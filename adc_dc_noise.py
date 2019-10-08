@@ -52,7 +52,9 @@ else:
     gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.9", load=gen_load)
     #sinewave, Hi-Z termination
 
-chns = cq.get_adcdata(PktNum=Ntot )
+fn = enob_dir + "WHITE_%s_%s"%(env,refs) + ".bin"
+print (fn)
+chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
                 
 noise_dir = rawdir + "DC_Noise/"
 if (os.path.exists(noise_dir)):

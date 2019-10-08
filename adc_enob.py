@@ -19,7 +19,6 @@ import os.path
 import csv
 import matplotlib.pyplot as plt
 from scipy.fftpack import fft,rfft,ifft,fftn
-import pickle
 from cmd_library import CMD_ACQ
 from stanford_ds360_gen import GEN_CTL
 cq = CMD_ACQ()  #command library
@@ -103,14 +102,10 @@ cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary",
 gen.gen_init()
 gen.gen_set(wave_type="SINE", freq="14404.3", amp=amp, dc_oft="0.9", load=gen_load)  #sinewave, Hi-Z termination
 
-
-chns = cq.get_adcdata(PktNum=Nsamps )
-
 #Save Data (comment if not necesssary)
-#fn = enob_dir + "ENOB_%s_%s"%(env,refs) + ".bin"
-#print (fn)
-#with open(fn, 'wb') as f:
-#    pickle.dump(chns, f)
+fn = enob_dir + "ENOB_%s_%s"%(env,refs) + ".bin"
+print (fn)
+chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
 
 if(mode16bit == False):
     chns = list(np.array(chns)//16)
