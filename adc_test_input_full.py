@@ -254,32 +254,28 @@ while(flag < 10 and ENOB < 10):
     #Truncate DC and Nyquist bins
     trunc = 5
     p = p[trunc:Ntot-trunc]
-    #Eliminate spurious bins if necessary (both sides of fundamental)
+       
+	#Span three bins at side of fundamental to calculate signal power
     p_aux = np.copy(p)
     noise = min(p)
-    spurious = 5
-    while max(p_aux)>10**(0):
-        mx_arr = np.where(p_aux == max(p_aux))
-        print(max(p_aux))
-        mx = mx_arr[0]
-        p_aux[mx] = noise
-        for k in range(1, spurious+1):
-            p[mx-k] = noise
-            p_aux[mx-k] = noise
-            if(mx+k < len(p)):
-                p[mx+k] = noise
-                p_aux[mx+k] = noise
+    mx_arr = np.where(p_aux == max(p_aux))
+    mx = mx_arr[0]
+    signal_pwr = max(p_aux)
+    span = 3
+    p_aux[mx] = noise
+    for k in range(1, span+1):
+        signal_pwr = signal_pwr + p[mx+k] + p[mx-k]
+        p_aux[mx+k] = noise
+        p_aux[mx-k] = noise
+
     
     ##### Extract parameters of interest #####
-    fundamental = max(p)
-    print(fundamental)
-    NAD = np.sum(p) - fundamental
-    SINAD = 10*np.log10( fundamental / NAD )
+    NAD = np.sum(p) - signal_pwr
+    SINAD = 10*np.log10( signal_pwr / NAD )
     new_enob = (SINAD - 1.76 + 20*np.log10(Vfullscale/Vinput)) / 6.02
-    print(new_enob)
-    p_NAD = np.copy(p)
-    p_NAD[np.where(p == max(p))] = 0
-    SFDR = 10*np.log10( fundamental / max(p_NAD))
+    
+    fundamental = max(p)
+    SFDR = 10*np.log10( fundamental / max(p_aux))
     
     if(new_enob > ENOB):
         ENOB = new_enob
@@ -300,7 +296,7 @@ with open(fn, 'wb') as f:
 ##### Plot normalized power spectral density in dBFS #####
 fig = plt.figure(figsize=(10,8))
 psd = psd[trunc:Ntot-trunc]
-psd_dbfs = psd - max(psd)
+psd_dbfs = psd - max(psd) - 20*np.log10(Vfullscale/Vinput)
 points_dbfs = np.linspace(0,fs/2, len(psd_dbfs))
 plt.plot(points_dbfs, psd_dbfs)
 plt.title('%s Environment. %s Reference. ADC Test Input'%(env, refs))

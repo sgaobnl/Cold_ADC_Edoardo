@@ -31,7 +31,7 @@ env = config.temperature
 rawdir = config.subdir
 
 #Input option from batch file: temperature
-refs = "BJT"
+refs = sys.argv[1]
 
 #50 ohm terminations on socket mezzanine boards
 gen_load = "50"
