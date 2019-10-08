@@ -1,0 +1,7 @@
+Power consumption (BJT reference): PASS 
+Power consumption (CMOS reference): PASS 
+UART Read/Write: PASS 
+I2C Read/Write: PASS 
+Configuration pattern: PASS 
+Default registers: PASS 
+Bandgap reference: PASS 
