@@ -44,7 +44,7 @@ else:
 ##### Parameters for DNL/INL calculation #####
 Ntot = 2**(22)
 if(env=="RT"):
-    amp = "1.35VP"
+    amp = "1.4VP"
 else:
     #IR drop at cold -> use lower swing to avoid overflowing
     amp = "1.35VP"
@@ -136,10 +136,10 @@ for chnno in range(16):
     fig = plt.figure(figsize=(10,8))
     ax1 = plt.subplot2grid((2,2), (0, 0), colspan=2, rowspan=1)
     ax1.x = np.arange(first_bin, last_bin +1)
-    ax1_len = len(ax1.x)
-    dnl_len = len(dnl)
-    tmp_len= min([ax1_len, dnl_len])
-#    ax1.plot(ax1.x,dnl)
+#    ax1_len = len(ax1.x)
+#    dnl_len = len(dnl)
+#    tmp_len= min([ax1_len, dnl_len])
+    ax1.plot(ax1.x,dnl)
     ax1.set_xlim([0,4095])
     ax1.set_ylim([-0.8,0.8])
     ax1.set_title('%s Environment. %s Reference. Channel %d'%(env, refs,chnno))
@@ -149,11 +149,11 @@ for chnno in range(16):
     
     ax2 = plt.subplot2grid((2,2), (1, 0), colspan=2, rowspan=1)
     ax2.x = np.arange(first_bin, last_bin +1)
-    ax2_len = len(ax2.x)
-    inl_len = len(inl)
-    tmp_len= min([ax2_len, inl_len])
-    ax2.plot(ax2.x[0:tmp_len], inl[0:tmp_len])
-    #ax2.plot(ax2.x,inl)
+#    ax2_len = len(ax2.x)
+#    inl_len = len(inl)
+#    tmp_len= min([ax2_len, inl_len])
+#    ax2.plot(ax2.x[0:tmp_len], inl[0:tmp_len])
+    ax2.plot(ax2.x,inl)
     ax2.set_xlim([0,4095])
     ax2.set_ylim([-6.5,6.5])
     ax2.set_ylabel('INL [LSB]')

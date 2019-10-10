@@ -123,11 +123,8 @@ cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary",
 ##### Parameters for DNL/INL calculation #####
 Ntot = 2**(22)
 if(env=="RT"):
-#    amp = "1.4VP"
-#    Vinput = 1.4
-    amp = "1.35VP"
-    Vinput = 1.35
-
+    amp = "1.4VP"
+    Vinput = 1.4
 else:
     amp = "1.35VP"
     Vinput = 1.35

@@ -32,7 +32,7 @@
 :: Turn on DS360 Stanford Generator.
 
 ::python adc_init_checkout.py      
-::python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4
+python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4
 python adc_dnlinl_sinewave.py    BJT 
 ::python adc_enob.py               BJT 
 ::python adc_dc_noise.py           BJT 200 
