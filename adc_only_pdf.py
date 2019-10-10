@@ -282,7 +282,8 @@ pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 1
 
 
 if(env == "RT"):
-    amp = "1.40 V" 
+    #amp = "1.40 V" 
+    amp = "1.35 V"
 else:
     amp = "1.35 V"
 

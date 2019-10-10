@@ -20,7 +20,6 @@ import matplotlib.pyplot as plt
 from scipy.fftpack import fft,rfft,ifft,fftn
 from scipy.stats import norm
 from itertools import chain
-import pickle
 from cmd_library import CMD_ACQ
 from stanford_ds360_gen import GEN_CTL
 cq = CMD_ACQ()  #command library
@@ -77,9 +76,13 @@ else:
 #write 0   ->  SHA sampling frequency 2 MHz (nominal, 16 Ms/s ADC)
 if(adc_sample_rate == "4"):
     freq = "13671.9"
+    dnl_freq = freq
     fs = 4000 #kHz
 else:
     freq = "85937.5"
+    dnl_freq = "85937.6"
+    #freq = "54688.6"
+    #dnl_freq = "54687.5"
     fs = 16000 #kHz
 
 
@@ -120,22 +123,25 @@ cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary",
 ##### Parameters for DNL/INL calculation #####
 Ntot = 2**(22)
 if(env=="RT"):
-    amp = "1.4VP"
-    Vinput = 1.4
+#    amp = "1.4VP"
+#    Vinput = 1.4
+    amp = "1.35VP"
+    Vinput = 1.35
+
 else:
     amp = "1.35VP"
     Vinput = 1.35
 
 ###### Take Data #####
 gen.gen_init()
-gen.gen_set(wave_type="SINE", freq=freq, amp = amp, dc_oft="0.45", load=gen_load) #sinewave, Hi-Z termination 
-chns = cq.get_adcdata(PktNum=Ntot )
+
+#gen.gen_set(wave_type="SINE", freq=dnl_freq, amp = amp, dc_oft="0.45", load=gen_load) #sinewave, 50Ohm termination 
+gen.gen_set(wave_type="SINE", freq=dnl_freq, amp = amp, dc_oft="0.90", load=gen_load) #sinewave, 50Ohm termination 
 
 #Save Data (>1G of data, comment if necessary)
-#fn = adc_tst_dir + "DNL_INL_sinewave_%s"%refs + ".bin"
-#print (fn)
-#with open(fn, 'wb') as f:
-#    pickle.dump(chns, f)
+fn = adc_tst_dir + "ADC_TST_INPUT_DNLINL_%s_%s"%(env,refs) + ".bin"
+print (fn)
+chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
 
 if(mode16bit == False):    
     chns = list(np.array(chns)//16)
@@ -199,7 +205,10 @@ worst_inl = np.around(max_inl - min_inl, decimals=2) / 2
 fig = plt.figure(figsize=(10,8))
 ax1 = plt.subplot2grid((2,2), (0, 0), colspan=2, rowspan=1)
 ax1.x = np.arange(first_bin, last_bin +1)
-ax1.plot(ax1.x,dnl)
+ax1_len = len(ax1.x)
+dnl_len = len(dnl)
+tmp_len= min([ax1_len, dnl_len])
+ax1.plot(ax1.x[0:tmp_len], dnl[0:tmp_len])
 ax1.set_xlim([0,4095])
 ax1.set_ylim([-0.8,0.8])
 ax1.set_title('%s Environment. %s Reference. ADC Test Input'%(env, refs))
@@ -209,7 +218,12 @@ ax1.annotate(' max DNL = %0.2f \n min DNL = %0.2f ' %(max_dnl, min_dnl),
 
 ax2 = plt.subplot2grid((2,2), (1, 0), colspan=2, rowspan=1)
 ax2.x = np.arange(first_bin, last_bin +1)
-ax2.plot(ax2.x,inl)
+
+ax2_len = len(ax2.x)
+inl_len = len(inl)
+tmp_len= min([ax2_len, inl_len])
+ax2.plot(ax2.x[0:tmp_len], inl[0:tmp_len])
+#ax2.plot(ax2.x,inl)
 ax2.set_xlim([0,4095])
 ax2.set_ylim([-6.5,6.5])
 ax2.set_ylabel('INL [LSB]')
@@ -235,13 +249,16 @@ Nsamps = 2**(15)
 Vfullscale = 1.5 #V
 
 ##### Take Data #####
-gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.45", load=gen_load)  #sinewave, 50 ohm termination, offset half than real (100 ohm term between P and N)
+#gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.45", load=gen_load)  #sinewave, 50 ohm termination, offset half than real (100 ohm term between P and N)
+gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.90", load=gen_load)  #sinewave, 50 ohm termination, offset half than real (100 ohm term between P and N)
 new_enob = 0
 ENOB = 0
 flag = 0
 #Select best between ten tries. This is not necessary, results are very similar between each other
 while(flag < 10 and ENOB < 10):
-    chns = cq.get_adcdata(PktNum=Nsamps )
+    fn = adc_tst_dir + "ADC_TEST_INPUT_ENOB_%s_%s"%(env,refs) + ".bin"
+#    chns = cq.get_adcdata(PktNum=Nsamps )
+    chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
     
     if(mode16bit == False):
         chns = list(np.array(chns)//16)
@@ -284,15 +301,6 @@ while(flag < 10 and ENOB < 10):
     flag += 1
     print(flag)
 
-
-#Save Data
-fn = adc_tst_dir + "ENOB_%s_%s"%(env,refs) + ".bin"
-print (fn)
-with open(fn, 'wb') as f:
-    pickle.dump(good_chns, f)
-
-
-
 ##### Plot normalized power spectral density in dBFS #####
 fig = plt.figure(figsize=(10,8))
 psd = psd[trunc:Ntot-trunc]
@@ -319,9 +327,12 @@ Ntot = 60000
 #Reminder: due to our termination, real offset is double the set one
 #Baseline 900 mV
 baseline = "900"
-gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.45", load=gen_load)
+#gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.45", load=gen_load)
+gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.90", load=gen_load)
 
-chns = cq.get_adcdata(PktNum=Ntot )
+#chns = cq.get_adcdata(PktNum=Ntot )
+fn = adc_tst_dir + "ADC_TST_INPUT_WHITE_%s_%s"%(env,refs) + ".bin"
+chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
 
 if (mode16bit):
     data_slice = np.array(chns[0][0:10000])&0xffff

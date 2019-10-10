@@ -75,8 +75,10 @@ fin = 36.1328 #kHz
 Vfullscale = 1.5 #V
 avgs = 10
 if(env=="RT"):
-    amp = "1.4VP"
-    Vinput = 1.4
+#    amp = "1.4VP"
+#    Vinput = 1.4
+    amp = "1.35VP"
+    Vinput = 1.35
 else:
     amp = "1.35VP"
     Vinput = 1.35
