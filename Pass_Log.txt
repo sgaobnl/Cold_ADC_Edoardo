@@ -1,7 +1,0 @@
-I2C Read/Write: PASS 
-Configuration pattern: PASS 
-Default registers: PASS 
-Bandgap reference: PASS 
-WARNING: Channel 0 RMS Noise (40.937098) is out of expected range 
-WARNING: Channel 1 RMS Noise (331.524121) is out of expected range 
-WARNING: Channel 0 RMS Noise (0.394333) is out of expected range 

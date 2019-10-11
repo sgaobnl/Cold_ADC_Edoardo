@@ -52,3 +52,4 @@ def power_on_init():
     gen.gen_set(out = "dis")
     time.sleep(3)
 
+power_on_init()

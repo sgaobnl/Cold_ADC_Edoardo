@@ -1,4 +1,0 @@
-BJT Reference: Power channel 3 (VDDIO) out of range(0.049867 W) 
-CMOS Reference: Power channel 3 (VDDIO) out of range(0.049926 W) 
-UART check failed. Read/Write not working correctly. 
-ADC output synchronization failed 
