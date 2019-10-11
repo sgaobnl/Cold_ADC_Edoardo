@@ -9,9 +9,16 @@ import numpy as np
 from keysight_e36312a_ps import PS_CTL
 from rigol_dp832_ps import RIGOL_PS_CTL
 from stanford_ds360_gen import GEN_CTL
+from cmd_library import CMD_ACQ
+import time
 
 def power_on_init():
     #Turn FM on
+    gen = GEN_CTL() 
+    adc_ps = PS_CTL()  
+    fm_ps = RIGOL_PS_CTL() 
+    cq = CMD_ACQ()
+
     print ("Turn FM on")
     fm_ps.ps_init()
     fm_ps.off([1,2,3])
@@ -30,18 +37,18 @@ def power_on_init():
 
     #initilize ADC PS
     print ("ADC is powered on")
-    ps.ps_init()
-    ps.off([1,2,3])
-    ps.set_channel(1,2.5)
-    ps.set_channel(2,2.1)
-    ps.set_channel(3,2.25)
-    ps.on([1,2,3])
+    adc_ps.ps_init()
+    adc_ps.off([1,2,3])
+    adc_ps.set_channel(1,2.5)
+    adc_ps.set_channel(2,2.1)
+    adc_ps.set_channel(3,2.25)
+    adc_ps.on([1,2,3])
     time.sleep(2)
 
     #initilize Genetor 
     print ("Generator output off")
-    gen_output_dis()
+    #Disable DS360 generator output
+    gen.gen_init()
+    gen.gen_set(out = "dis")
     time.sleep(3)
-
-
 

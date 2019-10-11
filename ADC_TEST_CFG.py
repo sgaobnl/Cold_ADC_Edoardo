@@ -16,12 +16,16 @@ import time
 import sys
 import pickle
 from keysight_e36312a_ps import PS_CTL
+from all_ps_on import power_on_init
 ps = PS_CTL()   #power supply library
 cq = CMD_ACQ()  #command library
 
 #From ADC configuration file (adc_config.py): temperature and directory name 
 env = config.temperature
 rawdir = config.subdir
+
+#Turn on power supplies and set generator output off (default)
+power_on_init()
 
 #Input options from batch file: reference, SDC enable, weights selection, system sample rate 
 #ADC Sample Rate = 16   ->  16 Ms/s sample rate of internal ADC, 2 MHz sample rate of full system ADC (not fully reliable operation)
