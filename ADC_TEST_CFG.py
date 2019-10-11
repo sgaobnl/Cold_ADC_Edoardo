@@ -81,17 +81,17 @@ else:
     cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFE)
     print("Sampling frequency set: 2 MHz (ADC sampling at 16 Ms/s)")
 
-if (clk10m_syn_en):
-    tmp = cq.bc.udp.read_reg(0x05)
-    tmp = cq.bc.udp.read_reg(0x05)
-    print("10MHz Sync out on MISC[0] is enabled")
-    cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFD)
-else:
-    tmp = cq.bc.udp.read_reg(0x05)
-    tmp = cq.bc.udp.read_reg(0x05)
-    print("10MHz Sync out on MISC[0] is disabled")
-    cq.bc.udp.write_reg_checked(0x05,tmp|0x02)
-
+#if (clk10m_syn_en):
+#    tmp = cq.bc.udp.read_reg(0x05)
+#    tmp = cq.bc.udp.read_reg(0x05)
+#    print("10MHz Sync out on MISC[0] is enabled")
+#    cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFD)
+#else:
+#    tmp = cq.bc.udp.read_reg(0x05)
+#    tmp = cq.bc.udp.read_reg(0x05)
+#    print("10MHz Sync out on MISC[0] is disabled")
+#    cq.bc.udp.write_reg_checked(0x05,tmp|0x02)
+#
 
 #Set 2.8 V for channel 1 (VDDA2P5) if BJT reference is used    
 ps.ps_init()
@@ -106,10 +106,9 @@ if(flg_bjt_r):
     ps.on([1,2,3])
     time.sleep(5)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
-    time.sleep(2)
+    time.sleep(10)
 
 else:
-    adc_curr_src = "BJT-sd"
     adc_curr_src = "CMOS-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     ps.off([1,2,3])
@@ -120,7 +119,7 @@ else:
     ps.on([1,2,3])
     time.sleep(5)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
-    time.sleep(2)
+    time.sleep(10)
 
 #Complete ADC configuration: input buffer, SDC, SHA, current source, references, weights)
 if (adc_sdc_en):

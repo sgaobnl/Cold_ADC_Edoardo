@@ -441,10 +441,10 @@ class CMD_ACQ:
 
     def chn_order_sync(self, PktNum=128 ):  
         print ("Starting ADC physical channel and logical channel mapping...")
-        self.bc.adc_load_pattern_0(0x01, 0x01)
-        self.bc.adc_load_pattern_1(0x01, 0x01)
         woc_f = False
         for chn_order in range(0,32,4):
+            self.bc.adc_load_pattern_0(0x01, 0x01)
+            self.bc.adc_load_pattern_1(0x01, 0x01)
             self.bc.adc_framemarker_shift (num = chn_order)
             self.bc.adc_test_data_mode(mode = "Test Pattern")
             chns = self.get_adcdata(PktNum=128)
@@ -455,6 +455,7 @@ class CMD_ACQ:
                     break
             if nibble_sync_f:
                 self.bc.adc_test_data_mode(mode = "Normal")
+                time.sleep(0.01)
                 chns = self.get_adcdata(PktNum=128)
                 for i in range(10):
                     chns = self.get_adcdata(PktNum=128)

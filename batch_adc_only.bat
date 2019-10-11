@@ -43,11 +43,11 @@ python adc_enob.py               CMOS
 python adc_dc_noise.py           CMOS 200
 python adc_dc_noise.py           CMOS 900
 PAUSE
-::
-:::: Internal ADC Tests (Differential ADC Test Input):
-:::: Disconnect Single Ended SMA output from DS360, connect differential output for ADC Test Input (P and N SMA cables).
-:::: Disconnect clock synchronization cables from FPGA mezzanine.
-::
+
+:: Internal ADC Tests (Differential ADC Test Input):
+:: Disconnect Single Ended SMA output from DS360, connect differential output for ADC Test Input (P and N SMA cables).
+:: Disconnect clock synchronization cables from FPGA mezzanine.
+
 python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16  UNSYNC 
 python adc_test_input_full.py    BJT 16
 python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4  UNSYNC

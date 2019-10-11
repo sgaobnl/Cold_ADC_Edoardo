@@ -1,1 +1,3 @@
-CMOS Reference: Power channel 1 (VDDA2P5 & VDDD2P5) out of range(0.333023 W) 
+BJT Reference: Power channel 3 (VDDIO) out of range(0.049867 W) 
+CMOS Reference: Power channel 3 (VDDIO) out of range(0.049926 W) 
+UART check failed. Read/Write not working correctly. 

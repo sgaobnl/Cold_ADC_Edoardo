@@ -24,8 +24,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keysight_e36312a_ps import PS_CTL
 from stanford_ds360_gen import GEN_CTL
+from rigol_dp832_ps import RIGOL_PS_CTL
 gen = GEN_CTL() #signal generator library
 ps = PS_CTL()   #power supply library
+fm_ps = RIGOL_PS_CTL() 
 cq = CMD_ACQ()  #command library
 
 #From ADC configuration file (adc_config.py): temperature and directory name. Create directory if not present
@@ -548,6 +550,14 @@ def init_system_500k():
     cq.bc.udp.write_reg_checked(0x05,1)
     print("Sampling frequency set: 500 kHz")
 
+def init_system_2M():
+    #Sampling frequency initialized: 500 kHz
+    #0x05      ->  FPGA register for system frequency control
+    #write 1   ->  SHA sampling frequency 500 kHz (4 Ms/s ADC)
+    #write 0   ->  SHA sampling frequency 2 MHz (nominal, 16 Ms/s ADC)
+    cq.bc.udp.write_reg_checked(0x05,0)
+    print("Sampling frequency set: 2 MHz")
+
 def init_logs():
     #Initialize logs
     #Status      ->  PASS as default, FAIL if initialization checkout fails. Every step of initialization checkout has a failure mode
@@ -567,11 +577,32 @@ def gen_output_dis():
     gen.gen_init()
     gen.gen_set(out = "dis")
 
+def power_on_init():
+    #Turn FM on
+    fm_ps.ps_init()
+    fm_ps.off([1,2,3])
+    fm_ps.set_channel(channel=1, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
+    fm_ps.set_channel(channel=2, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
+    fm_ps.set_channel(channel=3, voltage = 5,  c_limit = 1)
+    fm_ps.on([1,2,3])
+    time.sleep(1)
+    #initilize ADC PS
+    ps.ps_init()
+    ps.off([1,2,3])
 
-ps.ps_init()
-init_system_500k()
+    #initilize Genetor 
+    gen_output_dis()
+    time.sleep(5)
+
+    #FPGA reset
+    cq.bc.udp.write_reg(0,1) 
+    time.sleep(0.01)
+    cq.bc.udp.write_reg(0,1) 
+    time.sleep(1)
+
+power_on_init()
+init_system_2M()
 init_logs()
-gen_output_dis()
 pwr_chk()
 cq.init_chk()
 cq.uart_chk()

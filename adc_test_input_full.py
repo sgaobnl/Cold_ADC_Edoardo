@@ -76,12 +76,12 @@ else:
 #write 0   ->  SHA sampling frequency 2 MHz (nominal, 16 Ms/s ADC)
 if(adc_sample_rate == "4"):
     freq = "13671.9"
-    dnl_freq = freq
+    dnl_freq = "13672.1"
     fs = 4000 #kHz
 else:
     freq = "85937.5"
-    #dnl_freq = "85937.6"
-    dnl_freq = freq
+    dnl_freq = "85937.7"
+    #dnl_freq = freq
     #freq = "54688.6"
     #dnl_freq = "54687.5"
     fs = 16000 #kHz

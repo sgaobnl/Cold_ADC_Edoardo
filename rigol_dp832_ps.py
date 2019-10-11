@@ -13,7 +13,7 @@ import copy
 import visa
 from visa import VisaIOError
 
-class PS_CTL:
+class RIGOL_PS_CTL:
     def ps_init(self):
         rm = visa.ResourceManager()
         rm_list = rm.list_resources()
@@ -76,7 +76,8 @@ class PS_CTL:
                
     def get_on_off(self, channel):
         self.powerSupplyDevice.write(":OUTP? CH{}".format(channel))
-        resp = self.powerSupplyDevice.read().strip().decode()
+        #resp = self.powerSupplyDevice.read().strip().decode()
+        resp = self.powerSupplyDevice.read().strip()
         status = None
         if (resp == "ON"):
             status = True
@@ -93,7 +94,8 @@ class PS_CTL:
             if ((voltage > 0) and (voltage < 30)):
                 self.powerSupplyDevice.write(":SOUR{}:VOLT {}".format(channel,voltage))
                 self.powerSupplyDevice.write(":SOUR{}:VOLT?".format(channel))
-                response = float(self.powerSupplyDevice.read().strip().decode())
+                #response = float(self.powerSupplyDevice.read().strip().decode())
+                response = float(self.powerSupplyDevice.read().strip())
                 if (response != voltage):
                     print("RigolDP832 Error --> Voltage was set to {}, but response is {}".format(voltage, response))
             else:
@@ -103,7 +105,8 @@ class PS_CTL:
             if ((current > 0) and (current < 3)):
                 self.powerSupplyDevice.write(":SOUR{}:CURR {}".format(channel,current))
                 self.powerSupplyDevice.write(":SOUR{}:CURR?".format(channel))
-                response = float(self.powerSupplyDevice.read().strip().decode())
+                #response = float(self.powerSupplyDevice.read().strip().decode())
+                response = float(self.powerSupplyDevice.read().strip())
                 if (response != current):
                     print("RigolDP832 Error --> Current was set to {}, but response is {}".format(current, response))
             else:
@@ -113,7 +116,8 @@ class PS_CTL:
             if ((v_limit > 0.01) and (v_limit < 33)):
                 self.powerSupplyDevice.write(":SOUR{}:VOLT:PROT {}".format(channel,v_limit))
                 self.powerSupplyDevice.write(":SOUR{}:VOLT:PROT?".format(channel))
-                response = float(self.powerSupplyDevice.read().strip().decode())
+                #response = float(self.powerSupplyDevice.read().strip().decode())
+                response = float(self.powerSupplyDevice.read().strip())
                 if (response != v_limit):
                     print("RigolDP832 Error --> Voltage protection was set to {}, but response is {}".format(v_limit, response))
             else:
@@ -123,7 +127,8 @@ class PS_CTL:
             if ((c_limit > 0.001) and (c_limit < 3.3)):
                 self.powerSupplyDevice.write(":SOUR{}:CURR:PROT {}".format(channel,c_limit))
                 self.powerSupplyDevice.write(":SOUR{}:CURR:PROT?".format(channel))
-                response = float(self.powerSupplyDevice.read().strip().decode())
+                #response = float(self.powerSupplyDevice.read().strip().decode())
+                response = float(self.powerSupplyDevice.read().strip())
                 if (response != c_limit):
                     print("RigolDP832 Error --> Current protection was set to {}, but response is {}".format(c_limit, response))
             else:
@@ -133,7 +138,8 @@ class PS_CTL:
             if ((vp == "ON") or (vp == "OFF")):
                 self.powerSupplyDevice.write(":SOUR{}:VOLT:PROT:STATE {}".format(channel,vp))
                 self.powerSupplyDevice.write(":SOUR{}:VOLT:PROT:STATE?".format(channel))
-                response = self.powerSupplyDevice.read().strip().decode()
+                #response = self.powerSupplyDevice.read().strip().decode()
+                response = self.powerSupplyDevice.read().strip()
                 if (response != vp):
                     print("RigolDP832 Error --> OverVoltage was set to {}, but response is {}".format(vp, response))
             else:
@@ -143,7 +149,8 @@ class PS_CTL:
             if ((cp == "ON") or (cp == "OFF")):
                 self.powerSupplyDevice.write(":SOUR{}:CURR:PROT:STATE {}".format(channel,cp))
                 self.powerSupplyDevice.write(":SOUR{}:CURR:PROT:STATE?".format(channel))
-                response = self.powerSupplyDevice.read().strip().decode()
+                #response = self.powerSupplyDevice.read().strip().decode()
+                response = self.powerSupplyDevice.read().strip()
                 if (response != cp):
                     print("RigolDP832 Error --> OverCurrent was set to {}, but response is {}".format(cp, response))
             else:
