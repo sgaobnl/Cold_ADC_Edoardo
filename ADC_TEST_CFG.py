@@ -30,6 +30,7 @@ flg_bjt_r = (sys.argv[1] == "BJT")              #BJR reference flag
 adc_sdc_en = (sys.argv[2] == "SDC")             #SDC enable flag
 new_weights = (sys.argv[3] == "NEW_CALI")       #New calibration weights flag 
 adc_sample_rate = sys.argv[4]                   #4 Ms/s internal ADC sample rate flag
+clk10m_syn_en = (sys.argv[5] == "SYNC10M" ) #10MHz sync out 
 
 
 def old_wghts():
@@ -63,27 +64,63 @@ else:
     cali = "reload weights"
 
 
+cq.bc.udp.write_reg_checked(0x05,0)
+#reg5[0]: 0->-16Ms/s, 1--> 4Ms/s
+#reg5[1]: 0->-10MHz sync out enable,  1--> disable
+#reg5[4]: 0--> 2MHz & 64MHz enable, 1 --> disable
 if(adc_sample_rate == "4"):
-    cq.bc.udp.write_reg_checked(0x05,1)
     print("Sampling frequency set: 500 kHz (ADC sampling at 4 Ms/s)")
+    tmp = cq.bc.udp.read_reg(0x05)
+    tmp = cq.bc.udp.read_reg(0x05)
+    cq.bc.udp.write_reg_checked(0x05,tmp|0x01)
+
       
 else:
-    cq.bc.udp.write_reg_checked(0x05,0)
+    tmp = cq.bc.udp.read_reg(0x05)
+    tmp = cq.bc.udp.read_reg(0x05)
+    cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFE)
     print("Sampling frequency set: 2 MHz (ADC sampling at 16 Ms/s)")
+
+if (clk10m_syn_en):
+    tmp = cq.bc.udp.read_reg(0x05)
+    tmp = cq.bc.udp.read_reg(0x05)
+    print("10MHz Sync out on MISC[0] is enabled")
+    cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFD)
+else:
+    tmp = cq.bc.udp.read_reg(0x05)
+    tmp = cq.bc.udp.read_reg(0x05)
+    print("10MHz Sync out on MISC[0] is disabled")
+    cq.bc.udp.write_reg_checked(0x05,tmp|0x02)
 
 
 #Set 2.8 V for channel 1 (VDDA2P5) if BJT reference is used    
 ps.ps_init()
 if(flg_bjt_r):
     adc_curr_src = "BJT-sd"
+    cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
+    ps.off([1,2,3])
+    time.sleep(5)
     ps.set_channel(1,2.8)
+    ps.set_channel(2,2.1)
+    ps.set_channel(3,2.25)
+    ps.on([1,2,3])
     time.sleep(5)
-else:
-    adc_curr_src = "CMOS-sd"
-    ps.set_channel(1,2.5)
-    time.sleep(5)
-#print(adc_curr_src)
+    cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
+    time.sleep(2)
 
+else:
+    adc_curr_src = "BJT-sd"
+    adc_curr_src = "CMOS-sd"
+    cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
+    ps.off([1,2,3])
+    time.sleep(5)
+    ps.set_channel(1,2.5)
+    ps.set_channel(2,2.1)
+    ps.set_channel(3,2.25)
+    ps.on([1,2,3])
+    time.sleep(5)
+    cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
+    time.sleep(2)
 
 #Complete ADC configuration: input buffer, SDC, SHA, current source, references, weights)
 if (adc_sdc_en):

@@ -1,0 +1,1 @@
+CMOS Reference: Power channel 1 (VDDA2P5 & VDDD2P5) out of range(0.333023 W) 

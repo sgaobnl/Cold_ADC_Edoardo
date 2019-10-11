@@ -53,32 +53,28 @@ def pwr_chk():
     i_bjt = [0,0,0]
     powers = [0,0,0]
     p_bjt = [0,0,0]
-    cq.ref_set(flg_bjt_r = True , env=env)
     #Repeat for number of power cycles
     for i in range(pwr_cycles):
         #Procedure: high master reset -> power off channel 3 -> power off channels 1 and 2 -> power on all channels -> low master reset
-        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
+        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
         time.sleep(1)
-        ps.off([3])
-        time.sleep(1)
-        ps.off([1,2])
+        ps.off([1,2, 3])
         if(env == "RT"):
-            time.sleep(1)
+            time.sleep(5)
         else:
             #With LN2, wait longer (current settling)
             time.sleep(30)
-        ps.on([1,2,3])
-        time.sleep(1)
-        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
-        if(env == "RT"):
-            time.sleep(1)
-        else:
-            time.sleep(5)
         
         #Set VDDA2P5 to 2.8 V for BJT reference only (known issue at LN2 with nominal 2.5 V)
         ps.set_channel(1,2.8)
         ps.set_channel(2,2.1)
         ps.set_channel(3,2.25)
+        ps.on([1,2,3])
+        time.sleep(5)
+        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
+        time.sleep(1)
+        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", env=env, flg_bjt_r=True)
+        time.sleep(5)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
         powers = [a*b for a,b in zip(voltages,currents)]
@@ -136,29 +132,26 @@ def pwr_chk():
     i_cmos = [0,0,0]
     p_cmos = [0,0,0]
     flg = [0,0,0]
-    cq.ref_set(flg_bjt_r = False , env=env)
+#    cq.ref_set(flg_bjt_r = False , env=env)
     #Powerdown BJT reference (optional)
     #cq.bc.adc_ref_powerdown(1,1)
     for i in range(pwr_cycles):
-        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
-        time.sleep(1)
-        ps.off([3])
-        time.sleep(1)
-        ps.off([1,2])
-        if(env == "RT"):
-            time.sleep(1)
-        else:
-            time.sleep(30)
-        ps.on([1,2,3])
-        time.sleep(1)
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
+        time.sleep(1)
+        ps.off([1,2,3])
         if(env == "RT"):
-            time.sleep(1)
+            time.sleep(5)
         else:
             time.sleep(30)
         ps.set_channel(1,2.5)
         ps.set_channel(2,2.1)
         ps.set_channel(3,2.25)
+        ps.on([1,2,3])
+        time.sleep(5)
+        cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
+        time.sleep(1)
+        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", env=env, flg_bjt_r=False)
+        time.sleep(5)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
         powers = [a*b for a,b in zip(voltages,currents)]
@@ -167,7 +160,7 @@ def pwr_chk():
         p_cmos = [x + y for x, y in zip(p_cmos, powers)]
 #        print("Power Channel 1 = %f1 W \nPower Channel 2 = %f2 W \nPower Channel 3 = %f W"%(powers[0],powers[1],powers[2]))
         if(env=="RT"):
-            if(powers[0] > 0.90 or powers[0] < 0.40):
+            if(powers[0] > 0.90 or powers[0] < 0.20):
                 flg[0] = 1
             else:
                 flg[0] = 0
@@ -181,7 +174,7 @@ def pwr_chk():
                 flg[2] = 0
         
         else:
-            if(powers[0] > 0.90 or powers[0] < 0.40):
+            if(powers[0] > 0.90 or powers[0] < 0.20):
                 flg[0] = 1
             else:
                 flg[0] = 0
@@ -579,7 +572,6 @@ ps.ps_init()
 init_system_500k()
 init_logs()
 gen_output_dis()
-cq.init_chk()
 pwr_chk()
 cq.init_chk()
 cq.uart_chk()

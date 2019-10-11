@@ -24,9 +24,9 @@ class COLDADC_tool:
             self.uart_flag = False
             
     def hard_reset(self):
-        self.udp.write(self.fpga_reg.MASTER_RESET,1)
+        self.udp.write(self.fpga_reg.MASTER_RESET,0)
         time.sleep(0.5)
-        self.udp.write(self.fpga_reg.MASTER_RESET,0)  
+        self.udp.write(self.fpga_reg.MASTER_RESET,1)  
         
         
     def I2C_read(self,chip_id,page,addr):

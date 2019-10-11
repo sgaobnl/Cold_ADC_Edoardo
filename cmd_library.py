@@ -444,7 +444,7 @@ class CMD_ACQ:
         self.bc.adc_load_pattern_0(0x01, 0x01)
         self.bc.adc_load_pattern_1(0x01, 0x01)
         woc_f = False
-        for chn_order in range(32):
+        for chn_order in range(0,32,4):
             self.bc.adc_framemarker_shift (num = chn_order)
             self.bc.adc_test_data_mode(mode = "Test Pattern")
             chns = self.get_adcdata(PktNum=128)
@@ -542,6 +542,16 @@ class CMD_ACQ:
                                      adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
             print ("Manual Calibration is done, back to normal")
 
+    def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", env="RT", flg_bjt_r=True): 
+        self.init_chk()
+        self.ref_set(flg_bjt_r = flg_bjt_r , env=env)
+        time.sleep(1)
+        self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)         
+        self.bc.adc_sha_clk_sel(mode = "internal")
+
+        self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
+                                     adc_sync_mode ="Normal", adc_test_input = "Normal", 
+                                     adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
             
 #cq = CMD_ACQ() 
 #cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", env="RT", flg_bjt_r=True)
