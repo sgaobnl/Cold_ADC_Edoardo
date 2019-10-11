@@ -25,6 +25,7 @@ import matplotlib.pyplot as plt
 from keysight_e36312a_ps import PS_CTL
 from stanford_ds360_gen import GEN_CTL
 from rigol_dp832_ps import RIGOL_PS_CTL
+from all_ps_on import power_on_init
 gen = GEN_CTL() #signal generator library
 ps = PS_CTL()   #power supply library
 fm_ps = RIGOL_PS_CTL() 
@@ -577,28 +578,6 @@ def gen_output_dis():
     gen.gen_init()
     gen.gen_set(out = "dis")
 
-def power_on_init():
-    #Turn FM on
-    fm_ps.ps_init()
-    fm_ps.off([1,2,3])
-    fm_ps.set_channel(channel=1, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
-    fm_ps.set_channel(channel=2, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
-    fm_ps.set_channel(channel=3, voltage = 5,  c_limit = 1)
-    fm_ps.on([1,2,3])
-    time.sleep(1)
-    #initilize ADC PS
-    ps.ps_init()
-    ps.off([1,2,3])
-
-    #initilize Genetor 
-    gen_output_dis()
-    time.sleep(5)
-
-    #FPGA reset
-    cq.bc.udp.write_reg(0,1) 
-    time.sleep(0.01)
-    cq.bc.udp.write_reg(0,1) 
-    time.sleep(1)
 
 power_on_init()
 init_system_2M()
