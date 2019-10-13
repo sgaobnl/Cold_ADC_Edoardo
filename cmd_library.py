@@ -42,7 +42,42 @@ class CMD_ACQ:
         stat_file.close()
 
     def __init__(self):
+        self.flg_bjt_r = True
         self.bc = Brd_Config()
+        self.vp_vcmi = False
+        self.vn_vcmi = False
+        self.vm_vcmi = False
+        self.vp_vcmo = False
+        self.vn_vcmo = False
+        self.vm_vcmo = False
+        self.vp_vrefp = False
+        self.vn_vrefp = False
+        self.vm_vrefp = False
+        self.vp_vrefn = False
+        self.vn_vrefn = False
+        self.vm_vrefn = False
+        self.vrefp_voft = 0xe5
+        self.vrefn_voft = 0x27
+        self.vcmi_voft = 0x5c
+        self.vcmo_voft = 0x87
+
+#        if (env == "RT"):
+##for chip soldered on board C2
+##                vrefp_voft = 0xe1#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
+##                vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
+##                vcmi_voft = 0x60#0x5c#0x60#0x50#0x60
+##                vcmo_voft = 0x82
+#            self.vrefp_voft = 0xe5#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
+#            self.vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
+#            self.vcmi_voft = 0x5c#0x60#0x5c#0x60#0x50#0x60
+#            self.vcmo_voft = 0x87#0x82
+#        else:
+#            self.vrefp_voft = 0xd7#0xdc#0xdc#0xeb#0xf1
+#            self.vrefn_voft = 0x23#0x23#0x26#0x47#0x2b#0x29
+#            self.vcmi_voft = 0x60#0x50#0x64#0x7e#0x64#0x65
+#            self.vcmo_voft = 0x80#0x78#0x7d#0x9d#0x7c#0x8d
+
+
 
     def init_chk(self):
         #Hard reset ADC -> Read register 0 -> Soft reset (necessary for default page 2 registers, recently discovered problem)
@@ -131,10 +166,10 @@ class CMD_ACQ:
             print("Default registers are good")
             self.pass_log("Default registers: PASS \n")
     
-    def refs_chk(self, flg_bjt_r = True):
+    def refs_chk(self):
         #Sweeps reference voltages and currents
         avgs = 1
-        if (flg_bjt_r):
+        if (self.flg_bjt_r):
             self.bc.adc_ref_vol_src("BJT")
             self.bc.adc_bias_curr_src("BJT")
             vrefp_bjt = []
@@ -244,44 +279,33 @@ class CMD_ACQ:
             vcmo_cmos[:] = [x / avgs for x in vcmo_cmos]
             ibuff_cmos[:] = [x / avgs for x in ibuff_cmos]
             return (vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos)
-    
-    
-    def ref_set(self, flg_bjt_r = True, env = "RT" ):
-        if (flg_bjt_r):
+
+    def find_ref(self, vreg, vp, vn, vread, vset  ):
+        if (vp and vn):
+            pass
+        else:
+            if vread > vset + 0.01:
+                vreg -=1
+                vp = True
+            elif vread <  vset = 0.01:
+                vreg += 1
+                vn = True
+            else:
+                vreg = vreg
+                vm = True
+        return vreg, vp, vn, vm
+   
+    def ref_set_find(self,  fn = "" ):
+        if (self.flg_bjt_r):
             self.bc.adc_ref_vol_src("BJT")
             print ("Internal BJT voltage references are used")
             self.bc.adc_bias_curr_src("BJT")
             print ("Bias currents come from BJT-based references")
-            
-            set_flg = True
-            while (set_flg):
-                if (env == "RT"):
-    #for chip soldered on board C2
-    #                vrefp_voft = 0xe1#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
-    #                vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
-    #                vcmi_voft = 0x60#0x5c#0x60#0x50#0x60
-    #                vcmo_voft = 0x82
-                    vrefp_voft = 0xe5#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
-                    vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
-                    vcmi_voft = 0x5c#0x60#0x5c#0x60#0x50#0x60
-                    vcmo_voft = 0x87#0x82
-                else:
-                    vrefp_voft = 0xda#0xdc#0xdc#0xeb#0xf1
-                    vrefn_voft = 0x24#0x23#0x26#0x47#0x2b#0x29
-                    vcmi_voft = 0x61#0x50#0x64#0x7e#0x64#0x65
-                    vcmo_voft = 0x81#0x78#0x7d#0x9d#0x7c#0x8d
-                self.bc.adc_set_vrefs(vrefp_voft, vrefn_voft, vcmo_voft, vcmi_voft )
-                set_flg = False
-                print ("aaaa")
-#                vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
-#                if vcmi
-    
             vrefp_ioft = 1
             vrefn_ioft = 1
             vcmi_ioft = 1
             vcmo_ioft = 1
             self.bc.adc_set_ioffset(vrefp_ioft, vrefn_ioft, vcmo_ioft, vcmi_ioft)
-            print ("BJT reference is set to pre-calibrated values!")
             ibuff0_15 = 0x99
             ibuff1_16 = 0x99
             ivdac0_17 = 0x99
@@ -289,28 +313,47 @@ class CMD_ACQ:
             self.bc.adc_set_curr_ibuff(ibuff0_15, ibuff1_16)
             self.bc.adc_set_curr_vdac(ivdac0_17, ivdac1_18)
             print ("BJT current source for input buffer and VDAC is set to default values!")
+
+            print ("BJT reference is being calibrated")
+            self.vrefp_voft = 0xe5
+            self.vrefn_voft = 0x27
+            self.vcmi_voft = 0x5c
+            self.vcmo_voft = 0x87
+            while (True):
+                self.bc.adc_set_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft )
+                vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
+                if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
+                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, vread=vrefp, vset=1.95 )
+                else:
+                    vrefp_f = True
+                if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
+                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, vread=vrefn, vset=0.45 )
+                else:
+                    vrefn_f = True
+                if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
+                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, vread=vcmi, vset=0.90 )
+                else:
+                    vcmi_f = True
+                if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
+                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, vread=vcmo, vset=0.90 )
+                else:
+                    vcmo_f = True
+
+
+                if vrefp_f and vrefn_f and vcmi_f and vcom_f:
+                    print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
+                    break
+
+            with open(fn+".bjt", 'wb+') as f:
+                vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
+                vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
+                pickle.dump([vref_regs, vref_values] , f)
+
         else:
             self.bc.adc_ref_vol_src("CMOS")
             print ("CMOS voltage references are used")
             self.bc.adc_bias_curr_src("CMOS_INTR")
             print ("Bias currents come from CMOS-basedreference with internal R")  
-            if (env == "RT"):
-#for chip soldered on board C2
-#                vrefp_voft = 0xd0#0xd4#0xd0#0xda#0xdc#0xcc#0xce
-#                vrefn_voft = 0x2c#0x2a#0x2b
-#                vcmi_voft = 0x5d#0x5e#0x5d#0x5f#0x5b
-#                vcmo_voft = 0x7d#0x7f#0x7d#0x82#0x7b
-                vrefp_voft = 0xd4#0xd0#0xda#0xdc#0xcc#0xce
-                vrefn_voft = 0x2b
-                vcmi_voft = 0x5d#0x5e#0x5d#0x5f#0x5b
-                vcmo_voft = 0x7f#0x7d#0x82#0x7b
-            else:
-                vrefp_voft = 0xc9#0xc6
-                vrefn_voft = 0x2d#0x30
-                vcmi_voft = 0x5b
-                vcmo_voft = 0x7b
-            self.bc.adc_set_cmos_vrefs(vrefp_voft, vrefn_voft, vcmi_voft, vcmo_voft)
-            print ("CMOS reference is set to pre-calibrated values!") 
             iref_trim = 45
             self.bc.adc_set_cmos_iref_trim(iref_trim)
             print ("Set vt-reference current to 45uA (correction to default value)!") 
@@ -318,6 +361,85 @@ class CMD_ACQ:
             ibuff1_cmos = 0x27
             self.bc.adc_set_cmos_ibuff(ibuff0_cmos, ibuff1_cmos)
             print ("CMOS bias source for the input buffer is set!") 
+
+            print ("CMOS reference is being calibrated !") 
+            self.vrefp_voft = 0xd4
+            self.vrefn_voft = 0x2b
+            self.vcmi_voft = 0x5d
+            self.vcmo_voft = 0x7f
+            while (True):
+                self.bc.adc_set_cmos_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmi_voft, self.vcmo_voft)
+                vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
+                if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
+                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, vread=vrefp, vset=1.95 )
+                else:
+                    vrefp_f = True
+                if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
+                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, vread=vrefn, vset=0.45 )
+                else:
+                    vrefn_f = True
+                if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
+                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, vread=vcmi, vset=0.90 )
+                else:
+                    vcmi_f = True
+                if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
+                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, vread=vcmo, vset=0.90 )
+                else:
+                    vcmo_f = True
+
+                if vrefp_f and vrefn_f and vcmi_f and vcom_f:
+                    print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
+                    break
+            with open(fn+".cmos", 'wb+') as f:
+                vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
+                vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
+                pickle.dump([vref_regs, vref_values] , f)
+  
+    def ref_set(self, fn ):
+        if (self.flg_bjt_r):
+            self.bc.adc_ref_vol_src("BJT")
+            print ("Internal BJT voltage references are used")
+            self.bc.adc_bias_curr_src("BJT")
+            print ("Bias currents come from BJT-based references")
+            vrefp_ioft = 1
+            vrefn_ioft = 1
+            vcmi_ioft = 1
+            vcmo_ioft = 1
+            self.bc.adc_set_ioffset(vrefp_ioft, vrefn_ioft, vcmo_ioft, vcmi_ioft)
+
+            print ("BJT reference is set to pre-calibrated values!")
+            with open(fn+".bjt", 'rb') as f:
+                vref_regs, vref_values = pickle.load( f)
+            self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft = vref_regs
+            self.bc.adc_set_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft )
+
+            print ("BJT current source for input buffer and VDAC is set to default values!")
+            ibuff0_15 = 0x99
+            ibuff1_16 = 0x99
+            ivdac0_17 = 0x99
+            ivdac1_18 = 0x99
+            self.bc.adc_set_curr_ibuff(ibuff0_15, ibuff1_16)
+            self.bc.adc_set_curr_vdac(ivdac0_17, ivdac1_18)
+        else:
+            self.bc.adc_ref_vol_src("CMOS")
+            print ("CMOS voltage references are used")
+            print ("Bias currents come from CMOS-basedreference with internal R")  
+            self.bc.adc_bias_curr_src("CMOS_INTR")
+
+            print ("CMOS reference is set to pre-calibrated values!") 
+            with open(fn+".cmos", 'rb') as f:
+                vref_regs, vref_values = pickle.load( f)
+            self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft = vref_regs
+            self.bc.adc_set_cmos_vrefs(vrefp_voft, vrefn_voft, vcmi_voft, vcmo_voft)
+
+            print ("Set vt-reference current to 45uA (correction to default value)!") 
+            iref_trim = 45
+            self.bc.adc_set_cmos_iref_trim(iref_trim)
+
+            print ("CMOS bias source for the input buffer is set!") 
+            ibuff0_cmos = 0x27
+            ibuff1_cmos = 0x27
+            self.bc.adc_set_cmos_ibuff(ibuff0_cmos, ibuff1_cmos)
 
     def bjt_ref_aux(self, mon_src = "VREFP", mux_src = "AUX_VOLTAGE", avg_points =5  ):
         self.bc.cots_adc_bjt_mon_src(src = mon_src)
@@ -517,14 +639,14 @@ class CMD_ACQ:
         self.bc.fe_pulse_param(delay, period, width)
 
 
-    def adc_cfg(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", env="RT", flg_bjt_r=True, cali = "new weights"):
+    def adc_cfg(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd",  cali = "new weights"):
         #default BJT reference
         woc_f = False
         while(woc_f==False):
             self.init_chk()
-            self.ref_set(flg_bjt_r = flg_bjt_r , env=env)
-#            time.sleep(1)
-#            self.all_ref_vmons( )
+            self.ref_set()
+            time.sleep(1)
+            self.all_ref_vmons( )
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
             #self.Input_buffer_cfg(sdc = "On", db = "Bypass", sha = "Diff", curr_src = "BJT-sd")      
             self.bc.adc_sha_clk_sel(mode = "internal")
@@ -547,13 +669,12 @@ class CMD_ACQ:
                                      adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
             print ("Manual Calibration is done, back to normal")
 
-    def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", env="RT", flg_bjt_r=True): 
+    def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", ): 
         self.init_chk()
-        self.ref_set(flg_bjt_r = flg_bjt_r , env=env)
         time.sleep(1)
         self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)         
+        self.ref_set_find()
         self.bc.adc_sha_clk_sel(mode = "internal")
-
         self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                      adc_sync_mode ="Normal", adc_test_input = "Normal", 
                                      adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
