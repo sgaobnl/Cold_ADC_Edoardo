@@ -166,7 +166,7 @@ end = len(Vj)
 hlin =  Vj[1:] - Vj[:-1]
 
 #Arbitrary bit truncation (otion 1)
-trunc = 20
+trunc = 30
 hlin_trunc = hlin[trunc:-trunc]
 first_bin = first_bin + trunc
 last_bin = last_bin - trunc

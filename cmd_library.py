@@ -252,30 +252,34 @@ class CMD_ACQ:
             print ("Internal BJT voltage references are used")
             self.bc.adc_bias_curr_src("BJT")
             print ("Bias currents come from BJT-based references")
-            if (env == "RT"):
-#for chip soldered on board C2
-#                vrefp_voft = 0xe1#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
-#                vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
-#                vcmi_voft = 0x60#0x5c#0x60#0x50#0x60
-#                vcmo_voft = 0x82
-                vrefp_voft = 0xe5#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
-                vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
-                vcmi_voft = 0x5c#0x60#0x5c#0x60#0x50#0x60
-                vcmo_voft = 0x87#0x82
-                vrefp_ioft = 1
-                vrefn_ioft = 1
-                vcmi_ioft = 1
-                vcmo_ioft = 1
-            else:
-                vrefp_voft = 0xd7#0xdc#0xdc#0xeb#0xf1
-                vrefn_voft = 0x25#0x23#0x26#0x47#0x2b#0x29
-                vcmi_voft = 0x67#0x50#0x64#0x7e#0x64#0x65
-                vcmo_voft = 0x8b#0x78#0x7d#0x9d#0x7c#0x8d
-                vrefp_ioft = 1
-                vrefn_ioft = 1
-                vcmi_ioft = 1
-                vcmo_ioft = 1
-            self.bc.adc_set_vrefs(vrefp_voft, vrefn_voft, vcmo_voft, vcmi_voft )
+            
+            set_flg = True
+            while (set_flg):
+                if (env == "RT"):
+    #for chip soldered on board C2
+    #                vrefp_voft = 0xe1#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
+    #                vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
+    #                vcmi_voft = 0x60#0x5c#0x60#0x50#0x60
+    #                vcmo_voft = 0x82
+                    vrefp_voft = 0xe5#0xe5#0xe0#0xde#0xe4#0xe1#0xf0#0xf8#0xe4
+                    vrefn_voft = 0x27#0x25#0x21#0x26#0x24#0x27#0x08#0x10#0x24
+                    vcmi_voft = 0x5c#0x60#0x5c#0x60#0x50#0x60
+                    vcmo_voft = 0x87#0x82
+                else:
+                    vrefp_voft = 0xda#0xdc#0xdc#0xeb#0xf1
+                    vrefn_voft = 0x24#0x23#0x26#0x47#0x2b#0x29
+                    vcmi_voft = 0x61#0x50#0x64#0x7e#0x64#0x65
+                    vcmo_voft = 0x81#0x78#0x7d#0x9d#0x7c#0x8d
+                self.bc.adc_set_vrefs(vrefp_voft, vrefn_voft, vcmo_voft, vcmi_voft )
+                set_flg = False
+                print ("aaaa")
+#                vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
+#                if vcmi
+    
+            vrefp_ioft = 1
+            vrefn_ioft = 1
+            vcmi_ioft = 1
+            vcmo_ioft = 1
             self.bc.adc_set_ioffset(vrefp_ioft, vrefn_ioft, vcmo_ioft, vcmi_ioft)
             print ("BJT reference is set to pre-calibrated values!")
             ibuff0_15 = 0x99
@@ -519,8 +523,8 @@ class CMD_ACQ:
         while(woc_f==False):
             self.init_chk()
             self.ref_set(flg_bjt_r = flg_bjt_r , env=env)
-            time.sleep(1)
-            self.all_ref_vmons( )
+#            time.sleep(1)
+#            self.all_ref_vmons( )
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
             #self.Input_buffer_cfg(sdc = "On", db = "Bypass", sha = "Diff", curr_src = "BJT-sd")      
             self.bc.adc_sha_clk_sel(mode = "internal")

@@ -56,7 +56,6 @@ def pwr_chk():
     i_bjt = [0,0,0]
     powers = [0,0,0]
     p_bjt = [0,0,0]
-    ps.ps_init()
     #Repeat for number of power cycles
     for i in range(pwr_cycles):
         #Procedure: high master reset -> power off channel 3 -> power off channels 1 and 2 -> power on all channels -> low master reset
@@ -583,6 +582,7 @@ def gen_output_dis():
 #power_on_init()
 init_system_2M()
 init_logs()
+ps.ps_init()
 pwr_chk()
 cq.init_chk()
 cq.uart_chk()

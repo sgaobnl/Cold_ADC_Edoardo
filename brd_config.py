@@ -332,11 +332,11 @@ class Brd_Config:
         
     def adc_set_vrefs(self,vrefp_c,vrefn_c,vcmo_c,vcmi_c):
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefp_ctrl,vrefp_c)
-        time.sleep(1)
+        time.sleep(0.01)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefn_ctrl,vrefn_c)
-        time.sleep(1)
+        time.sleep(0.01)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmo_ctrl,vcmo_c)
-        time.sleep(1)
+        time.sleep(0.01)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmi_ctrl,vcmi_c)
 
     
@@ -366,11 +366,11 @@ class Brd_Config:
     #CMOS reference
     def adc_set_cmos_vrefs(self,vrefp_c,vrefn_c,vcmi_c,vcmo_c):
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefp_ctrl_cmos,vrefp_c)
-        time.sleep(0.02)
+        time.sleep(0.01)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefn_ctrl_cmos,vrefn_c)
-        time.sleep(0.02) 
+        time.sleep(0.01) 
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmi_ctrl_cmos,vcmi_c)
-        time.sleep(0.02) 
+        time.sleep(0.01) 
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmo_ctrl_cmos,vcmo_c)
         #time.sleep(0.01) 
     
