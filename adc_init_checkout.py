@@ -338,6 +338,15 @@ def record_weights(reg, val, flg_bjt_r):
 
 def refs_plot():
     #Create sweep plots of reference settings for both BJT and CMOS. If not monotonic, Status = FAIL and report in Error Log
+    ref_dir = rawdir + "Reference_Check/"
+    if (os.path.exists(ref_dir)):
+        pass
+    else:
+        try:
+            os.makedirs(ref_dir)
+        except OSError:
+            print ("Error to create folder ")
+            sys.exit()          
     vrefp_bjt = []
     vrefn_bjt = []
     vcmi_bjt = []
@@ -357,12 +366,17 @@ def refs_plot():
     time.sleep(5)
     cq.flg_bjt_r = True
     vrefp_bjt, vrefn_bjt, vcmi_bjt, vcmo_bjt, ibuff0_bjt, ibuff1_bjt, ivdac0_bjt, ivdac1_bjt = cq.refs_chk()
+    with open(ref_dir + "BJT_ref_cali.bin", "wb") as fp:  
+        pickle.dump((vrefp_bjt, vrefn_bjt, vcmi_bjt, vcmo_bjt, ibuff0_bjt, ibuff1_bjt, ivdac0_bjt, ivdac1_bjt), fp)
+
     #Collect CMOS references (2.5 V for VDDA2P5)
     ps.set_channel(1,2.5)
     time.sleep(5)
     cq.flg_bjt_r = False
     vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos = cq.refs_chk()
-    
+    with open(ref_dir + "CMOS_ref_cali.bin", "wb") as fp:  
+        pickle.dump((vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos), fp)
+
     #Check sweep plots monotonicity
     if(not monotonic(vrefp_bjt)):
         cq.status("FAIL") 
@@ -406,16 +420,7 @@ def refs_plot():
         
     sweep = len(vrefp_bjt) #18
     
-    ref_dir = rawdir + "Reference_Check/"
-    if (os.path.exists(ref_dir)):
-        pass
-    else:
-        try:
-            os.makedirs(ref_dir)
-        except OSError:
-            print ("Error to create folder ")
-            sys.exit()          
-    
+   
     #Reference sweep plots: BJT
     fig = plt.figure(figsize=(18,8))
     ax1 = plt.subplot2grid((2,4), (0, 0), colspan=1, rowspan=1)

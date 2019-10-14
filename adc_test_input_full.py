@@ -116,12 +116,6 @@ cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary",
                          adc_sync_mode ="Normal", adc_test_input = "ADC_TST_IN", 
                          adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
 
-
-###############################################################################
-######################### DNL/INL Calculation #################################
-
-
-##### Parameters for DNL/INL calculation #####
 Ntot = 2**(22)
 if(env=="RT"):
     amp = "1.4VP"
@@ -129,9 +123,15 @@ if(env=="RT"):
 else:
     amp = "1.35VP"
     Vinput = 1.35
+gen.gen_init()
+
+###############################################################################
+######################### DNL/INL Calculation #################################
+
 
 ###### Take Data #####
-gen.gen_init()
+##### Parameters for DNL/INL calculation #####
+
 
 #gen.gen_set(wave_type="SINE", freq=dnl_freq, amp = amp, dc_oft="0.45", load=gen_load) #sinewave, 50Ohm termination 
 gen.gen_set(wave_type="SINE", freq=dnl_freq, amp = amp, dc_oft="0.90", load=gen_load) #sinewave, 50Ohm termination 
@@ -242,11 +242,28 @@ plt.close()
 
 ##### Parameters for ENOB Calculation #####
 Ntot = 2**(11)
-avgs = 10
-Nsamps = 2**(15)
+avgs = 50
+Nsamps = 2**(17)
 Vfullscale = 1.5 #V
 
 ##### Take Data #####
+def p_delete(f, p, psd, fmin=3900, fmax=4100):
+    if max(f) < fmin:
+        pnew = p
+        psdnew = psd
+    else:
+        if max(f) < fmax :
+            fmax = max(f)
+        f4min = np.where( (f > fmin) )[0][0]
+        f4max = np.where( (f > fmax) )[0][0]
+        p4m = f4min + np.where( p[f4min:f4max] == max(p[f4min:f4max]) )[0][0]
+        pnew = np.append(p[0:p4m], p[p4m-1])
+        pnew = np.append(pnew, p[p4m+1:])
+        psd4m = f4min + np.where( psd[f4min:f4max] == max(psd[f4min:f4max]) )[0][0]
+        psdnew = np.append(psd[0:psd4m], psd[psd4m-1])
+        psdnew = np.append(psdnew, psd[psd4m+1:])
+    return f, pnew, psdnew
+
 #gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.45", load=gen_load)  #sinewave, 50 ohm termination, offset half than real (100 ohm term between P and N)
 gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.90", load=gen_load)  #sinewave, 50 ohm termination, offset half than real (100 ohm term between P and N)
 new_enob = 0
@@ -255,8 +272,8 @@ flag = 0
 #Select best between ten tries. This is not necessary, results are very similar between each other
 while(flag < 10 and ENOB < 10):
     fn = adc_tst_dir + "ADC_TEST_INPUT_ENOB_%s_%s"%(env,refs) + ".bin"
-#    chns = cq.get_adcdata(PktNum=Nsamps )
-    chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
+    chns = cq.get_adcdata(PktNum=Nsamps )
+#    chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
     
     if(mode16bit == False):
         chns = list(np.array(chns)//16)
@@ -266,6 +283,10 @@ while(flag < 10 and ENOB < 10):
     fft_data = list(chain.from_iterable(zip(chns[0][:N_single_chn], chns[1][:N_single_chn],chns[2][:N_single_chn],chns[3][:N_single_chn],chns[4][:N_single_chn],chns[5][:N_single_chn],chns[6][:N_single_chn],chns[7][:N_single_chn])))
     
     f, p, psd = chn_rfft_psd(fft_data, fs = fs, fft_s = Ntot, avg_cycle = avgs)
+    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
+    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
+
     #Truncate DC and Nyquist bins
     trunc = 5
     p = p[trunc:Ntot-trunc]

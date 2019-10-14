@@ -33,7 +33,6 @@
 
 ::python all_ps_on.py
 ::python adc_init_checkout.py      
-::PAUSE
 ::python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4 SYNC10M 
 ::python adc_dnlinl_sinewave.py    BJT 
 ::python adc_enob.py               BJT 
@@ -59,6 +58,6 @@ python adc_test_input_full.py    CMOS  16
 python ADC_TEST_CFG.py           CMOS NoSDC NEW_CALI 4  UNSYNC
 python adc_test_input_full.py    CMOS  4
 python all_ps_off.py
-PAUSE
+::PAUSE
 ::python adc_only_pdf.py           NoSDC    
 ::PAUSE
