@@ -23,6 +23,7 @@ cq = CMD_ACQ()  #command library
 #From ADC configuration file (adc_config.py): temperature and directory name 
 env = config.temperature
 rawdir = config.subdir
+ref_set_dir = rawdir + "/Ref_set/"
 
 #Turn on power supplies and set generator output off (default)
 power_on_init()
@@ -31,6 +32,7 @@ power_on_init()
 #ADC Sample Rate = 16   ->  16 Ms/s sample rate of internal ADC, 2 MHz sample rate of full system ADC (not fully reliable operation)
 #ADC Sample Rate = 4    ->  4 Ms/s sample rate of internal ADC, 500 kHz sample rate of full system ADC (reliable operation)
 flg_bjt_r = (sys.argv[1] == "BJT")              #BJR reference flag
+cq.flg_bjt_r = flg_bjt_r
 adc_sdc_en = (sys.argv[2] == "SDC")             #SDC enable flag
 new_weights = (sys.argv[3] == "NEW_CALI")       #New calibration weights flag 
 adc_sample_rate = sys.argv[4]                   #4 Ms/s internal ADC sample rate flag
@@ -127,12 +129,12 @@ else:
 
 #Complete ADC configuration: input buffer, SDC, SHA, current source, references, weights)
 if (adc_sdc_en):
-    cq.adc_cfg(adc_sdc="On", adc_db="Bypass", adc_sha="Diff", adc_curr_src=adc_curr_src, env=env, flg_bjt_r=flg_bjt_r, cali = cali)
+    cq.adc_cfg(adc_sdc="On", adc_db="Bypass", adc_sha="Diff", adc_curr_src=adc_curr_src,cali = cali, fn = ref_set_dir)
     print("SDC Enabled")
     if(cali == "reload weights"):
         old_wghts()
 else:
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src=adc_curr_src, env=env, flg_bjt_r=flg_bjt_r, cali = cali)
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src=adc_curr_src, cali = cali, fn = ref_set_dir)
     print("SDC Disabled")
     if(cali == "reload weights"):
         old_wghts()

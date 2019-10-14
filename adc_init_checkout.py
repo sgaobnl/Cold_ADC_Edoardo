@@ -43,6 +43,16 @@ else:
         print ("Error to create folder ")
         sys.exit()    
 
+ref_set_dir = rawdir + "/Ref_set/"
+if (os.path.exists(ref_set_dir )):
+    pass
+else:
+    try:
+        os.makedirs(ref_set_dir )
+    except OSError:
+        print ("Error to create folder ")
+        sys.exit()    
+
 def pwr_chk():
     #Power check: record voltages and currents from Keysight E36312A and check if in normal range (not defined yet)
     pwr_cycles = 5
@@ -76,7 +86,8 @@ def pwr_chk():
         time.sleep(5)
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
         time.sleep(1)
-        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", env=env, flg_bjt_r=True)
+        cq.flg_bjt_r = True
+        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=ref_set_dir)
         time.sleep(5)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
@@ -153,7 +164,8 @@ def pwr_chk():
         time.sleep(5)
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
         time.sleep(1)
-        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", env=env, flg_bjt_r=False)
+        cq.flg_bjt_r = False
+        cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=ref_set_dir)
         time.sleep(5)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
@@ -343,11 +355,13 @@ def refs_plot():
     #Collect BJT references (2.8 V for VDDA2P5)
     ps.set_channel(1,2.8)
     time.sleep(5)
-    vrefp_bjt, vrefn_bjt, vcmi_bjt, vcmo_bjt, ibuff0_bjt, ibuff1_bjt, ivdac0_bjt, ivdac1_bjt = cq.refs_chk(flg_bjt_r = True)
+    cq.flg_bjt_r = True
+    vrefp_bjt, vrefn_bjt, vcmi_bjt, vcmo_bjt, ibuff0_bjt, ibuff1_bjt, ivdac0_bjt, ivdac1_bjt = cq.refs_chk()
     #Collect CMOS references (2.5 V for VDDA2P5)
     ps.set_channel(1,2.5)
     time.sleep(5)
-    vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos = cq.refs_chk(flg_bjt_r = False)
+    cq.flg_bjt_r = False
+    vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos = cq.refs_chk()
     
     #Check sweep plots monotonicity
     if(not monotonic(vrefp_bjt)):
@@ -497,14 +511,16 @@ def cali_chk():
     #BJT calibration weights
     ps.set_channel(1,2.8)
     time.sleep(5)
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", env=env, flg_bjt_r=True, cali = "new weights")
+    flg_bjt_r = True
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", cali = "new weights", fn=ref_set_dir)
     reg, weight_bjt = cq.bc.adc_read_weights()
     record_weights(reg, weight_bjt,flg_bjt_r= True)
     
     #CMOS calibration weights
     ps.set_channel(1,2.5)
     time.sleep(5)
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", env=env, flg_bjt_r=False, cali = "new weights")
+    flg_bjt_r = False
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", cali = "new weights", fn=ref_set_dir))
     reg, weight_cmos = cq.bc.adc_read_weights()
     record_weights(reg, weight_cmos,flg_bjt_r=False)
     

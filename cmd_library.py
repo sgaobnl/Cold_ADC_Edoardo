@@ -339,12 +339,11 @@ class CMD_ACQ:
                 else:
                     vcmo_f = True
 
-
                 if vrefp_f and vrefn_f and vcmi_f and vcom_f:
                     print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
                     break
 
-            with open(fn+".bjt", 'wb+') as f:
+            with open(fn + "bjt.bjt", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
                 vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
                 pickle.dump([vref_regs, vref_values] , f)
@@ -390,7 +389,7 @@ class CMD_ACQ:
                 if vrefp_f and vrefn_f and vcmi_f and vcom_f:
                     print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
                     break
-            with open(fn+".cmos", 'wb+') as f:
+            with open(fn + "cmos.cmos", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
                 vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
                 pickle.dump([vref_regs, vref_values] , f)
@@ -408,7 +407,7 @@ class CMD_ACQ:
             self.bc.adc_set_ioffset(vrefp_ioft, vrefn_ioft, vcmo_ioft, vcmi_ioft)
 
             print ("BJT reference is set to pre-calibrated values!")
-            with open(fn+".bjt", 'rb') as f:
+            with open(fn+"bjt.bjt", 'rb') as f:
                 vref_regs, vref_values = pickle.load( f)
             self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft = vref_regs
             self.bc.adc_set_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft )
@@ -639,14 +638,13 @@ class CMD_ACQ:
         self.bc.fe_pulse_param(delay, period, width)
 
 
-    def adc_cfg(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd",  cali = "new weights"):
+    def adc_cfg(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd",  cali = "new weights", fn = ""):
         #default BJT reference
         woc_f = False
         while(woc_f==False):
             self.init_chk()
-            self.ref_set()
+            self.ref_set(fn)
             time.sleep(1)
-            self.all_ref_vmons( )
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
             #self.Input_buffer_cfg(sdc = "On", db = "Bypass", sha = "Diff", curr_src = "BJT-sd")      
             self.bc.adc_sha_clk_sel(mode = "internal")
@@ -669,11 +667,17 @@ class CMD_ACQ:
                                      adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
             print ("Manual Calibration is done, back to normal")
 
-    def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", ): 
+    def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", fn = "" ): 
         self.init_chk()
         time.sleep(1)
         self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)         
-        self.ref_set_find()
+        if (self.flg_bjt_r):
+            fp = fn + "/bjt.bjt"
+        else:
+            fp = fn + "/cmos.cmos"
+        if (not os.path.isfile(fp)):
+            self.ref_set_find(fp)
+        self.ref_set(fp)
         self.bc.adc_sha_clk_sel(mode = "internal")
         self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                      adc_sync_mode ="Normal", adc_test_input = "Normal", 

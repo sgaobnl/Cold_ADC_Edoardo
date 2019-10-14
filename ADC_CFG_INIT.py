@@ -17,9 +17,12 @@ cq = CMD_ACQ()  #command library
 env = config.temperature
 rawdir = config.subdir
 
+
 flg_bjt_r = (sys.argv[1] == "BJT")
+cq.flg_bjt_r = flg_bjt_r
 adc_sdc_en = (sys.argv[2] == "SDC")
 new_weights = (sys.argv[3] == "NEW_CALI")
+ref_set_dir = rawdir + "/Ref_set/"
 
 #### Debug #####
 #env = "RT"
@@ -64,11 +67,11 @@ else:
 print(adc_curr_src)
 
 if (adc_sdc_en):
-    cq.adc_cfg(adc_sdc="On", adc_db="Bypass", adc_sha="Diff", adc_curr_src=adc_curr_src, env=env, flg_bjt_r=flg_bjt_r, cali = cali)
+    cq.adc_cfg(adc_sdc="On", adc_db="Bypass", adc_sha="Diff", adc_curr_src=adc_curr_src, cali = cali, fn=ref_set_dir)
     print("SDC Enabled")
     if(cali == "reload weights"):
         old_wghts()
 else:
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", env=env, flg_bjt_r=flg_bjt_r, cali = cali)
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src=adc_curr_src,,  cali = cali, fn=ref_set_dir)
     if(cali == "reload weights"):
         old_wghts()
