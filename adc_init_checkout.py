@@ -520,7 +520,7 @@ def cali_chk():
     ps.set_channel(1,2.5)
     time.sleep(5)
     flg_bjt_r = False
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", cali = "new weights", fn=ref_set_dir))
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", cali = "new weights", fn=ref_set_dir)
     reg, weight_cmos = cq.bc.adc_read_weights()
     record_weights(reg, weight_cmos,flg_bjt_r=False)
     

@@ -11,6 +11,7 @@ import time
 import numpy as np
 from raw_data_decoder import raw_conv
 import pickle
+import os
 
 #from udp import UDP 
 #from adc_i2c_uart import COLDADC_tool
@@ -280,15 +281,16 @@ class CMD_ACQ:
             ibuff_cmos[:] = [x / avgs for x in ibuff_cmos]
             return (vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos)
 
-    def find_ref(self, vreg, vp, vn, vread, vset  ):
+    def find_ref(self, vreg, vp, vn, vm, vread, vset  ):
         if (vp and vn):
             pass
         else:
-            if vread > vset + 0.01:
+            if (vread > vset + 0.01):
                 vreg -=1
                 vp = True
-            elif vread <  vset = 0.01:
+            elif (vread <  vset - 0.01):
                 vreg += 1
+                vp = vp
                 vn = True
             else:
                 vreg = vreg
@@ -297,6 +299,7 @@ class CMD_ACQ:
    
     def ref_set_find(self,  fn = "" ):
         if (self.flg_bjt_r):
+
             self.bc.adc_ref_vol_src("BJT")
             print ("Internal BJT voltage references are used")
             self.bc.adc_bias_curr_src("BJT")
@@ -315,32 +318,53 @@ class CMD_ACQ:
             print ("BJT current source for input buffer and VDAC is set to default values!")
 
             print ("BJT reference is being calibrated")
-            self.vrefp_voft = 0xe5
-            self.vrefn_voft = 0x27
-            self.vcmi_voft = 0x5c
-            self.vcmo_voft = 0x87
+            self.vp_vcmi = False
+            self.vn_vcmi = False
+            self.vm_vcmi = False
+            self.vp_vcmo = False
+            self.vn_vcmo = False
+            self.vm_vcmo = False
+            self.vp_vrefp = False
+            self.vn_vrefp = False
+            self.vm_vrefp = False
+            self.vp_vrefn = False
+            self.vn_vrefn = False
+            self.vm_vrefn = False
+            self.vrefp_voft = 0xe8
+            self.vrefn_voft = 0x20
+            self.vcmi_voft = 0x60
+            self.vcmo_voft = 0x88
             while (True):
+                vrefp_f = False
+                vrefn_f = False
+                vcmi_f = False
+                vcmo_f = False
+
                 self.bc.adc_set_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft )
                 vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
                 if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
-                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, vread=vrefp, vset=1.95 )
+                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = \
+                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.95 )
                 else:
                     vrefp_f = True
                 if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
-                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, vread=vrefn, vset=0.45 )
+                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = \
+                            self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn, vread=vrefn, vset=0.45 )
                 else:
                     vrefn_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
-                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, vread=vcmi, vset=0.90 )
+                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = \
+                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.90 )
                 else:
                     vcmi_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
-                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, vread=vcmo, vset=0.90 )
+                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = \
+                            self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo, vread=vcmo, vset=1.20 )
                 else:
                     vcmo_f = True
 
-                if vrefp_f and vrefn_f and vcmi_f and vcom_f:
-                    print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
+                print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmo))
+                if vrefp_f and vrefn_f and vcmi_f and vcmo_f:
                     break
 
             with open(fn + "bjt.bjt", 'wb+') as f:
@@ -362,32 +386,52 @@ class CMD_ACQ:
             print ("CMOS bias source for the input buffer is set!") 
 
             print ("CMOS reference is being calibrated !") 
-            self.vrefp_voft = 0xd4
-            self.vrefn_voft = 0x2b
-            self.vcmi_voft = 0x5d
-            self.vcmo_voft = 0x7f
+            self.vp_vcmi = False
+            self.vn_vcmi = False
+            self.vm_vcmi = False
+            self.vp_vcmo = False
+            self.vn_vcmo = False
+            self.vm_vcmo = False
+            self.vp_vrefp = False
+            self.vn_vrefp = False
+            self.vm_vrefp = False
+            self.vp_vrefn = False
+            self.vn_vrefn = False
+            self.vm_vrefn = False
+            self.vrefp_voft = 0xd8
+            self.vrefn_voft = 0x28
+            self.vcmi_voft = 0x60
+            self.vcmo_voft = 0x80
             while (True):
                 self.bc.adc_set_cmos_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmi_voft, self.vcmo_voft)
                 vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
+                vrefp_f = False
+                vrefn_f = False
+                vcmi_f = False
+                vcmo_f = False
                 if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
-                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, vread=vrefp, vset=1.95 )
+                    self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = \
+                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.95 )
                 else:
                     vrefp_f = True
                 if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
-                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, vread=vrefn, vset=0.45 )
+                    self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn = \
+                            self.find_ref(self.vrefn_voft, self.vp_vrefn, self.vn_vrefn, self.vm_vrefn, vread=vrefn, vset=0.45 )
                 else:
                     vrefn_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
-                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, vread=vcmi, vset=0.90 )
+                    self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = \
+                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.90 )
                 else:
                     vcmi_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
-                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, vread=vcmo, vset=0.90 )
+                    self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo = \
+                            self.find_ref(self.vcmo_voft, self.vp_vcmo, self.vn_vcmo, self.vm_vcmo, vread=vcmo, vset=1.20 )
                 else:
                     vcmo_f = True
 
-                if vrefp_f and vrefn_f and vcmi_f and vcom_f:
-                    print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmi)
+                print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmo))
+                if vrefp_f and vrefn_f and vcmi_f and vcmo_f:
                     break
             with open(fn + "cmos.cmos", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
@@ -426,10 +470,10 @@ class CMD_ACQ:
             self.bc.adc_bias_curr_src("CMOS_INTR")
 
             print ("CMOS reference is set to pre-calibrated values!") 
-            with open(fn+".cmos", 'rb') as f:
+            with open(fn+"cmos.cmos", 'rb') as f:
                 vref_regs, vref_values = pickle.load( f)
             self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft = vref_regs
-            self.bc.adc_set_cmos_vrefs(vrefp_voft, vrefn_voft, vcmi_voft, vcmo_voft)
+            self.bc.adc_set_cmos_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmi_voft, self.vcmo_voft)
 
             print ("Set vt-reference current to 45uA (correction to default value)!") 
             iref_trim = 45
@@ -676,8 +720,8 @@ class CMD_ACQ:
         else:
             fp = fn + "/cmos.cmos"
         if (not os.path.isfile(fp)):
-            self.ref_set_find(fp)
-        self.ref_set(fp)
+            self.ref_set_find(fn)
+        self.ref_set(fn)
         self.bc.adc_sha_clk_sel(mode = "internal")
         self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                      adc_sync_mode ="Normal", adc_test_input = "Normal", 
