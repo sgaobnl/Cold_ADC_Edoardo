@@ -68,7 +68,7 @@ def chn_rfft_psd(chndata, fs = 2000000.0, fft_s = 2000, avg_cycle = 50):
 
 ##### Parameters for ENOB Calculation #####
 Ntot = 2**(11)
-avgs = 10
+avgs = 50
 Nsamps = (avgs+2)*Ntot
 fs = 500 #kHz
 fin = 36.1328 #kHz
@@ -105,12 +105,11 @@ gen.gen_set(wave_type="SINE", freq="14404.3", amp=amp, dc_oft="0.9", load=gen_lo
 #Save Data (comment if not necesssary)
 fn = enob_dir + "ENOB_%s_%s"%(env,refs) + ".bin"
 print (fn)
-chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
+#chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
+chns = cq.get_adcdata(PktNum=Nsamps, saveraw=True, fn=fn )
 
 if(mode16bit == False):
     chns = list(np.array(chns)//16)
-
-
 
 ##### FFT and PSD #####
 enob_all = []

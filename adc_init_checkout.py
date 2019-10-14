@@ -25,7 +25,6 @@ import matplotlib.pyplot as plt
 from keysight_e36312a_ps import PS_CTL
 from stanford_ds360_gen import GEN_CTL
 from rigol_dp832_ps import RIGOL_PS_CTL
-from all_ps_on import power_on_init
 gen = GEN_CTL() #signal generator library
 ps = PS_CTL()   #power supply library
 fm_ps = RIGOL_PS_CTL() 
@@ -600,7 +599,6 @@ def gen_output_dis():
     gen.gen_set(out = "dis")
 
 
-#power_on_init()
 init_system_2M()
 init_logs()
 ps.ps_init()

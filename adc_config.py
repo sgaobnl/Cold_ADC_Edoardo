@@ -5,7 +5,7 @@ Created on Fri Sep 20 16:40:03 2019
 @author: Edoardo Lopriore
 """
 
-temperature = "RT"
+temperature = "LN"
 sampling_frequency = "500kHz"
 board_ID = "S2"
 chip_ID = "00067"

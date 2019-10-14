@@ -272,7 +272,7 @@ flag = 0
 #Select best between ten tries. This is not necessary, results are very similar between each other
 while(flag < 10 and ENOB < 10):
     fn = adc_tst_dir + "ADC_TEST_INPUT_ENOB_%s_%s"%(env,refs) + ".bin"
-    chns = cq.get_adcdata(PktNum=Nsamps )
+    chns = cq.get_adcdata(PktNum=Nsamps , saveraw=True, fn=fn )
 #    chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
     
     if(mode16bit == False):

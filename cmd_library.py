@@ -330,7 +330,7 @@ class CMD_ACQ:
             self.vp_vrefn = False
             self.vn_vrefn = False
             self.vm_vrefn = False
-            self.vrefp_voft = 0xe8
+            self.vrefp_voft = 0xe0
             self.vrefn_voft = 0x20
             self.vcmi_voft = 0x60
             self.vcmo_voft = 0x88
@@ -344,7 +344,7 @@ class CMD_ACQ:
                 vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
                 if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
                     self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = \
-                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.95 )
+                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.96 )
                 else:
                     vrefp_f = True
                 if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
@@ -354,7 +354,7 @@ class CMD_ACQ:
                     vrefn_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
                     self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = \
-                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.90 )
+                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.92 )
                 else:
                     vcmi_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
@@ -365,6 +365,7 @@ class CMD_ACQ:
 
                 print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmo))
                 if vrefp_f and vrefn_f and vcmi_f and vcmo_f:
+                    print (hex(self.vcmo_voft), hex(self.vp_vcmo), hex(self.vn_vcmo), hex(self.vm_vcmo))
                     break
 
             with open(fn + "bjt.bjt", 'wb+') as f:
@@ -399,7 +400,7 @@ class CMD_ACQ:
             self.vn_vrefn = False
             self.vm_vrefn = False
             self.vrefp_voft = 0xd8
-            self.vrefn_voft = 0x28
+            self.vrefn_voft = 0x20
             self.vcmi_voft = 0x60
             self.vcmo_voft = 0x80
             while (True):
@@ -411,7 +412,7 @@ class CMD_ACQ:
                 vcmo_f = False
                 if not ( (self.vp_vrefp and self.vn_vrefp ) or self.vm_vrefp ):
                     self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp = \
-                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.95 )
+                            self.find_ref(self.vrefp_voft, self.vp_vrefp, self.vn_vrefp, self.vm_vrefp, vread=vrefp, vset=1.96 )
                 else:
                     vrefp_f = True
                 if not ( (self.vp_vrefn and self.vn_vrefn ) or self.vm_vrefn ):
@@ -421,7 +422,7 @@ class CMD_ACQ:
                     vrefn_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmi ):
                     self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi = \
-                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.90 )
+                            self.find_ref(self.vcmi_voft, self.vp_vcmi, self.vn_vcmi, self.vm_vcmi, vread=vcmi, vset=0.91 )
                 else:
                     vcmi_f = True
                 if not ( (self.vp_vcmi and self.vn_vcmi ) or self.vm_vcmo ):
@@ -432,6 +433,7 @@ class CMD_ACQ:
 
                 print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmo))
                 if vrefp_f and vrefn_f and vcmi_f and vcmo_f:
+                    print (hex(self.vcmo_voft), hex(self.vp_vcmo), hex(self.vn_vcmo), hex(self.vm_vcmo))
                     break
             with open(fn + "cmos.cmos", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
