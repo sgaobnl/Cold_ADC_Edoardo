@@ -22,6 +22,7 @@ from scipy.stats import norm
 from itertools import chain
 from cmd_library import CMD_ACQ
 from stanford_ds360_gen import GEN_CTL
+import pickle
 cq = CMD_ACQ()  #command library
 gen = GEN_CTL() #signal generator library
 
@@ -117,12 +118,15 @@ cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary",
                          adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
 
 Ntot = 2**(22)
-if(env=="RT"):
-    amp = "1.4VP"
-    Vinput = 1.4
-else:
-    amp = "1.35VP"
-    Vinput = 1.35
+amp = "1.3VP"
+Vinput = 1.3
+
+#if(env=="RT"):
+#    amp = "1.4VP"
+#    Vinput = 1.4
+#else:
+#    amp = "1.35VP"
+#    Vinput = 1.35
 gen.gen_init()
 
 ###############################################################################
@@ -244,7 +248,16 @@ plt.close()
 Ntot = 2**(11)
 avgs = 50
 Nsamps = 2**(17)
-Vfullscale = 1.5 #V
+
+if(refs == "BJT"):
+    with open (rawdir + "/ref_set/bjt.bjt", 'rb') as f:
+        tmp = pickle.load(f)
+else:
+    with open (rawdir + "/ref_set/cmos.cmos", 'rb') as f:
+        tmp = pickle.load(f)
+Vfullscale = tmp[1][3] - tmp[1][4]
+
+#Vfullscale = 1.5 #V
 
 ##### Take Data #####
 def p_delete(f, p, psd, fmin=3900, fmax=4100):
@@ -254,8 +267,8 @@ def p_delete(f, p, psd, fmin=3900, fmax=4100):
     else:
         if max(f) < fmax :
             fmax = max(f)
-        f4min = np.where( (f > fmin) )[0][0]
-        f4max = np.where( (f > fmax) )[0][0]
+        f4min = np.where( (f >= fmin) )[0][0]
+        f4max = np.where( (f >= fmax) )[0][0]
         p4m = f4min + np.where( p[f4min:f4max] == max(p[f4min:f4max]) )[0][0]
         pnew = np.append(p[0:p4m], p[p4m-1])
         pnew = np.append(pnew, p[p4m+1:])
@@ -283,9 +296,9 @@ while(flag < 10 and ENOB < 10):
     fft_data = list(chain.from_iterable(zip(chns[0][:N_single_chn], chns[1][:N_single_chn],chns[2][:N_single_chn],chns[3][:N_single_chn],chns[4][:N_single_chn],chns[5][:N_single_chn],chns[6][:N_single_chn],chns[7][:N_single_chn])))
     
     f, p, psd = chn_rfft_psd(fft_data, fs = fs, fft_s = Ntot, avg_cycle = avgs)
-    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
-    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
-    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
+#    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
+#    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+#    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
 
     #Truncate DC and Nyquist bins
     trunc = 5

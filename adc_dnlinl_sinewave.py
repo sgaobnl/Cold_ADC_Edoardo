@@ -43,12 +43,13 @@ else:
 
 ##### Parameters for DNL/INL calculation #####
 Ntot = 2**(22)
-if(env=="RT"):
-    amp = "1.4VP"
-else:
-    #IR drop at cold -> use lower swing to avoid overflowing
-    amp = "1.35VP"
-
+amp = "1.3VP"
+#if(env=="RT"):
+#    amp = "1.4VP"
+#else:
+#    #IR drop at cold -> use lower swing to avoid overflowing
+#    amp = "1.35VP"
+#
 
 ##### Data Directory #####
 lin_dir = rawdir + "Linearity/"

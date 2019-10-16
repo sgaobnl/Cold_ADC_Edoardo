@@ -23,9 +23,9 @@ def power_on_init():
     fm_ps.ps_init()
     fm_ps.off([1,2,3])
     fm_ps.set_channel(channel=1, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
-    fm_ps.set_channel(channel=2, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
-    fm_ps.set_channel(channel=3, voltage = 5,  c_limit = 1)
-    fm_ps.on([1,2,3])
+    fm_ps.set_channel(channel=2, voltage = 5.0,  v_limit = 5.2, c_limit = 1)
+#    fm_ps.set_channel(channel=3, voltage = 5,  c_limit = 1)
+    fm_ps.on([1,2])
     time.sleep(3)
     #FPGA reset
     print ("FM Reset")

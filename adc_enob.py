@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 from scipy.fftpack import fft,rfft,ifft,fftn
 from cmd_library import CMD_ACQ
 from stanford_ds360_gen import GEN_CTL
+import pickle
 cq = CMD_ACQ()  #command library
 gen = GEN_CTL() #signal generator library
 plt.rcParams.update({'font.size': 18})
@@ -29,7 +30,7 @@ plt.rcParams.update({'font.size': 18})
 env = config.temperature
 rawdir = config.subdir
 
-#Input option from batch file: temperature
+#Input option from batch file: BJT or CMOS reference
 refs = sys.argv[1]
 
 #50 ohm terminations on socket mezzanine boards
@@ -71,15 +72,26 @@ Ntot = 2**(11)
 avgs = 50
 Nsamps = (avgs+2)*Ntot
 fs = 500 #kHz
-fin = 36.1328 #kHz
-Vfullscale = 1.5 #V
-avgs = 10
-if(env=="RT"):
-    amp = "1.4VP"
-    Vinput = 1.4
+
+if(refs == "BJT"):
+    with open (rawdir + "/ref_set/bjt.bjt", 'rb') as f:
+        tmp = pickle.load(f)
 else:
-    amp = "1.35VP"
-    Vinput = 1.35
+    with open (rawdir + "/ref_set/cmos.cmos", 'rb') as f:
+        tmp = pickle.load(f)
+Vfullscale = tmp[1][3] - tmp[1][4]
+#Vfullscale = 1.5 #V
+avgs = 10
+
+amp = "1.3VP"
+Vinput = 1.3
+
+#if(env=="RT"):
+#    amp = "1.4VP"
+#    Vinput = 1.4
+#else:
+#    amp = "1.35VP"
+#    Vinput = 1.35
 
 
 ##### Data Directory #####

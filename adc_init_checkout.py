@@ -24,10 +24,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keysight_e36312a_ps import PS_CTL
 from stanford_ds360_gen import GEN_CTL
-from rigol_dp832_ps import RIGOL_PS_CTL
 gen = GEN_CTL() #signal generator library
 ps = PS_CTL()   #power supply library
-fm_ps = RIGOL_PS_CTL() 
 cq = CMD_ACQ()  #command library
 
 #From ADC configuration file (adc_config.py): temperature and directory name. Create directory if not present
