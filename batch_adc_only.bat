@@ -30,9 +30,15 @@
 :: Connect Single Ended SMA cable from DS360 positive output to the board.
 :: Connect Clock Synchronization cables from FPGA mezzanine jumpers to DS360 10 MHz input.
 :: Turn on DS360 Stanford Generator.
-
-::python all_ps_on.py
-::python adc_init_checkout.py      
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
+PAUSE
+python all_ps_on.py
+python adc_init_checkout.py      
 python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4 SYNC10M 
 python adc_dnlinl_sinewave.py    BJT 
 python adc_enob.py               BJT 
@@ -43,6 +49,14 @@ python adc_dnlinl_sinewave.py    CMOS
 python adc_enob.py               CMOS 
 python adc_dc_noise.py           CMOS 200
 python adc_dc_noise.py           CMOS 900
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+PAUSE
+echo 'Confirm the cables were switch!'
 PAUSE
 ::::
 :::::: Internal ADC Tests (Differential ADC Test Input):
@@ -60,4 +74,11 @@ python adc_test_input_full.py    CMOS  4
 python all_ps_off.py
 PAUSE
 python adc_only_pdf.py           NoSDC    
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+echo 'Switch the cables'
+PAUSE
+echo 'Confirm the cables were switch!'
 PAUSE
