@@ -172,7 +172,7 @@ points_dbfs = np.linspace(0,fs/2, len(psd_dbfs))
 plt.plot(points_dbfs, psd_dbfs)
 plt.title('Stanford Research Generator \n %s.'%tmp + ' ADC Test Input. ' + 'Frequency = %0.4f'%fin + ' kHz . Bins = %d'%Ntot)
 plt.xlabel('Frequency [MHz]')
-plt.ylabel('Power Density Amplitude [dBFS]')
+plt.ylabel('Amplitude [dBFS]')
 plt.annotate('SFDR = %0.2f dB \nSINAD = %0.2f dB \nENOB = %0.2f bits' %(np.around(SFDR, decimals=2), np.around(SINAD, decimals=2), np.around(ENOB, decimals = 2)), 
              xy=(0.65,0.8),xycoords='axes fraction', textcoords='offset points', size=14, bbox=dict(boxstyle="round", fc=(1.0, 1.0, 1.0), ec="none"))
 

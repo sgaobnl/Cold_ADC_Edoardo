@@ -99,8 +99,8 @@ for chnno in range(16):
     plt.plot(gaussian_x, gaussian_y, color='r')
     
     plt.title('%s Environment. %s Reference. %s mV Baseline. Channel %d'%(env, refs, baseline,chnno), size = 18)
-    plt.xlabel('Normalized Counts', size = 18)
-    plt.ylabel('ADC Output / LSB', size = 18)
+    plt.ylabel('Normalized Counts', size = 18)
+    plt.xlabel('ADC Output / LSB', size = 18)
     plt.legend(loc="upper right", fontsize = 22)
     plt.savefig(single_ch_dir + "Hist_NoiseTest_%s_%s_%s_ch%d"%(env,refs,baseline,chnno) + ".png" )
     plt.close()

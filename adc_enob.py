@@ -167,7 +167,7 @@ for chnno in range(16):
     plt.plot(points_dbfs, psd_dbfs)
     plt.title('%s Environment. %s Reference. Channel %d'%(env, refs,chnno))
     plt.xlabel('Frequency [kHz]')
-    plt.ylabel('Power Density Amplitude [dBFS]')
+    plt.ylabel('Amplitude [dBFS]')
     plt.annotate('SFDR = %0.2f dB \nSINAD = %0.2f dB \nENOB = %0.2f bits' %(np.around(SFDR, decimals=2), np.around(SINAD, decimals=2), np.around(ENOB, decimals = 2)), 
                  xy=(0.6,0.8),xycoords='axes fraction', textcoords='offset points', size=22, bbox=dict(boxstyle="round", fc=(1.0, 1.0, 1.0), ec="none"))
     
