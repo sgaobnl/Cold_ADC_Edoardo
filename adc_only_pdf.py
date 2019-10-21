@@ -80,12 +80,12 @@ pdf.cell(30, 5, 'Status: %s'%status, 0, 1)
 pdf.ln(5)
 
 # Generate Power Check table
-pdf.cell(30, 5, 'Power Consumption (BJT Reference):', 0, 1)
+pdf.cell(30, 5, 'Power Consumption (CMOS Reference):', 0, 1)
 # Colon width is 1/4 of effective page width
 epw = pdf.w - 2*pdf.l_margin
 col_width = epw/4
 pdf.set_font('Times', '', 10) 
-with open(rawdir + 'Power_Check/Power_Check_BJT.csv', "r") as csvfile:
+with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
 print(data)
 pdf.ln(5)
@@ -110,9 +110,9 @@ if(status == "PASS"):
     pdf.ln(2*th)
 
     col_width = epw/9
-    pdf.cell(epw, 10, 'ADC0 (BJT Reference)', 0, 1, align = 'C')
+    pdf.cell(epw, 10, 'ADC0 (CMOS Reference)', 0, 1, align = 'C')
     pdf.ln(0.5*th)
-    with open(rawdir + 'Channel_Characterization_BJT_ADC0.csv', "r") as csvfile:
+    with open(rawdir + 'Channel_Characterization_CMOS_ADC0.csv', "r") as csvfile:
         data = list(csv.reader(csvfile))
     print(data)
 
@@ -122,9 +122,9 @@ if(status == "PASS"):
         pdf.ln(2*th)
     pdf.ln(2*th)
 
-    pdf.cell(epw, 10, 'ADC1 (BJT Reference)', 0, 1, align = 'C')
+    pdf.cell(epw, 10, 'ADC1 (CMOS Reference)', 0, 1, align = 'C')
     pdf.ln(0.5*th)
-    with open(rawdir + 'Channel_Characterization_BJT_ADC1.csv', "r") as csvfile:
+    with open(rawdir + 'Channel_Characterization_CMOS_ADC1.csv', "r") as csvfile:
         data = list(csv.reader(csvfile))
     print(data)
 
@@ -281,11 +281,12 @@ pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 1
 
 
 
-if(env == "RT"):
-    #amp = "1.40 V" 
-    amp = "1.35 V"
-else:
-    amp = "1.35 V"
+#if(env == "RT"):
+#    #amp = "1.40 V" 
+#    amp = "1.35 V"
+#else:
+#    amp = "1.35 V"
+amp = "1.30 V"
 
 ##### Single channel Carachterization (static and dynamic behavior) #####
 for chnno in range(16):
@@ -317,52 +318,52 @@ for chnno in range(16):
 
 
 
-##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
-
-pdf.cell(0,5,'',0,1)
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-
-pdf.cell(0,73,'',0,1)
-pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-
-pdf.cell(0,85,'',0,1)
-pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
-
-
-##### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
-
-pdf.cell(0,5,'',0,1)
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-
-pdf.cell(0,73,'',0,1)
-pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-
-pdf.cell(0,85,'',0,1)
-pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
-
-
+###### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
+#pdf.add_page()
+#pdf.set_font('Times', '', 20)
+#pdf.cell(85)
+#pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
+#
+#pdf.cell(0,5,'',0,1)
+#pdf.set_font('Times', '', 12)
+#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+#
+#pdf.cell(0,73,'',0,1)
+#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+#
+#pdf.cell(0,85,'',0,1)
+#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+#
+#
+###### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
+#pdf.add_page()
+#pdf.set_font('Times', '', 20)
+#pdf.cell(85)
+#pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
+#
+#pdf.cell(0,5,'',0,1)
+#pdf.set_font('Times', '', 12)
+#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+#
+#pdf.cell(0,73,'',0,1)
+#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+#
+#pdf.cell(0,85,'',0,1)
+#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+#
+#
 filename = rawdir + "Board" + board + "_Chip" + chip + "_"  + env + ".pdf"
 pdf.output(filename, 'F')
 pdf.close()

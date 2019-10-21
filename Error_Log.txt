@@ -1,1 +1,0 @@
-CMOS Reference: Power channel 3 (VDDIO) out of range(0.048736 W) 

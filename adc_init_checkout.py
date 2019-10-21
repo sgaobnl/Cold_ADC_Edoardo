@@ -172,29 +172,29 @@ def pwr_chk():
         p_cmos = [x + y for x, y in zip(p_cmos, powers)]
 #        print("Power Channel 1 = %f1 W \nPower Channel 2 = %f2 W \nPower Channel 3 = %f W"%(powers[0],powers[1],powers[2]))
         if(env=="RT"):
-            if(powers[0] > 0.90 or powers[0] < 0.20):
+            if(powers[0] > 1.00 or powers[0] < 0.20):
                 flg[0] = 1
             else:
                 flg[0] = 0
-            if(powers[1] > 0.030 or powers[1] < 0.005):
+            if(powers[1] > 0.130 or powers[1] < 0.001):
                 flg[1] = 1
             else:
                 flg[1] = 0
-            if(powers[2] > 0.060 or powers[2] < 0.010):
+            if(powers[2] > 0.160 or powers[2] < 0.001):
                 flg[2] = 1
             else:
                 flg[2] = 0
         
         else:
-            if(powers[0] > 0.90 or powers[0] < 0.20):
+            if(powers[0] > 1.00 or powers[0] < 0.20):
                 flg[0] = 1
             else:
                 flg[0] = 0
-            if(powers[1] > 0.020 or powers[1] < 0.002):
+            if(powers[1] > 0.120 or powers[1] < 0.001):
                 flg[1] = 1
             else:
                 flg[1] = 0
-            if(powers[2] > 0.030 or powers[2] < 0.004):
+            if(powers[2] > 0.130 or powers[2] < 0.001):
                 flg[2] = 1
             else:
                 flg[2] = 0
