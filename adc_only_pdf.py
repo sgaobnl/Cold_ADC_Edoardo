@@ -318,52 +318,52 @@ for chnno in range(16):
 
 
 
-###### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
-#
-#pdf.cell(0,5,'',0,1)
-#pdf.set_font('Times', '', 12)
-#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-#
-#pdf.cell(0,73,'',0,1)
-#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-#
-#pdf.cell(0,85,'',0,1)
-#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
-#
-#
-###### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
-#
-#pdf.cell(0,5,'',0,1)
-#pdf.set_font('Times', '', 12)
-#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-#
-#pdf.cell(0,73,'',0,1)
-#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-#
-#pdf.cell(0,85,'',0,1)
-#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
-#
-#
+##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
+
+pdf.cell(0,5,'',0,1)
+pdf.set_font('Times', '', 12)
+pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+
+pdf.cell(0,73,'',0,1)
+pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+
+pdf.cell(0,85,'',0,1)
+pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+
+
+##### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
+
+pdf.cell(0,5,'',0,1)
+pdf.set_font('Times', '', 12)
+pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+
+pdf.cell(0,73,'',0,1)
+pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+
+pdf.cell(0,85,'',0,1)
+pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+
+
 filename = rawdir + "Board" + board + "_Chip" + chip + "_"  + env + ".pdf"
 pdf.output(filename, 'F')
 pdf.close()
