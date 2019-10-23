@@ -607,6 +607,7 @@ cq.i2c_chk()
 cq.pattern_chk()
 cq.regs_chk()
 refs_plot()
+init_system_500k()
 cali_chk()
 init_chns_table()
 

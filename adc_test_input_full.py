@@ -308,7 +308,7 @@ while(flag < 10 and ENOB < 10):
     p_aux = np.copy(p)
     noise = min(p)
     mx_arr = np.where(p_aux == max(p_aux))
-    mx = mx_arr[0]
+    mx = mx_arr[0][0]
     signal_pwr = max(p_aux)
     span = 3
     p_aux[mx] = noise

@@ -16,7 +16,6 @@ import time
 import sys
 import pickle
 from keysight_e36312a_ps import PS_CTL
-#from all_ps_on import power_on_init
 ps = PS_CTL()   #power supply library
 cq = CMD_ACQ()  #command library
 
@@ -24,9 +23,6 @@ cq = CMD_ACQ()  #command library
 env = config.temperature
 rawdir = config.subdir
 ref_set_dir = rawdir + "/Ref_set/"
-
-#Turn on power supplies and set generator output off (default)
-#power_on_init()
 
 #Input options from batch file: reference, SDC enable, weights selection, system sample rate 
 #ADC Sample Rate = 16   ->  16 Ms/s sample rate of internal ADC, 2 MHz sample rate of full system ADC (not fully reliable operation)
@@ -104,13 +100,13 @@ ps.ps_init()
 if(flg_bjt_r):
     adc_curr_src = "BJT-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
-#    ps.off([1,2,3])
-#    time.sleep(5)
-#    ps.set_channel(1,2.8)
-#    ps.set_channel(2,2.1)
-#    ps.set_channel(3,2.25)
-#    ps.on([1,2,3])
+    ps.off([1,2,3])
+    time.sleep(5)
     ps.set_channel(1,2.8)
+    ps.set_channel(2,2.1)
+    ps.set_channel(3,2.25)
+    ps.on([1,2,3])
+####    ps.set_channel(1,2.8)
 
     time.sleep(5)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
@@ -119,13 +115,13 @@ if(flg_bjt_r):
 else:
     adc_curr_src = "CMOS-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
-#    ps.off([1,2,3])
-#    time.sleep(5)
-#    ps.set_channel(1,2.5)
-#    ps.set_channel(2,2.1)
-#    ps.set_channel(3,2.25)
-#    ps.on([1,2,3])
+    ps.off([1,2,3])
+    time.sleep(5)
     ps.set_channel(1,2.5)
+    ps.set_channel(2,2.1)
+    ps.set_channel(3,2.25)
+    ps.on([1,2,3])
+####    ps.set_channel(1,2.5)
     time.sleep(5)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
     time.sleep(10)
