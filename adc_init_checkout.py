@@ -262,7 +262,7 @@ def non_decreasing(L):
 def monotonic(L):
     return non_increasing(L) or non_decreasing(L)
 
-def record_weights(reg, val, flg_bjt_r):  
+def record_weights(reg, val, flg_bjt_r, smps = "4M"):  
     #Saves calibration weights for BJT and CMOS references in two CSV files
     
     #CSV field names 
@@ -285,7 +285,7 @@ def record_weights(reg, val, flg_bjt_r):
             sys.exit() 
     
     #Pickle raw weights
-    with open(wght_dir + "Raw_Weights_%s.bin"%refs, "wb") as fp:  
+    with open(wght_dir + "Raw_Weights_%s_%s.bin"%(refs, smps), "wb") as fp:  
       pickle.dump((reg,val), fp)
      
     print(val)
@@ -295,25 +295,25 @@ def record_weights(reg, val, flg_bjt_r):
         internal_adc = "ADC0"
         wght_nr = "W0"
         stage = (reg[i]-0) / 2
-        wght_val = (val[i+1]<<8)|(val[i])           
+        wght_val = hex((val[i+1]<<8)|(val[i]))        
         rows.append([internal_adc, wght_nr, stage, wght_val])      
     for i in range(14,28,2):
         internal_adc = "ADC0"
         wght_nr = "W2"
         stage = (reg[i]-0x20) / 2
-        wght_val = (val[i+1]<<8)|(val[i]) 
+        wght_val = hex((val[i+1]<<8)|(val[i]) )
         rows.append([internal_adc, wght_nr, stage, wght_val])      
     for i in range(28,42,2):
         internal_adc = "ADC1"
         wght_nr = "W0"
         stage = (reg[i]-0x40) / 2
-        wght_val = (val[i+1]<<8)|(val[i])
+        wght_val = hex((val[i+1]<<8)|(val[i]))
         rows.append([internal_adc, wght_nr, stage, wght_val])      
     for i in range(42,56,2):
         internal_adc = "ADC1"
         wght_nr = "W2"
         stage = (reg[i]-0x60) / 2
-        wght_val = (val[i+1]<<8)|(val[i])
+        wght_val = hex((val[i+1]<<8)|(val[i]))
         rows.append([internal_adc, wght_nr, stage, wght_val])     
 
     record_dir = rawdir + "Weights_Records/"
@@ -325,7 +325,7 @@ def record_weights(reg, val, flg_bjt_r):
         except OSError:
             print ("Error to create folder ")
             sys.exit()
-    filename = record_dir + "Weights_Record_%s.csv"%refs          
+    filename = record_dir + "Weights_Record_%s_%s.csv"%(refs, smps)          
 
     with open(filename, 'w', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
@@ -509,14 +509,14 @@ def refs_plot():
     plt.close()   
     print("CMOS Reference sweep plots successfully created")
 
-def cali_chk():
+def cali_chk(smps = "4M"):
     #BJT calibration weights
     ps.set_channel(1,2.8)
     time.sleep(5)
     flg_bjt_r = True
     cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", cali = "new weights", fn=ref_set_dir)
     reg, weight_bjt = cq.bc.adc_read_weights()
-    record_weights(reg, weight_bjt,flg_bjt_r= True)
+    record_weights(reg, weight_bjt, flg_bjt_r= True, smps = smps)
     
     #CMOS calibration weights
     ps.set_channel(1,2.5)
@@ -524,7 +524,7 @@ def cali_chk():
     flg_bjt_r = False
     cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", cali = "new weights", fn=ref_set_dir)
     reg, weight_cmos = cq.bc.adc_read_weights()
-    record_weights(reg, weight_cmos,flg_bjt_r=False)
+    record_weights(reg, weight_cmos, flg_bjt_r=False, smps = smps)
     
 
 def init_chns_table():
@@ -607,7 +607,9 @@ cq.i2c_chk()
 cq.pattern_chk()
 cq.regs_chk()
 refs_plot()
+init_system_2M()
+cali_chk(smps = "16M")
 init_system_500k()
-cali_chk()
+cali_chk(smps = "4M")
 init_chns_table()
 

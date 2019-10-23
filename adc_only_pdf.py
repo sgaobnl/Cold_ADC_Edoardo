@@ -196,14 +196,14 @@ pdf.image(rawdir + 'Reference_Check/Reference_CMOS.png', 11, 222, 186)
 pdf.add_page()
 pdf.set_font('Times', '', 20)
 pdf.cell(85)
-pdf.cell(30, 5, 'Calibration Weights', 0, 1, 'C')
+pdf.cell(30, 5, 'Calibration Weights (4 Ms/s)', 0, 1, 'C')
 
 table_w = pdf.w/2 - (4/3)*pdf.l_margin
 pdf.set_font('Times', '', 12)
 pdf.set_y(25)
 pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
 col_width = table_w/4
-with open(rawdir + 'Weights_Records/Weights_Record_BJT.csv', "r") as csvfile:
+with open(rawdir + 'Weights_Records/Weights_Record_BJT_4M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
 print(data)
 
@@ -221,7 +221,7 @@ pdf.cell(table_w + (2/3)*pdf.l_margin)
 pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
 table_w = pdf.w/2 - (4/3)*pdf.l_margin
 col_width = table_w/4
-with open(rawdir + 'Weights_Records/Weights_Record_CMOS.csv', "r") as csvfile:
+with open(rawdir + 'Weights_Records/Weights_Record_CMOS_4M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
 print(data)
 
@@ -233,6 +233,46 @@ for row in data:
         pdf.cell(col_width, 2*th, str(datum), border=1)
     pdf.ln(2*th)    
 
+# Generate Calibration Weights table
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'Calibration Weights (16 Ms/s)', 0, 1, 'C')
+
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_BJT_16M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)
+
+
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w + (2/3)*pdf.l_margin)
+pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_CMOS_16M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    pdf.cell(table_w + (2/3)*pdf.l_margin)
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)    
 
 #Generate Noise Study pages
 pdf.add_page()

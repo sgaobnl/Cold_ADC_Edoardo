@@ -32,7 +32,7 @@ cq.flg_bjt_r = flg_bjt_r
 adc_sdc_en = (sys.argv[2] == "SDC")             #SDC enable flag
 new_weights = (sys.argv[3] == "NEW_CALI")       #New calibration weights flag 
 adc_sample_rate = sys.argv[4]                   #4 Ms/s internal ADC sample rate flag
-clk10m_syn_en = (sys.argv[5] == "SYNC10M" ) #10MHz sync out 
+#clk10m_syn_en = (sys.argv[5] == "SYNC10M" ) #10MHz sync out 
 
 
 def old_wghts():
@@ -43,10 +43,16 @@ def old_wghts():
         refs = "BJT"
     else:
         refs = "CMOS"
+    if(adc_sample_rate == "4"):
+        smps = "4M"
+        print ("smps = %s"%smps)
+    else:
+        smps = "16M"
+
     val = []
     reg = []
     wght_dir = rawdir + "Weights_Records/"
-    with open(wght_dir + "Raw_Weights_%s.bin"%refs, "rb") as fp:   #unpickle raw weights
+    with open(wght_dir + "Raw_Weights_%s_%s.bin"%(refs,smps), "rb") as fp:   #unpickle raw weights
       reg,val = pickle.load(fp)
     print(val)
     print(reg)
