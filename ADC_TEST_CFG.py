@@ -61,7 +61,7 @@ def old_wghts():
     #Configure normal input operation
     cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                              adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                             adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
+                             adc_output_sel = "cali_ADCdata")
     print("Old weights reloaded!")
 
 
@@ -108,7 +108,7 @@ if(flg_bjt_r):
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     ps.off([1,2,3])
     time.sleep(5)
-    ps.set_channel(1,2.8)
+    ps.set_channel(1,2.75)
     ps.set_channel(2,2.1)
     ps.set_channel(3,2.25)
     ps.on([1,2,3])
@@ -123,7 +123,7 @@ else:
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     ps.off([1,2,3])
     time.sleep(5)
-    ps.set_channel(1,2.5)
+    ps.set_channel(1,2.75)
     ps.set_channel(2,2.1)
     ps.set_channel(3,2.25)
     ps.on([1,2,3])

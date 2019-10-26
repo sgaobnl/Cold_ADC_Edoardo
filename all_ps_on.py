@@ -39,7 +39,7 @@ def power_on_init():
     print ("ADC is powered on")
     adc_ps.ps_init()
     adc_ps.off([1,2,3])
-    adc_ps.set_channel(1,2.5)
+    adc_ps.set_channel(1,2.75)
     adc_ps.set_channel(2,2.1)
     adc_ps.set_channel(3,2.25)
     adc_ps.on([1,2,3])

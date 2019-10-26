@@ -61,6 +61,8 @@ class CMD_ACQ:
         self.vrefn_voft = 0x27
         self.vcmi_voft = 0x5c
         self.vcmo_voft = 0x87
+        self.iref_trim = 45
+        self.adc_bias_uA = 50
 
 #        if (env == "RT"):
 ##for chip soldered on board C2
@@ -248,8 +250,7 @@ class CMD_ACQ:
             vcmi_cmos = []
             vcmo_cmos = []
             ibuff_cmos = []
-            iref_trim = 45
-            self.bc.adc_set_cmos_iref_trim(iref_trim)
+            self.bc.adc_set_cmos_iref_trim(self.iref_trim)
             for j in range (avgs):
                 if (j==0):
                     for i in range (0,256,15):
@@ -378,8 +379,7 @@ class CMD_ACQ:
             print ("CMOS voltage references are used")
             self.bc.adc_bias_curr_src("CMOS_INTR")
             print ("Bias currents come from CMOS-basedreference with internal R")  
-            iref_trim = 45
-            self.bc.adc_set_cmos_iref_trim(iref_trim)
+            self.bc.adc_set_cmos_iref_trim(self.iref_trim)
             print ("Set vt-reference current to 45uA (correction to default value)!") 
             ibuff0_cmos = 0x27
             ibuff1_cmos = 0x27
@@ -478,8 +478,8 @@ class CMD_ACQ:
             self.bc.adc_set_cmos_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmi_voft, self.vcmo_voft)
 
             print ("Set vt-reference current to 45uA (correction to default value)!") 
-            iref_trim = 45
-            self.bc.adc_set_cmos_iref_trim(iref_trim)
+
+            self.bc.adc_set_cmos_iref_trim(self.iref_trim)
 
             print ("CMOS bias source for the input buffer is set!") 
             ibuff0_cmos = 0x27
@@ -564,13 +564,13 @@ class CMD_ACQ:
 
     def Converter_Config(self, edge_sel = "Normal", out_format = "two-complement", 
                          adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                         adc_output_sel = "cali_ADCdata", adc_bias_uA = 50):
+                         adc_output_sel = "cali_ADCdata"):
         self.bc.adc_edge_select(mode = edge_sel)
         self.bc.adc_outputformat(oformat = out_format)
         self.bc.adc_sync_mode(mode = adc_sync_mode)
         self.bc.adc_test_input(mode = adc_test_input)
         self.bc.adc_output_select(option = adc_output_sel)
-        self.bc.adc_set_adc_bias(val = adc_bias_uA)
+        self.bc.adc_set_adc_bias(val = self.adc_bias_uA)
         
     def Input_buffer_cfg( self, sdc = "Bypass", db = "Bypass", sha = "Single-ended", curr_src = "BJT-sd"):        
         self.bc.adc_sdc_select(sdc)
@@ -691,18 +691,19 @@ class CMD_ACQ:
             self.init_chk()
             self.ref_set(fn)
             time.sleep(1)
+
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
             #self.Input_buffer_cfg(sdc = "On", db = "Bypass", sha = "Diff", curr_src = "BJT-sd")      
-            self.bc.adc_sha_clk_sel(mode = "internal")
+#            self.bc.adc_sha_clk_sel(mode = "internal")
             self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                  adc_sync_mode ="Analog pattern", adc_test_input = "Normal", 
-                                 adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
+                                 adc_output_sel = "cali_ADCdata")
             self.bc.udp.clr_server_buf()
             woc_f = self.chn_order_sync()
         
         self.Converter_Config(edge_sel = "Normal", out_format = "two-complement", 
                                  adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                                 adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
+                                 adc_output_sel = "cali_ADCdata")
         
         if(cali == "new weights"):
             print ("Manual Calibration starting, wait...")
@@ -710,7 +711,7 @@ class CMD_ACQ:
             self.bc.adc_autocali(avr=20000,saveflag="undef")
             self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                      adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                                     adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
+                                     adc_output_sel = "cali_ADCdata")
             print ("Manual Calibration is done, back to normal")
 
     def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", fn = "" ): 
@@ -721,13 +722,16 @@ class CMD_ACQ:
             fp = fn + "/bjt.bjt"
         else:
             fp = fn + "/cmos.cmos"
+            print ("Powerdone BJT reference")
+            self.bc.adc_write_reg(22, 0xff)
+            self.bc.adc_write_reg(23, 0x7f)            
         if (not os.path.isfile(fp)):
             self.ref_set_find(fn)
         self.ref_set(fn)
-        self.bc.adc_sha_clk_sel(mode = "internal")
+#        self.bc.adc_sha_clk_sel(mode = "internal")
         self.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
                                      adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                                     adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
+                                     adc_output_sel = "cali_ADCdata")
             
 #cq = CMD_ACQ() 
 #cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", env="RT", flg_bjt_r=True)

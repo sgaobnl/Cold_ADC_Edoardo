@@ -1,10 +1,2 @@
 Power consumption (BJT reference): PASS 
 Power consumption (CMOS reference): PASS 
-UART Read/Write: PASS 
-I2C Read/Write: PASS 
-Configuration pattern: PASS 
-Default registers: PASS 
-Bandgap reference: PASS 
-WARNING: Channel 0 RMS Noise (0.346242) is out of expected range 
-WARNING: Channel 1 RMS Noise (0.386365) is out of expected range 
-WARNING: Channel 2 RMS Noise (0.395709) is out of expected range 
