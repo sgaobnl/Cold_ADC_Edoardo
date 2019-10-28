@@ -558,6 +558,7 @@ def init_chns_table():
     csvfile.close()     
 
     #CMOS reference
+    fields = ['Quantity', 'Channel 0', 'Channel 1', 'Channel 2', 'Channel 3','Channel 4', 'Channel 5', 'Channel 6', 'Channel 7']  
     filename = rawdir + "Channel_Characterization_CMOS_ADC0.csv"         
     with open(filename, 'w', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 

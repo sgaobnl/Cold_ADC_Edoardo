@@ -183,9 +183,9 @@ if(misscodes > 0):
 if(refs == "BJT"):
     file_table = rawdir + "Channel_Characterization_BJT_ADC0.csv"
     dnl_adc0 = dnl_all[0:8]
-    dnl_adc0.insert(0,"Worst DNL")      
+    dnl_adc0.insert(0,"Worst DNL (%s Ms/s)"%adc_sample_rate)      
     inl_adc0 = inl_all[0:8]
-    inl_adc0.insert(0,"Worst INL")     
+    inl_adc0.insert(0,"Worst INL (%s Ms/s)"%adc_sample_rate)     
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(dnl_adc0)    
@@ -194,9 +194,9 @@ if(refs == "BJT"):
     
     file_table = rawdir + "Channel_Characterization_BJT_ADC1.csv"
     dnl_adc1 = dnl_all[8:16]
-    dnl_adc1.insert(0,"Worst DNL")
+    dnl_adc1.insert(0,"Worst DNL (%s Ms/s)"%adc_sample_rate)
     inl_adc1 = inl_all[8:16]
-    inl_adc1.insert(0,"Worst INL")             
+    inl_adc1.insert(0,"Worst INL (%s Ms/s)"%adc_sample_rate)             
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(dnl_adc1)    
@@ -206,9 +206,9 @@ if(refs == "BJT"):
 if(refs == "CMOS"):
     file_table = rawdir + "Channel_Characterization_CMOS_ADC0.csv"
     dnl_adc0 = dnl_all[0:8]
-    dnl_adc0.insert(0,"Worst DNL")      
+    dnl_adc0.insert(0,"Worst DNL (%s Ms/s)"%adc_sample_rate)      
     inl_adc0 = inl_all[0:8]
-    inl_adc0.insert(0,"Worst INL")     
+    inl_adc0.insert(0,"Worst INL (%s Ms/s)"%adc_sample_rate)     
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(dnl_adc0)    
@@ -217,9 +217,9 @@ if(refs == "CMOS"):
     
     file_table = rawdir + "Channel_Characterization_CMOS_ADC1.csv"
     dnl_adc1 = dnl_all[8:16]
-    dnl_adc1.insert(0,"Worst DNL")
+    dnl_adc1.insert(0,"Worst DNL (%s Ms/s)"%adc_sample_rate)
     inl_adc1 = inl_all[8:16]
-    inl_adc1.insert(0,"Worst INL")             
+    inl_adc1.insert(0,"Worst INL (%s Ms/s)"%adc_sample_rate)             
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(dnl_adc1)    

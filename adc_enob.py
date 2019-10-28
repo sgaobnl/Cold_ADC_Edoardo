@@ -188,7 +188,7 @@ if(refs == "BJT"):
     file_table = rawdir + "Channel_Characterization_BJT_ADC0.csv"
     enob_adc0 = enob_all[0:8]
     enob_adc0 = [round(x,3) for x in enob_adc0]
-    enob_adc0.insert(0,"ENOB")         
+    enob_adc0.insert(0,"ENOB (%s Ms/s)" % adc_sample_rate)         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(enob_adc0)    
@@ -197,7 +197,7 @@ if(refs == "BJT"):
     file_table = rawdir + "Channel_Characterization_BJT_ADC1.csv"
     enob_adc1 = enob_all[8:16]
     enob_adc1 = [round(x,3) for x in enob_adc1]
-    enob_adc1.insert(0,"ENOB")         
+    enob_adc1.insert(0,"ENOB (%s Ms/s)" % adc_sample_rate)         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(enob_adc1)    
@@ -207,7 +207,7 @@ if(refs == "CMOS"):
     file_table = rawdir + "Channel_Characterization_CMOS_ADC0.csv"
     enob_adc0 = enob_all[0:8]
     enob_adc0 = [round(x,3) for x in enob_adc0]
-    enob_adc0.insert(0,"ENOB")         
+    enob_adc0.insert(0,"ENOB (%s Ms/s)" % adc_sample_rate)         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(enob_adc0)    
@@ -216,7 +216,7 @@ if(refs == "CMOS"):
     file_table = rawdir + "Channel_Characterization_CMOS_ADC1.csv"
     enob_adc1 = enob_all[8:16]
     enob_adc1 = [round(x,3) for x in enob_adc1]
-    enob_adc1.insert(0,"ENOB")         
+    enob_adc1.insert(0,"ENOB (%s Ms/s)" % adc_sample_rate)         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(enob_adc1)    

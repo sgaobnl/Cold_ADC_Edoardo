@@ -112,7 +112,7 @@ if(refs == "BJT"):
     file_table = rawdir + "Channel_Characterization_BJT_ADC0.csv"
     rms_adc0 = rms[0:8]
     rms_adc0 = [round(x,3) for x in rms_adc0] 
-    rms_adc0.insert(0,"Noise (%s)"%baseline)         
+    rms_adc0.insert(0,"Noise (%s, %s Ms/s)"%(baseline, adc_sample_rate))         
     # writing to csv file 
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
@@ -122,7 +122,7 @@ if(refs == "BJT"):
     file_table = rawdir + "Channel_Characterization_BJT_ADC1.csv"
     rms_adc1 = rms[8:16]
     rms_adc1 = [round(x,3) for x in rms_adc1]
-    rms_adc1.insert(0,"Noise (%s)"%baseline)         
+    rms_adc1.insert(0,"Noise (%s, %s Ms/s)"%(baseline, adc_sample_rate))         
     # writing to csv file 
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
@@ -133,7 +133,7 @@ if(refs == "CMOS"):
     file_table = rawdir + "Channel_Characterization_CMOS_ADC0.csv"
     rms_adc0 = rms[0:8]
     rms_adc0 = [round(x,3) for x in rms_adc0] 
-    rms_adc0.insert(0,"Noise (%s)"%baseline)         
+    rms_adc0.insert(0,"Noise (%s, %s Ms/s)"%(baseline, adc_sample_rate))         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(rms_adc0)    
@@ -142,7 +142,7 @@ if(refs == "CMOS"):
     file_table = rawdir + "Channel_Characterization_CMOS_ADC1.csv"
     rms_adc1 = rms[8:16]
     rms_adc1 = [round(x,3) for x in rms_adc1]
-    rms_adc1.insert(0,"Noise (%s)"%baseline)         
+    rms_adc1.insert(0,"Noise (%s, %s Ms/s)"%(baseline, adc_sample_rate))         
     with open(file_table, 'a', newline='') as csvfile: 
         csvwriter = csv.writer(csvfile) 
         csvwriter.writerow(rms_adc1)    
