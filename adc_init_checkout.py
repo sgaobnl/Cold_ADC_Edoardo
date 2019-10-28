@@ -571,21 +571,18 @@ def init_chns_table():
         csvwriter.writerow(fields)    
     csvfile.close()                   
 
-def init_system_500k():
+def sample_rate_set(sr = 16):
     #Sampling frequency initialized: 500 kHz
-    #0x05      ->  FPGA register for system frequency control
-    #write 1   ->  SHA sampling frequency 500 kHz (4 Ms/s ADC)
-    #write 0   ->  SHA sampling frequency 2 MHz (nominal, 16 Ms/s ADC)
-    cq.bc.udp.write_reg_checked(0x05,1)
-    print("Sampling frequency set: 500 kHz")
-
-def init_system_2M():
-    #Sampling frequency initialized: 500 kHz
-    #0x05      ->  FPGA register for system frequency control
-    #write 1   ->  SHA sampling frequency 500 kHz (4 Ms/s ADC)
-    #write 0   ->  SHA sampling frequency 2 MHz (nominal, 16 Ms/s ADC)
-    cq.bc.udp.write_reg_checked(0x05,0)
-    print("Sampling frequency set: 2 MHz")
+    if(sr == 4):
+        print("Sampling frequency set: 500 kHz (ADC sampling at 4 Ms/s)")
+        tmp = cq.bc.udp.read_reg(0x05)
+        tmp = cq.bc.udp.read_reg(0x05)
+        cq.bc.udp.write_reg_checked(0x05,tmp|0x01)
+    else:
+        tmp = cq.bc.udp.read_reg(0x05)
+        tmp = cq.bc.udp.read_reg(0x05)
+        cq.bc.udp.write_reg_checked(0x05,tmp&0xFFFFFFFE)
+        print("Sampling frequency set: 2 MHz (ADC sampling at 16 Ms/s)")
 
 def init_logs():
     #Initialize logs
@@ -697,7 +694,7 @@ def Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1):
     with open(pwr_meas_dir + "Power_meas.bin", "wb") as fp:  
       pickle.dump(pwr_info, fp)
 
-init_system_2M()
+sample_rate_set(sr = 16)
 init_logs()
 ps.ps_init()
 #Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1)
@@ -708,9 +705,9 @@ cq.i2c_chk()
 cq.pattern_chk()
 cq.regs_chk()
 refs_plot()
-init_system_2M()
+sample_rate_set(sr = 16)
 cali_chk(smps = "16M")
-init_system_500k()
+sample_rate_set(sr = 4)
 cali_chk(smps = "4M")
 init_chns_table()
-
+sample_rate_set(sr = 16)

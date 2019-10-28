@@ -46,7 +46,6 @@ def old_wghts():
         refs = "CMOS"
     if(adc_sample_rate == "4"):
         smps = "4M"
-        print ("smps = %s"%smps)
     else:
         smps = "16M"
 
@@ -66,7 +65,6 @@ def old_wghts():
     print("Old weights reloaded!")
 
 
-
 if(new_weights):
     cali = "new weights"
 else:
@@ -82,8 +80,6 @@ if(adc_sample_rate == "4"):
     tmp = cq.bc.udp.read_reg(0x05)
     tmp = cq.bc.udp.read_reg(0x05)
     cq.bc.udp.write_reg_checked(0x05,tmp|0x01)
-
-      
 else:
     tmp = cq.bc.udp.read_reg(0x05)
     tmp = cq.bc.udp.read_reg(0x05)
