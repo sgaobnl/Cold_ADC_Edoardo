@@ -29,6 +29,7 @@ rawdir = config.subdir
 
 refs = sys.argv[1]
 baseline = sys.argv[2]
+adc_sample_rate = sys.argv[3]
 
 gen_load = "50"
 
@@ -52,7 +53,7 @@ else:
     gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.9", load=gen_load)
     #sinewave, Hi-Z termination
 
-noise_dir = rawdir + "DC_Noise/"
+noise_dir = rawdir + "DC_Noise_%sMSPS/"%adc_sample_rate
 if (os.path.exists(noise_dir)):
     pass
 else:

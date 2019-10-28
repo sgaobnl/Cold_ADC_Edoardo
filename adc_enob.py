@@ -32,6 +32,16 @@ rawdir = config.subdir
 
 #Input option from batch file: BJT or CMOS reference
 refs = sys.argv[1]
+adc_sample_rate = sys.argv[2]
+
+if(adc_sample_rate == "4"):
+    freq = "14404.3"
+    fs = 500 #kHz
+else:
+    #freq = "81054.7"
+    #freq = "28320.3"
+    freq = "12695.3"
+    fs = 2000 #kHz
 
 #50 ohm terminations on socket mezzanine boards
 gen_load = "50"
@@ -71,7 +81,6 @@ def chn_rfft_psd(chndata, fs = 2000000.0, fft_s = 2000, avg_cycle = 50):
 Ntot = 2**(11)
 avgs = 50
 Nsamps = (avgs+2)*Ntot
-fs = 500 #kHz
 
 if(refs == "BJT"):
     with open (rawdir + "/ref_set/bjt.bjt", 'rb') as f:
@@ -95,7 +104,7 @@ Vinput = 1.3
 
 
 ##### Data Directory #####
-enob_dir = rawdir + "Dynamic_Behavior/"
+enob_dir = rawdir + "Dynamic_Behavior_%sMSPS/"%adc_sample_rate
 if (os.path.exists(enob_dir)):
     pass
 else:
@@ -107,12 +116,8 @@ else:
 
 
 ##### Take Data #####
-print ("Enabling ADC External Input...")
-cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
-                         adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                         adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
 gen.gen_init()
-gen.gen_set(wave_type="SINE", freq="14404.3", amp=amp, dc_oft="0.9", load=gen_load)  #sinewave, Hi-Z termination
+gen.gen_set(wave_type="SINE", freq=freq, amp=amp, dc_oft="0.9", load=gen_load)  #sinewave, Hi-Z termination
 
 #Save Data (comment if not necesssary)
 fn = enob_dir + "ENOB_%s_%s"%(env,refs) + ".bin"

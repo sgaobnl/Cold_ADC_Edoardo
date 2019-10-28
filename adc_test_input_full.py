@@ -111,12 +111,6 @@ else:
         sys.exit()
 
 
-##### Enable ADC Test Input #####
-print ("Enabling ADC Test Input...")
-cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
-                         adc_sync_mode ="Normal", adc_test_input = "ADC_TST_IN", 
-                         adc_output_sel = "cali_ADCdata")
-
 Ntot = 2**(22)
 amp = "1.3VP"
 Vinput = 1.3

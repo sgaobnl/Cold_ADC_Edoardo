@@ -32,6 +32,7 @@ cq.flg_bjt_r = flg_bjt_r
 adc_sdc_en = (sys.argv[2] == "SDC")             #SDC enable flag
 new_weights = (sys.argv[3] == "NEW_CALI")       #New calibration weights flag 
 adc_sample_rate = sys.argv[4]                   #4 Ms/s internal ADC sample rate flag
+adc_direct_en = (sys.argv[5] == "ADCinput")                 #4 Ms/s internal ADC sample rate flag
 #clk10m_syn_en = (sys.argv[5] == "SYNC10M" ) #10MHz sync out 
 
 
@@ -143,3 +144,14 @@ else:
     print("SDC Disabled")
     if(cali == "reload weights"):
         old_wghts()
+
+if (adc_direct_en):
+    print ("Enabling ADC Direct Input...")
+    cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
+                             adc_sync_mode ="Normal", adc_test_input = "ADC_TST_IN", 
+                             adc_output_sel = "cali_ADCdata")
+else:
+    print ("Enabling SHA Input...")
+    cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
+                             adc_sync_mode ="Normal", adc_test_input = "Normal", 
+                             adc_output_sel = "cali_ADCdata")

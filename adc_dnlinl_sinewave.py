@@ -30,6 +30,16 @@ rawdir = config.subdir
 
 #Input option from batch file: temperature
 refs = sys.argv[1]
+adc_sample_rate = sys.argv[2]
+
+if(adc_sample_rate == "4"):
+    freq = "14404.3"
+    fs = 500 #kHz
+else:
+    #freq = "81054.7"
+    #freq = "28320.3"
+    freq = "12695.3"
+    fs = 2000 #kHz
 
 #50 ohm terminations on socket mezzanine boards
 gen_load = "50"  
@@ -52,7 +62,7 @@ amp = "1.3VP"
 #
 
 ##### Data Directory #####
-lin_dir = rawdir + "Linearity/"
+lin_dir = rawdir + "Linearity_%sMSPS/"%adc_sample_rate
 if (os.path.exists(lin_dir)):
     pass
 else:
@@ -63,13 +73,8 @@ else:
         sys.exit()
 
 
-##### Take Data #####
-print ("Enabling ADC External Input...")
-cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", 
-                         adc_sync_mode ="Normal", adc_test_input = "Normal", 
-                         adc_output_sel = "cali_ADCdata", adc_bias_uA = 50)
 gen.gen_init()
-gen.gen_set(wave_type="SINE", freq="14404.3", amp = amp, dc_oft="0.9", load=gen_load) #sinewave, Hi-Z termination 
+gen.gen_set(wave_type="SINE", freq=freq, amp = amp, dc_oft="0.9", load=gen_load) #sinewave, Hi-Z termination 
 #Save Data (>1G of data, comment if not required)
 fn = lin_dir + "DNL_INL_sinewave_%s"%refs + ".bin"
 print (fn)

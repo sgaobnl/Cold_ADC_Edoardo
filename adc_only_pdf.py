@@ -30,7 +30,7 @@ env = config.temperature
 rawdir = config.subdir
 board = config.board_ID
 chip = config.chip_ID
-samp_freq = config.sampling_frequency
+#samp_freq = config.sampling_frequency
 
 adc_sdc_en = (sys.argv[1] == "SDC")
 
@@ -73,7 +73,7 @@ pdf.cell(100)
 pdf.cell(30, 5, 'Temperature: %s'%env, 0, 1)
 pdf.cell(30, 5, 'Chip ID: %s'%chip, 0, 0)
 pdf.cell(100)
-pdf.cell(30, 5, 'Frequency: %s'%samp_freq, 0, 1)
+#pdf.cell(30, 5, 'Frequency: %s'%samp_freq, 0, 1)
 pdf.cell(30, 5, 'Board ID: %s'%board, 0, 0)
 pdf.cell(100)
 pdf.cell(30, 5, 'Status: %s'%status, 0, 1)
@@ -151,7 +151,7 @@ pdf.cell(30, 5, 'Initialization Checkout', 0, 1, 'C')
 pdf.set_font('Times', '', 12)
 
 # Generate Power Check table
-pdf.cell(30, 5, 'Power Check - BJT:', 0, 1)
+pdf.cell(30, 5, 'Power Check - BJT (2 MSPS/CH):', 0, 1)
 # Colon width is 1/4 of effective page width
 epw = pdf.w - 2*pdf.l_margin
 col_width = epw/4
@@ -172,7 +172,7 @@ for row in data:
 # Linebreak of 2 lines
 pdf.ln(2*th)
 
-pdf.cell(30, 5, 'Power Check - CMOS:', 0, 1)
+pdf.cell(30, 5, 'Power Check - CMOS (2 MSPS/CH):', 0, 1)
 pdf.ln(0.5*th)
 with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
@@ -274,89 +274,82 @@ for row in data:
         pdf.cell(col_width, 2*th, str(datum), border=1)
     pdf.ln(2*th)    
 
-#Generate Noise Study pages
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'Noise Study', 0, 1, 'C')
-
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 20, 'Baseline 200 mV, BJT Reference:', 0, 1)
-pdf.image(rawdir + 'DC_Noise/' + 'Hist_NoiseTest_%s_BJT_200.png'%env, 14, 30, 180)
-pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_BJT_200.png'%env, 30, 180, 160)
-
-
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'Noise Study', 0, 1, 'C')
-
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 20, 'Baseline 900 mV, BJT Reference:', 0, 1)
-pdf.image(rawdir + 'DC_Noise/' + 'Hist_NoiseTest_%s_BJT_900.png'%env, 14, 30, 180)
-pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_BJT_900.png'%env, 30, 180, 160)
-
-
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'Noise Study', 0, 1, 'C')
-
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 20, 'Baseline 200 mV, CMOS Reference:', 0, 1)
-pdf.image(rawdir + 'DC_Noise/' + 'Hist_NoiseTest_%s_CMOS_200.png'%env, 14, 30, 180)
-pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_CMOS_200.png'%env, 30, 180, 160)
-
-
-pdf.add_page()
-pdf.set_font('Times', '', 20)
-pdf.cell(85)
-pdf.cell(30, 5, 'Noise Study', 0, 1, 'C')
-
-pdf.set_font('Times', '', 12)
-pdf.cell(30, 20, 'Baseline 900 mV, CMOS Reference:', 0, 1)
-pdf.image(rawdir + 'DC_Noise/' + 'Hist_NoiseTest_%s_CMOS_900.png'%env, 14, 30, 180)
-pdf.image(rawdir + 'DC_Noise/' + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 160)
-
-
-
-
-#if(env == "RT"):
-#    #amp = "1.40 V" 
-#    amp = "1.35 V"
-#else:
-#    amp = "1.35 V"
-amp = "1.30 V"
-
-##### Single channel Carachterization (static and dynamic behavior) #####
-for chnno in range(16):
+for sample_rate in ["4MSPS", "16MSPS"]:
+    #Generate Noise Study pages
     pdf.add_page()
     pdf.set_font('Times', '', 20)
     pdf.cell(85)
-    if(adc_sdc_en):
-        pdf.cell(30, 3, 'Channel %d (SE + SDC + SHA + ADC)'%chnno, 0, 1, 'C')
-    else:
-        pdf.cell(30, 3, 'Channel %d (SE + SHA + ADC)'%chnno, 0, 1, 'C')
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 200 mV, BJT Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_200.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
     
     pdf.set_font('Times', '', 12)
-    pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-    pdf.image(rawdir + 'DC_Noise/Single_Channel/' + 'Hist_NoiseTest_%s_BJT_200_ch%d.png'%(env,chnno), 9, 20, 100)
-    pdf.image(rawdir + 'DC_Noise/Single_Channel/' + 'Hist_NoiseTest_%s_BJT_900_ch%d.png'%(env,chnno), 9, 65, 100)
-    pdf.image(rawdir + 'DC_Noise/Single_Channel/' + 'Hist_NoiseTest_%s_CMOS_200_ch%d.png'%(env,chnno), 107, 20, 100)
-    pdf.image(rawdir + 'DC_Noise/Single_Channel/' + 'Hist_NoiseTest_%s_CMOS_900_ch%d.png'%(env,chnno), 107, 65, 100)
-
-    pdf.cell(0,95,'',0,1)
-
-    pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-    pdf.image(rawdir + 'Linearity/' + 'DNL_INL_%s_BJT_ch%d.png'%(env,chnno), 8, 120, 95)
-    pdf.image(rawdir + 'Linearity/' + 'DNL_INL_%s_CMOS_ch%d.png'%(env,chnno), 108,120,95)
-
-    pdf.cell(0,78,'',0,1)
-    pdf.cell(30, 5, 'Dynamic Behavior (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-    pdf.image(rawdir + 'Dynamic_Behavior/' + 'ENOB_%s_BJT_ch%d.png'%(env,chnno), 8, 203, 94)
-    pdf.image(rawdir + 'Dynamic_Behavior/' + 'ENOB_%s_CMOS_ch%d.png'%(env,chnno), 108,203,94)
-
-
+    pdf.cell(30, 20, 'Baseline 900 mV, BJT Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_900.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 200 mV, CMOS Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_200.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 900 mV, CMOS Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 160)
+    
+    #if(env == "RT"):
+    #    #amp = "1.40 V" 
+    #    amp = "1.35 V"
+    #else:
+    #    amp = "1.35 V"
+    amp = "1.30 V"
+    
+    ##### Single channel Carachterization (static and dynamic behavior) #####
+    for chnno in range(16):
+        pdf.add_page()
+        pdf.set_font('Times', '', 20)
+        pdf.cell(85)
+        if(adc_sdc_en):
+            pdf.cell(30, 3, 'Channel %d (SE + SDC + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
+        else:
+            pdf.cell(30, 3, 'Channel %d (SE + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
+        
+        pdf.set_font('Times', '', 12)
+        pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200_ch%d.png'%(env,chnno), 9, 20, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900_ch%d.png'%(env,chnno), 9, 65, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200_ch%d.png'%(env,chnno), 107, 20, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900_ch%d.png'%(env,chnno), 107, 65, 100)
+    
+        pdf.cell(0,95,'',0,1)
+    
+        pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_BJT_ch%d.png'%(env,chnno), 8, 120, 95)
+        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_CMOS_ch%d.png'%(env,chnno), 108,120,95)
+    
+        pdf.cell(0,78,'',0,1)
+        pdf.cell(30, 5, 'Dynamic Behavior (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_BJT_ch%d.png'%(env,chnno), 8, 203, 94)
+        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_CMOS_ch%d.png'%(env,chnno), 108,203,94)
+    
 
 ##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
 pdf.add_page()

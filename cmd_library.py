@@ -61,7 +61,7 @@ class CMD_ACQ:
         self.vrefn_voft = 0x27
         self.vcmi_voft = 0x5c
         self.vcmo_voft = 0x87
-        self.iref_trim = 45
+        self.iref_trim = 40
         self.adc_bias_uA = 50
 
 #        if (env == "RT"):
