@@ -164,7 +164,7 @@ def pwr_chk():
             time.sleep(5)
         else:
             time.sleep(30)
-        ps.set_channel(1,2.75)
+        ps.set_channel(1,2.55)
         ps.set_channel(2,2.1)
         ps.set_channel(3,2.25)
         ps.on([1,2,3])
@@ -377,7 +377,7 @@ def refs_plot():
         pickle.dump((vrefp_bjt, vrefn_bjt, vcmi_bjt, vcmo_bjt, ibuff0_bjt, ibuff1_bjt, ivdac0_bjt, ivdac1_bjt), fp)
 
     #Collect CMOS references (2.5 V for VDDA2P5)
-    ps.set_channel(1,2.75)
+    ps.set_channel(1,2.55)
     time.sleep(5)
     cq.flg_bjt_r = False
     vrefp_cmos, vrefn_cmos, vcmi_cmos, vcmo_cmos, ibuff_cmos = cq.refs_chk()
@@ -529,7 +529,7 @@ def cali_chk(smps = "4M"):
     record_weights(reg, weight_bjt, flg_bjt_r= True, smps = smps)
     
     #CMOS calibration weights
-    ps.set_channel(1,2.75)
+    ps.set_channel(1,2.55)
     time.sleep(5)
     flg_bjt_r = False
     cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", cali = "new weights", fn=ref_set_dir)

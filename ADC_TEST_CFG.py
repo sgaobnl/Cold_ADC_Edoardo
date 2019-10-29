@@ -120,7 +120,7 @@ else:
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     ps.off([1,2,3])
     time.sleep(5)
-    ps.set_channel(1,2.75)
+    ps.set_channel(1,2.55)
     ps.set_channel(2,2.1)
     ps.set_channel(3,2.25)
     ps.on([1,2,3])

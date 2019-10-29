@@ -290,9 +290,9 @@ while(flag < 10 and ENOB < 10):
     fft_data = list(chain.from_iterable(zip(chns[0][:N_single_chn], chns[1][:N_single_chn],chns[2][:N_single_chn],chns[3][:N_single_chn],chns[4][:N_single_chn],chns[5][:N_single_chn],chns[6][:N_single_chn],chns[7][:N_single_chn])))
     
     f, p, psd = chn_rfft_psd(fft_data, fs = fs, fft_s = Ntot, avg_cycle = avgs)
-#    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
-#    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
-#    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
+    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
+    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
 
     #Truncate DC and Nyquist bins
     trunc = 5
