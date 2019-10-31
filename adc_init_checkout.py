@@ -83,7 +83,7 @@ def pwr_chk():
             time.sleep(5)
         else:
             #With LN2, wait longer (current settling)
-            time.sleep(30)
+            time.sleep(10)
         
         #Set VDDA2P5 to 2.8 V for BJT reference only (known issue at LN2 with nominal 2.5 V)
         ps.set_channel(1,2.75)
@@ -163,7 +163,7 @@ def pwr_chk():
         if(env == "RT"):
             time.sleep(5)
         else:
-            time.sleep(30)
+            time.sleep(10)
         ps.set_channel(1,2.55)
         ps.set_channel(2,2.1)
         ps.set_channel(3,2.25)
@@ -172,6 +172,8 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
         time.sleep(1)
         cq.flg_bjt_r = False
+        cq.bc.adc_write_reg(22, 0xff)
+        cq.bc.adc_write_reg(23, 0x3f)
         cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=ref_set_dir)
         time.sleep(5)
         voltages = ps.measure_voltages()
@@ -632,73 +634,109 @@ def Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1):
     pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
 
     cq.flg_bjt_r = True
+    cq.adc_bias_uA = 50
+    cq.bc.adc_set_cmos_iref_trim(45)
     cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=pwr_meas_dir)
-    pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA"))
+    pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA, cmos_vt_trim 45uA"))
 
-    #for i in range(8):
-    #    cq.adc_bias_uA = (80-10*i)
-    #    cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
-    #            adc_test_input = "Normal", adc_output_sel = "cali_ADCdata"  )
-    #    pwr_info.append(Pwr_meas_ptn(note = "adc_bias_%2duA"%(80-10*i)))
-    #cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=pwr_meas_dir)
-    #pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA"))
+#    #################################################################33
+#    ##############################comment###################################33
+#    cq.flg_bjt_r = True
+#    cq.adc_bias_uA = 50
+#    cq.bc.adc_set_cmos_iref_trim(35)
+#    cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=pwr_meas_dir)
+#    pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA, cmos_vt_trim 35uA"))
+#
+#    cq.flg_bjt_r = True
+#    cq.adc_bias_uA = 50
+#    cq.bc.adc_set_cmos_iref_trim(45)
+#    cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=pwr_meas_dir)
+#    pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA, cmos_vt_trim 45uA"))
+#
+#    for i in range(8):
+#        cq.adc_bias_uA = (80-10*i)
+#        cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
+#                adc_test_input = "Normal", adc_output_sel = "cali_ADCdata"  )
+#        pwr_info.append(Pwr_meas_ptn(note = "adc_bias_%2duA"%(80-10*i)))
+#    cq.adc_bias_uA = 50
+#    cq.bc.adc_set_cmos_iref_trim(45)
+#    cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=pwr_meas_dir)
+#    pwr_info.append(Pwr_meas_ptn(note = "BJT reference, SDC bypassed, Single-ended, adc_bias_50uA, cmos_vt_trim 45uA"))
+#    ##############################comment###################################33
+#    #################################################################33
 
     cq.init_chk()
     pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
     cq.flg_bjt_r = False
+    cq.adc_bias_uA = 50
+    cq.bc.adc_set_cmos_iref_trim(45)
     cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
     pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
-    #for i in range(8):
-    #    cq.adc_bias_uA = (80-10*i)
-    #    cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
-    #            adc_test_input = "Normal", adc_output_sel = "cali_ADCdata" )
-    #    pwr_info.append(Pwr_meas_ptn(note = "adc_bias_%2duA"%(80-10*i)))
-    #cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
-    #pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
 
-    #for i in range(8):
-    #    cq.bc.adc_set_cmos_iref_trim(70 - 5*i)
-    #    pwr_info.append(Pwr_meas_ptn(note = "Vt_iref_%2duA"%(70-5*i)))
-    #cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
-    #pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
+#    #################################################################33
+#    ##############################comment###################################33
+#    for i in range(8):
+#        cq.adc_bias_uA = (80-10*i)
+#        cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
+#                adc_test_input = "Normal", adc_output_sel = "cali_ADCdata" )
+#        pwr_info.append(Pwr_meas_ptn(note = "adc_bias_%2duA"%(80-10*i)))
+#
+#    cq.init_chk()
+#    pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
+#    cq.flg_bjt_r = False
+#    cq.adc_bias_uA = 50
+#    cq.bc.adc_set_cmos_iref_trim(45)
+#    cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
+#    pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
+#
+#    for i in range(8):
+#        cq.bc.adc_set_cmos_iref_trim(70 - 5*i)
+#        pwr_info.append(Pwr_meas_ptn(note = "Vt_iref_%2duA"%(70-5*i)))
+#
+#    cq.init_chk()
+#    pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
+#    cq.flg_bjt_r = False
+#    cq.adc_bias_uA = 50
+#    cq.bc.adc_set_cmos_iref_trim(45)
+#    cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
+#    pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
+#
+#    ##############################comment###################################33
+#    #################################################################33
 
     cq.init_chk()
     pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
     cq.flg_bjt_r = False
+    cq.adc_bias_uA = 50
+    cq.bc.adc_set_cmos_iref_trim(45)
     cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
     pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
     cq.bc.adc_write_reg(22, 0xff)
-    cq.bc.adc_write_reg(23, 0x7f)
-    pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=0x7F"))
-    #cq.bc.adc_write_reg(23, 0x0f)
-    #pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=0x0F"))
-    #for i in range(7):
-    #    vreg23 = 16*i + 0x0f
-    #    cq.bc.adc_write_reg(23, vreg23)
-    #    pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=%x"%(vreg23)))
-
-    #for i in range(8):
-    #    cq.adc_bias_uA = (80-10*i)
-    #    cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
-    #            adc_test_input = "Normal", adc_output_sel = "cali_ADCdata" )
-    #    pwr_info.append(Pwr_meas_ptn(note = "adc_bias_%2duA"%(80-10*i)))
-
-    #cq.adc_bias_uA = (80-10*i)
-    #cq.Converter_Config(edge_sel = "Normal", out_format = "offset binary", adc_sync_mode ="Normal", \
-    #        adc_test_input = "Normal", adc_output_sel = "cali_ADCdata" )
-    #for i in range(8):
-    #    cq.bc.adc_set_cmos_iref_trim(70 - 5*i)
-    #    pwr_info.append(Pwr_meas_ptn(note = "Vt_iref_%2duA"%(70-5*i)))
+    cq.bc.adc_write_reg(23, 0x3f)
+    pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=0x0F"))
+#    #################################################################33
+#    #################################################################33
+#    for i in range(8):
+#        vreg23 = 16*i + 0x0f
+#        cq.bc.adc_write_reg(23, vreg23)
+#        pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=%x"%(vreg23)))
+#    #################################################################33
+#    #################################################################33
+    cq.init_chk()
+    pwr_info.append(Pwr_meas_ptn(note = "Power on, after hard&soft reset"))
+    cq.flg_bjt_r = False
+    cq.adc_bias_uA = 50
+    cq.bc.adc_set_cmos_iref_trim(45)
     cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
     pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
 
     with open(pwr_meas_dir + "Power_meas.bin", "wb") as fp:  
       pickle.dump(pwr_info, fp)
 
-sample_rate_set(sr = 16)
 init_logs()
 ps.ps_init()
-#Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1)
+sample_rate_set(sr = 16)
+#Pwr_meas(vdda = 2.55, vdio=2.25, vd1p2=2.1)
 pwr_chk()
 cq.init_chk()
 cq.uart_chk()

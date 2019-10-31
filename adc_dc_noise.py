@@ -183,7 +183,7 @@ fig.subplots_adjust(top=0.94)
 plt.savefig( noise_dir + "Hist_NoiseTest_%s_%s_%s"%(env,refs,baseline) + ".png" )
 plt.close()
 
-bad_rms = [x for x in rms if (x>0.9 or x<0.4)]
+bad_rms = [x for x in rms if (x>1.5 or x<0.1)]
 if not (bad_rms == []):
     for i in range(len(bad_rms)):
         cq.pass_log("WARNING: Channel %d RMS Noise (%f) is out of expected range \n"%(i,bad_rms[i]))

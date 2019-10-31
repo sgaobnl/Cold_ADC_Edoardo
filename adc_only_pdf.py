@@ -144,267 +144,269 @@ if(status == "PASS"):
         pdf.ln(2*th)
 
 
-#if(status == "FAIL"):
-#    pdf.set_font('Times', '', 12)
-#    pdf.cell(30, 5, 'Error Log:', 0, 1)
-#    pdf.ln(0.5*th)
-#    pdf.set_font('Times', '', 10)
-#    pdf.multi_cell(epw, 5, '%s'%err_log)
-#    
-#
-#
-###### ADC Initialization Checkout pages #####
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'Initialization Checkout', 0, 1, 'C')
-#pdf.set_font('Times', '', 12)
-#
-## Generate Power Check table
-#pdf.cell(30, 5, 'Power Check - BJT (2 MSPS/CH):', 0, 1)
-## Colon width is 1/4 of effective page width
-#epw = pdf.w - 2*pdf.l_margin
-#col_width = epw/4
-# 
-#with open(rawdir + 'Power_Check/Power_Check_BJT.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-## Text height is the same as current font size
-#th = pdf.font_size 
-#pdf.ln(0.5*th)
-#for row in data:
-#    for datum in row:
-#        # pyFPDF expects a string, not a number
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)
-#
-## Linebreak of 2 lines
-#pdf.ln(2*th)
-#
-#pdf.cell(30, 5, 'Power Check - CMOS (2 MSPS/CH):', 0, 1)
-#pdf.ln(0.5*th)
-#with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-#for row in data:
-#    for datum in row:
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)
-#
-#pdf.ln(3*th)
-#pdf.cell(30, 5, 'Reference Check - BJT:', 0, 1)
-#pdf.image(rawdir + 'Reference_Check/Reference_BJT.png', 18, 126, 176)
-#
-#pdf.cell(0,89,'',0,1)
-#pdf.cell(30, 5, 'Reference Check - CMOS:', 0, 1)
-#pdf.image(rawdir + 'Reference_Check/Reference_CMOS.png', 11, 222, 186)
-#
-#
-## Generate Calibration Weights table
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'Calibration Weights (4 Ms/s)', 0, 1, 'C')
-#
-#table_w = pdf.w/2 - (4/3)*pdf.l_margin
-#pdf.set_font('Times', '', 12)
-#pdf.set_y(25)
-#pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
-#col_width = table_w/4
-#with open(rawdir + 'Weights_Records/Weights_Record_BJT_4M.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-#pdf.set_font('Times', '', 10)
-#th = pdf.font_size 
-#for row in data:
-#    for datum in row:
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)
-#
-#
-#pdf.set_font('Times', '', 12)
-#pdf.set_y(25)
-#pdf.cell(table_w + (2/3)*pdf.l_margin)
-#pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
-#table_w = pdf.w/2 - (4/3)*pdf.l_margin
-#col_width = table_w/4
-#with open(rawdir + 'Weights_Records/Weights_Record_CMOS_4M.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-#pdf.set_font('Times', '', 10)
-#th = pdf.font_size 
-#for row in data:
-#    pdf.cell(table_w + (2/3)*pdf.l_margin)
-#    for datum in row:
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)    
-#
-## Generate Calibration Weights table
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'Calibration Weights (16 Ms/s)', 0, 1, 'C')
-#
-#table_w = pdf.w/2 - (4/3)*pdf.l_margin
-#pdf.set_font('Times', '', 12)
-#pdf.set_y(25)
-#pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
-#col_width = table_w/4
-#with open(rawdir + 'Weights_Records/Weights_Record_BJT_16M.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-#pdf.set_font('Times', '', 10)
-#th = pdf.font_size 
-#for row in data:
-#    for datum in row:
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)
-#
-#
-#pdf.set_font('Times', '', 12)
-#pdf.set_y(25)
-#pdf.cell(table_w + (2/3)*pdf.l_margin)
-#pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
-#table_w = pdf.w/2 - (4/3)*pdf.l_margin
-#col_width = table_w/4
-#with open(rawdir + 'Weights_Records/Weights_Record_CMOS_16M.csv', "r") as csvfile:
-#    data = list(csv.reader(csvfile))
-#print(data)
-#
-#pdf.set_font('Times', '', 10)
-#th = pdf.font_size 
-#for row in data:
-#    pdf.cell(table_w + (2/3)*pdf.l_margin)
-#    for datum in row:
-#        pdf.cell(col_width, 2*th, str(datum), border=1)
-#    pdf.ln(2*th)    
-#
-#for sample_rate in ["4MSPS", "16MSPS"]:
-#    #Generate Noise Study pages
-#    pdf.add_page()
-#    pdf.set_font('Times', '', 20)
-#    pdf.cell(85)
-#    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
-#    pdf.set_font('Times', '', 12)
-#    pdf.cell(30, 20, 'Baseline 200 mV, BJT Reference:', 0, 1)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200.png'%env, 14, 30, 180)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_200.png'%env, 30, 180, 160)
-#    
-#    pdf.add_page()
-#    pdf.set_font('Times', '', 20)
-#    pdf.cell(85)
-#    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
-#    
-#    pdf.set_font('Times', '', 12)
-#    pdf.cell(30, 20, 'Baseline 900 mV, BJT Reference:', 0, 1)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900.png'%env, 14, 30, 180)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_900.png'%env, 30, 180, 160)
-#    
-#    pdf.add_page()
-#    pdf.set_font('Times', '', 20)
-#    pdf.cell(85)
-#    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
-#    
-#    pdf.set_font('Times', '', 12)
-#    pdf.cell(30, 20, 'Baseline 200 mV, CMOS Reference:', 0, 1)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200.png'%env, 14, 30, 180)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_200.png'%env, 30, 180, 160)
-#    
-#    pdf.add_page()
-#    pdf.set_font('Times', '', 20)
-#    pdf.cell(85)
-#    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
-#    
-#    pdf.set_font('Times', '', 12)
-#    pdf.cell(30, 20, 'Baseline 900 mV, CMOS Reference:', 0, 1)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900.png'%env, 14, 30, 180)
-#    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 160)
-#    
-#    #if(env == "RT"):
-#    #    #amp = "1.40 V" 
-#    #    amp = "1.35 V"
-#    #else:
-#    #    amp = "1.35 V"
-#    amp = "1.30 V"
-#    
-#    ##### Single channel Carachterization (static and dynamic behavior) #####
-#    for chnno in range(16):
-#        pdf.add_page()
-#        pdf.set_font('Times', '', 20)
-#        pdf.cell(85)
-#        if(adc_sdc_en):
-#            pdf.cell(30, 3, 'Channel %d (SE + SDC + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
-#        else:
-#            pdf.cell(30, 3, 'Channel %d (SE + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
-#        
-#        pdf.set_font('Times', '', 12)
-#        pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-#        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200_ch%d.png'%(env,chnno), 9, 20, 100)
-#        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900_ch%d.png'%(env,chnno), 9, 65, 100)
-#        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200_ch%d.png'%(env,chnno), 107, 20, 100)
-#        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900_ch%d.png'%(env,chnno), 107, 65, 100)
-#    
-#        pdf.cell(0,95,'',0,1)
-#    
-#        pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_BJT_ch%d.png'%(env,chnno), 8, 120, 95)
-#        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_CMOS_ch%d.png'%(env,chnno), 108,120,95)
-#    
-#        pdf.cell(0,78,'',0,1)
-#        pdf.cell(30, 5, 'Dynamic Behavior (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_BJT_ch%d.png'%(env,chnno), 8, 203, 94)
-#        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_CMOS_ch%d.png'%(env,chnno), 108,203,94)
-#    
-#
-###### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
-#
-#pdf.cell(0,5,'',0,1)
-#pdf.set_font('Times', '', 12)
-#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-#
-#pdf.cell(0,73,'',0,1)
-#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-#
-#pdf.cell(0,85,'',0,1)
-#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-#pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
-#
-#
-###### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
-#pdf.add_page()
-#pdf.set_font('Times', '', 20)
-#pdf.cell(85)
-#pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
-#
-#pdf.cell(0,5,'',0,1)
-#pdf.set_font('Times', '', 12)
-#pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
-#
-#pdf.cell(0,73,'',0,1)
-#pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
-#
-#pdf.cell(0,85,'',0,1)
-#pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
-#pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+if(status == "FAIL"):
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 5, 'Error Log:', 0, 1)
+    pdf.ln(0.5*th)
+    pdf.set_font('Times', '', 10)
+    pdf.multi_cell(epw, 5, '%s'%err_log)
+    
+
+
+##### ADC Initialization Checkout pages #####
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'Initialization Checkout', 0, 1, 'C')
+pdf.set_font('Times', '', 12)
+
+# Generate Power Check table
+pdf.cell(30, 5, 'Power Check - BJT (2 MSPS/CH):', 0, 1)
+# Colon width is 1/4 of effective page width
+epw = pdf.w - 2*pdf.l_margin
+col_width = epw/4
+ 
+with open(rawdir + 'Power_Check/Power_Check_BJT.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+# Text height is the same as current font size
+th = pdf.font_size 
+pdf.ln(0.5*th)
+for row in data:
+    for datum in row:
+        # pyFPDF expects a string, not a number
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)
+
+# Linebreak of 2 lines
+pdf.ln(2*th)
+
+pdf.cell(30, 5, 'Power Check - CMOS (2 MSPS/CH):', 0, 1)
+pdf.ln(0.5*th)
+with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+for row in data:
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)
+
+pdf.ln(3*th)
+pdf.cell(30, 5, 'Reference Check - BJT:', 0, 1)
+pdf.image(rawdir + 'Reference_Check/Reference_BJT.png', 18, 126, 176)
+
+pdf.cell(0,89,'',0,1)
+pdf.cell(30, 5, 'Reference Check - CMOS:', 0, 1)
+pdf.image(rawdir + 'Reference_Check/Reference_CMOS.png', 11, 222, 186)
+
+
+# Generate Calibration Weights table
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'Calibration Weights (4 Ms/s)', 0, 1, 'C')
+
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_BJT_4M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)
+
+
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w + (2/3)*pdf.l_margin)
+pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_CMOS_4M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    pdf.cell(table_w + (2/3)*pdf.l_margin)
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)    
+
+# Generate Calibration Weights table
+pdf.add_page()
+pdf.set_font('Times', '', 20)
+pdf.cell(85)
+pdf.cell(30, 5, 'Calibration Weights (16 Ms/s)', 0, 1, 'C')
+
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_BJT_16M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)
+
+
+pdf.set_font('Times', '', 12)
+pdf.set_y(25)
+pdf.cell(table_w + (2/3)*pdf.l_margin)
+pdf.cell(table_w, 10, 'CMOS:', 0, 1, align = 'C')
+table_w = pdf.w/2 - (4/3)*pdf.l_margin
+col_width = table_w/4
+with open(rawdir + 'Weights_Records/Weights_Record_CMOS_16M.csv', "r") as csvfile:
+    data = list(csv.reader(csvfile))
+print(data)
+
+pdf.set_font('Times', '', 10)
+th = pdf.font_size 
+for row in data:
+    pdf.cell(table_w + (2/3)*pdf.l_margin)
+    for datum in row:
+        pdf.cell(col_width, 2*th, str(datum), border=1)
+    pdf.ln(2*th)    
+
+for sample_rate in ["4MSPS", "16MSPS"]:
+    #Generate Noise Study pages
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 200 mV, BJT Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_200.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 900 mV, BJT Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_BJT_900.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 200 mV, CMOS Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_200.png'%env, 30, 180, 160)
+    
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'Noise Study (%s)'%sample_rate, 0, 1, 'C')
+    
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 20, 'Baseline 900 mV, CMOS Reference:', 0, 1)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900.png'%env, 14, 30, 180)
+    pdf.image(rawdir + 'DC_Noise_%s/'%sample_rate + 'RMS_NoiseTest_%s_CMOS_900.png'%env, 30, 180, 160)
+    
+    #if(env == "RT"):
+    #    #amp = "1.40 V" 
+    #    amp = "1.35 V"
+    #else:
+    #    amp = "1.35 V"
+    amp = "1.30 V"
+    
+    ##### Single channel Carachterization (static and dynamic behavior) #####
+    for chnno in range(16):
+        pdf.add_page()
+        pdf.set_font('Times', '', 20)
+        pdf.cell(85)
+        if(adc_sdc_en):
+            pdf.cell(30, 3, 'Channel %d (SE + SDC + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
+        else:
+            pdf.cell(30, 3, 'Channel %d (SE + SHA + ADC) (%s)'%(chnno, sample_rate), 0, 1, 'C')
+        
+        pdf.set_font('Times', '', 12)
+        pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_200_ch%d.png'%(env,chnno), 9, 20, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_BJT_900_ch%d.png'%(env,chnno), 9, 65, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_200_ch%d.png'%(env,chnno), 107, 20, 100)
+        pdf.image(rawdir + 'DC_Noise_%s/Single_Channel/'%sample_rate + 'Hist_NoiseTest_%s_CMOS_900_ch%d.png'%(env,chnno), 107, 65, 100)
+    
+        pdf.cell(0,95,'',0,1)
+    
+        pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_BJT_ch%d.png'%(env,chnno), 8, 120, 95)
+        pdf.image(rawdir + 'Linearity_%s/'%sample_rate + 'DNL_INL_%s_CMOS_ch%d.png'%(env,chnno), 108,120,95)
+    
+        pdf.cell(0,78,'',0,1)
+        pdf.cell(30, 5, 'Dynamic Behavior (Freq = 14.4043 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_BJT_ch%d.png'%(env,chnno), 8, 203, 94)
+        pdf.image(rawdir + 'Dynamic_Behavior_%s/'%sample_rate + 'ENOB_%s_CMOS_ch%d.png'%(env,chnno), 108,203,94)
+    
+
+##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
+#if (False):
+if (True):
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'ADC Test Input (16 Ms/s)', 0, 1, 'C')
+    
+    pdf.cell(0,5,'',0,1)
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+    
+    pdf.cell(0,73,'',0,1)
+    pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+    
+    pdf.cell(0,85,'',0,1)
+    pdf.cell(30, 5, 'Dynamic Behavior (Freq = 85.9375 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+    pdf.image(rawdir + 'ADC_TST_IN/16Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
+    
+    
+    ##### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
+    pdf.add_page()
+    pdf.set_font('Times', '', 20)
+    pdf.cell(85)
+    pdf.cell(30, 5, 'ADC Test Input (4 Ms/s)', 0, 1, 'C')
+    
+    pdf.cell(0,5,'',0,1)
+    pdf.set_font('Times', '', 12)
+    pdf.cell(30, 5, 'Static Behavior - Noise:', 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_BJT_900.png'%(env), 9, 25, 100)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'Hist_NoiseTest_%s_CMOS_900.png'%(env), 107, 25, 100)
+    
+    pdf.cell(0,73,'',0,1)
+    pdf.cell(30, 5, 'Static Behavior - Linearity (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_BJT.png'%(env), 8, 108, 95)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'DNL_INL_%s_CMOS.png'%(env), 108,108,95)
+    
+    pdf.cell(0,85,'',0,1)
+    pdf.cell(30, 5, 'Dynamic Behavior (Freq = 13671.9 kHz, Amp = %s, Offs = 0.9 V):'%amp, 0, 1)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_BJT.png'%(env), 8, 198, 94)
+    pdf.image(rawdir + 'ADC_TST_IN/4Mss/' + 'ENOB_%s_CMOS.png'%(env), 108,198,94)
 
 
 filename = rawdir + "Board" + board + "_Chip" + chip + "_"  + env + ".pdf"

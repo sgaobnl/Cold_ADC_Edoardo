@@ -396,8 +396,8 @@ noise_table = []
 
 if(refs == "BJT"):
     file_table = adc_tst_dir + "Channel_Characterization_BJT.csv"
-    dnl_table.append(dnl)
-    inl_table.append(inl)
+    dnl_table.append(worst_dnl)
+    inl_table.append(worst_inl)
     enob_table.append(ENOB)
     noise_table.append(rms900)
     dnl_table.insert(0,"Worst DNL")      
@@ -416,8 +416,8 @@ if(refs == "BJT"):
 
 if(refs == "CMOS"):
     file_table = adc_tst_dir + "Channel_Characterization_CMOS.csv"
-    dnl_table.append(dnl)
-    inl_table.append(inl)
+    dnl_table.append(worst_dnl)
+    inl_table.append(worst_inl)
     enob_table.append(ENOB)
     noise_table.append(rms900)
     dnl_table.insert(0,"Worst DNL")      

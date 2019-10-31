@@ -61,7 +61,7 @@ class CMD_ACQ:
         self.vrefn_voft = 0x27
         self.vcmi_voft = 0x5c
         self.vcmo_voft = 0x87
-        self.iref_trim = 45
+        self.iref_trim = 45 #minimum is 35, 
         self.adc_bias_uA = 50
 
 #        if (env == "RT"):
@@ -92,6 +92,8 @@ class CMD_ACQ:
             self.status("FAIL")
             self.err_log("Initialization check failed. Read/Write not working correctly. \n")  
         self.bc.adc_soft_reset()
+       
+
             
     def i2c_chk(self):
         #Read and Write register with I2C
@@ -486,6 +488,8 @@ class CMD_ACQ:
             ibuff1_cmos = 0x27
             self.bc.adc_set_cmos_ibuff(ibuff0_cmos, ibuff1_cmos)
 
+
+
     def bjt_ref_aux(self, mon_src = "VREFP", mux_src = "AUX_VOLTAGE", avg_points =5  ):
         self.bc.cots_adc_bjt_mon_src(src = mon_src)
         self.bc.cots_adc_mux_mon_src(src = mux_src )
@@ -690,6 +694,9 @@ class CMD_ACQ:
         while(woc_f==False):
             self.init_chk()
             self.ref_set(fn)
+            if (not self.flg_bjt_r):
+                self.bc.adc_write_reg(22, 0xff)
+                self.bc.adc_write_reg(23, 0x3f)     
             time.sleep(1)
 
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
@@ -723,8 +730,8 @@ class CMD_ACQ:
         else:
             fp = fn + "/cmos.cmos"
             print ("Powerdone BJT reference")
-            self.bc.adc_write_reg(22, 0xff)
-            self.bc.adc_write_reg(23, 0x7f)            
+#            self.bc.adc_write_reg(22, 0xff)
+#            self.bc.adc_write_reg(23, 0x0f)            
         if (not os.path.isfile(fp)):
             self.ref_set_find(fn)
         self.ref_set(fn)
