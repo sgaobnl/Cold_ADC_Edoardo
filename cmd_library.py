@@ -586,13 +586,12 @@ class CMD_ACQ:
         self.bc.adc_ibuff_ctrl(curr_src)      
     
     def get_adcdata(self, PktNum=128, saveraw = False, fn = "" ):
-        self.bc.Acq_start_stop(1)
-        self.bc.Acq_start_stop(1)
+#        self.bc.Acq_start_stop(1)
         rawdata = self.bc.udp.get_pure_rawdata(PktNum+1000 )
         if (saveraw):
             with open(fn, 'wb') as f:
                 pickle.dump(rawdata, f)
-        self.bc.Acq_start_stop(0)
+#        self.bc.Acq_start_stop(0)
         chns = raw_conv(rawdata, PktNum)[0]
 #        self.bc.Acq_start_stop(1)
 #        rawdata = self.bc.get_data(PktNum,1, Jumbo="Jumbo") #packet check
@@ -607,9 +606,9 @@ class CMD_ACQ:
         return chns 
     
     def get_adcdata_raw(self, PktNum=128 ):
-        self.bc.Acq_start_stop(1)
+#        self.bc.Acq_start_stop(1)
         rawdata = self.bc.udp.get_pure_rawdata(PktNum+1000 )
-        self.bc.Acq_start_stop(0)
+#        self.bc.Acq_start_stop(0)
         chns = raw_conv(rawdata, PktNum)[0]
 #        rawdata = self.bc.get_data(PktNum,1, Jumbo="Jumbo") #packet check
 #        return rawdata

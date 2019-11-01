@@ -42,11 +42,7 @@ class Brd_Config:
         if Val == 1:
             self.udp_fifo_clear()        
             self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],1)
-            time.sleep(0.01)
-            self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],1)
         else:
-            self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],0)
-            time.sleep(0.01)
             self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],0)
         time.sleep(0.01)
         
@@ -530,10 +526,10 @@ class Brd_Config:
         return (int(num) & 0xffff) #ignore the bit17
 
     def adc_average(self,pktnum,neg=None):
-        self.Acq_start_stop(1)
+#        self.Acq_start_stop(1)
         rawdata = self.udp.get_pure_rawdata(pktnum+1000 )
         chns = raw_conv(rawdata, pktnum)[0]
-        self.Acq_start_stop(0)
+#        self.Acq_start_stop(0)
         
 #        #add for test  
 #        self.Acq_start_stop(1)

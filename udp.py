@@ -245,19 +245,25 @@ class UDP(UDP_frames):
         if checkflg == True:
             self.check_packets(packet_cnts)
         return user_data
-    def clr_data_fifo (self):
-        self.write([0x1,0x4],1)
-        self.write([0x1,0x4],1)
-        time.sleep(0.01)
-        self.write([0x1,0x4],0)
+
+    def data_fifo_en (self, en=1):
+        tmp = self.read_reg(1)
+        tmp = self.read_reg(1)
+        self.write_reg_checked(0x01, tmp|0x10)
+        self.write_reg_checked(0x01, tmp&0xFFFFFFEF)
+        time.sleep(0.001)
+        self.write_reg_checked(0x0F, en)
+        if (en ==1):
+            time.sleep(0.01)
         
     def get_pure_rawdata(self,PktNum,Jumbo=None):
-        self.clr_data_fifo ()        
         #set up listening socket
         for j in range(10):
             sock_data = self.socket_gen("Listen")
             sock_data.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
             sock_data.bind(('', self.UDP_PORT_HSDATA))                          #high-speed data UDP port 32003
+
+            self.data_fifo_en(en=1)
             
             if Jumbo == 'None':
                 recvbuf = 8192      
@@ -267,13 +273,9 @@ class UDP(UDP_frames):
                 cycle = 1
             else:
                 cycle = (PktNum // self.PKT_MAX) + 1
-    #        print('cycle=%d'%cycle)
-    #        recv_raw=b""
 
             recv_raw=[]
             for i in range(cycle):    
-    #            if (i%1000==0):
-    #                print (i)
                 data = None
                 try:
                     data = sock_data.recv(recvbuf) 
@@ -294,7 +296,6 @@ class UDP(UDP_frames):
                     print ("No high-speed data received (%d)"%j)
                     time.sleep(0.5)
                     continue
-    #                recv_raw += data
             sock_data.close()
             
             pkg_len = (0x1610//2)
@@ -310,9 +311,9 @@ class UDP(UDP_frames):
                     bad_pkg_flg = True
                     break
             if (bad_pkg_flg):
-                self.clr_data_fifo()
                 continue
             else:
+                self.data_fifo_en(en=0)
                 break
         return recv_raw
     
