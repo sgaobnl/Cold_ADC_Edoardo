@@ -172,8 +172,6 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
         time.sleep(1)
         cq.flg_bjt_r = False
-        cq.bc.adc_write_reg(22, 0xff)
-        cq.bc.adc_write_reg(23, 0x3f)
         cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=ref_set_dir)
         time.sleep(5)
         voltages = ps.measure_voltages()
@@ -711,8 +709,6 @@ def Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1):
     cq.bc.adc_set_cmos_iref_trim(45)
     cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=pwr_meas_dir)
     pwr_info.append(Pwr_meas_ptn(note = "CMOS reference, SDC bypassed, Single-ended, adc_bias_50uA"))
-    cq.bc.adc_write_reg(22, 0xff)
-    cq.bc.adc_write_reg(23, 0x3f)
     pwr_info.append(Pwr_meas_ptn(note = "BJT Powerdown (reg22=0xFF, 23=0x0F"))
 #    #################################################################33
 #    #################################################################33
@@ -736,7 +732,7 @@ def Pwr_meas(vdda = 2.75, vdio=2.25, vd1p2=2.1):
 init_logs()
 ps.ps_init()
 sample_rate_set(sr = 16)
-#Pwr_meas(vdda = 2.55, vdio=2.25, vd1p2=2.1)
+##Pwr_meas(vdda = 2.55, vdio=2.25, vd1p2=2.1)
 pwr_chk()
 cq.init_chk()
 cq.uart_chk()

@@ -333,10 +333,10 @@ class CMD_ACQ:
             self.vp_vrefn = False
             self.vn_vrefn = False
             self.vm_vrefn = False
-            self.vrefp_voft = 0xf0
-            self.vrefn_voft = 0x18
-            self.vcmi_voft = 0x70
-            self.vcmo_voft = 0x88
+            self.vrefp_voft = 0xe2
+            self.vrefn_voft = 0x22
+            self.vcmi_voft = 0x60
+            self.vcmo_voft = 0x80
             while (True):
                 vrefp_f = False
                 vrefn_f = False
@@ -366,14 +366,14 @@ class CMD_ACQ:
                 else:
                     vcmo_f = True
 
-                print ("VREFP = %.3f, VREFN = %.3f, VCMI = %.3f, VCMO = %.3f"%(vrefp, vrefn, vcmi, vcmo))
+                print ("VREFP = %.3f, VREFN = %.3f, VCMO = %.3f, VCMI = %.3f"%(vrefp, vrefn, vcmo, vcmi))
                 if vrefp_f and vrefn_f and vcmi_f and vcmo_f:
                     print (hex(self.vrefp_voft), hex(self.vrefn_voft), hex(self.vcmo_voft), hex(self.vcmi_voft))
                     break
 
             with open(fn + "bjt.bjt", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
-                vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
+                vref_values = [vbgr, vrefp, vrefn, vcmo, vcmi, vssa ]
                 pickle.dump([vref_regs, vref_values] , f)
 
         else:
@@ -401,10 +401,10 @@ class CMD_ACQ:
             self.vp_vrefn = False
             self.vn_vrefn = False
             self.vm_vrefn = False
-            self.vrefp_voft = 0xe0
-            self.vrefn_voft = 0x18
-            self.vcmi_voft = 0x70
-            self.vcmo_voft = 0x88
+            self.vrefp_voft = 0xc0
+            self.vrefn_voft = 0x28
+            self.vcmi_voft = 0x60
+            self.vcmo_voft = 0x80
             while (True):
                 self.bc.adc_set_cmos_vrefs(self.vrefp_voft, self.vrefn_voft, self.vcmi_voft, self.vcmo_voft)
                 vbgr, vcmi, vcmo, vrefp, vrefn, vssa = self.all_ref_vmons( )
@@ -439,7 +439,7 @@ class CMD_ACQ:
                     break
             with open(fn + "cmos.cmos", 'wb+') as f:
                 vref_regs = [self.vrefp_voft, self.vrefn_voft, self.vcmo_voft, self.vcmi_voft]
-                vref_values = [vbgr, vcmi, vcmo, vrefp, vrefn, vssa ]
+                vref_values = [vbgr, vrefp, vrefn, vcmo, vcmi, vssa ]
                 pickle.dump([vref_regs, vref_values] , f)
   
     def ref_set(self, fn ):
@@ -587,6 +587,7 @@ class CMD_ACQ:
     
     def get_adcdata(self, PktNum=128, saveraw = False, fn = "" ):
         self.bc.Acq_start_stop(1)
+        self.bc.Acq_start_stop(1)
         rawdata = self.bc.udp.get_pure_rawdata(PktNum+1000 )
         if (saveraw):
             with open(fn, 'wb') as f:
@@ -694,9 +695,13 @@ class CMD_ACQ:
         while(woc_f==False):
             self.init_chk()
             self.ref_set(fn)
-            if (not self.flg_bjt_r):
+            if (self.flg_bjt_r):
+#                self.bc.adc_write_reg(22, 0x00)
+#                self.bc.adc_write_reg(23, 0x20) 
+                pass
+            else:
                 self.bc.adc_write_reg(22, 0xff)
-                self.bc.adc_write_reg(23, 0x3f)     
+                self.bc.adc_write_reg(23, 0x2f)     
             time.sleep(1)
 
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
@@ -723,15 +728,17 @@ class CMD_ACQ:
 
     def adc_cfg_init(self, adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-Ended", adc_curr_src="BJT-sd", fn = "" ): 
         self.init_chk()
-        time.sleep(1)
         self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)         
         if (self.flg_bjt_r):
             fp = fn + "/bjt.bjt"
+            self.bc.adc_write_reg(22, 0x00)
+            self.bc.adc_write_reg(23, 0x20)            
         else:
             fp = fn + "/cmos.cmos"
             print ("Powerdone BJT reference")
-#            self.bc.adc_write_reg(22, 0xff)
-#            self.bc.adc_write_reg(23, 0x0f)            
+            self.bc.adc_write_reg(22, 0xff)
+            self.bc.adc_write_reg(23, 0x2f)            
+        time.sleep(1)
         if (not os.path.isfile(fp)):
             self.ref_set_find(fn)
         self.ref_set(fn)

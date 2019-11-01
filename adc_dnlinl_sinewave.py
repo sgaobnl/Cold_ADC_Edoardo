@@ -150,7 +150,7 @@ for chnno in range(16):
     ax1.set_ylim([-0.8,0.8])
     ax1.set_title('%s Environment. %s Reference. Channel %d'%(env, refs,chnno))
     ax1.set_ylabel('DNL [LSB]')
-    ax1.annotate(' max DNL = %0.2f \n min DNL = %0.2f ' %(max_dnl, min_dnl), 
+    ax1.annotate(' max DNL = %0.2f \n min DNL = %0.2f ' %(max_dnl, min_dnl), \
                  xy=(0.65,0.7),xycoords='axes fraction', textcoords='offset points', size=22, bbox=dict(boxstyle="round", fc=(1.0, 1.0, 1.0), ec="none"))
     
     ax2 = plt.subplot2grid((2,2), (1, 0), colspan=2, rowspan=1)
@@ -163,7 +163,7 @@ for chnno in range(16):
     ax2.set_xlim([0,4095])
     ax2.set_ylim([-6.5,6.5])
     ax2.set_ylabel('INL [LSB]')
-    ax2.annotate(' max INL = %0.2f \n min INL = %0.2f ' %(max_inl, min_inl), 
+    ax2.annotate(' max INL = %0.2f \n min INL = %0.2f ' %(max_inl, min_inl), \
                  xy=(0.65,0.7),xycoords='axes fraction', textcoords='offset points', size=22, bbox=dict(boxstyle="round", fc=(1.0, 1.0, 1.0), ec="none"))
     
     plt.xlabel('ADC Code')

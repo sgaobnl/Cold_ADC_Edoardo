@@ -104,47 +104,59 @@ class UDP(UDP_frames):
            #print "FEMB_UDP--> Error read_reg: Invalid register number"
            return None
         else:
-            #set up listening socket, do before sending read request
-            sock_readresp = self.socket_gen("Listen")
-            READ_MESSAGE = self.Msg_gen(regVal,0)
-            #set up a read request socket
-            sock_read = self.socket_gen("Write")
-            if femb_addr == None:
-                sock_readresp.bind(('', self.UDP_PORT_RREGRESP ))      #WIB Response UDP port 32002
-                sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDP_PORT_RREG))#Read request UDP port 32001
-            elif femb_addr == 0:
-                sock_readresp.bind(('', self.UDPFEMB0_PORT_RREGRESP )) #FEMB0 Response UDP port 32018
-                sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB0_PORT_RREG)) #FEMB0 Read request UDP port 32017
-            elif femb_addr == 1:
-                sock_readresp.bind(('', self.UDPFEMB1_PORT_RREGRESP )) #FEMB1 Response UDP port 32034
-                sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB1_PORT_RREG)) #FEMB1 Read request UDP port 32033
-            elif femb_addr == 2:
-                sock_readresp.bind(('', self.UDPFEMB2_PORT_RREGRESP )) #FEMB2 Response UDP port 32050
-                sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB2_PORT_RREG)) #FEMB2 Read request UDP port 32049
-            elif femb_addr == 3:
-                sock_readresp.bind(('', self.UDPFEMB3_PORT_RREGRESP )) #FEMB3 Response UDP port 32066
-                sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB3_PORT_RREG)) #FEMB3 Read request UDP port 32065
-
-            sock_read.close()
-            #try to receive response packet from board, store in hex
-            data = []
-            try:
-                data = sock_readresp.recv(4*1024)
-            except socket.timeout:
-                self.udp_timeout_cnt = self.udp_timeout_cnt  + 1
-                #print "FEMB_UDP--> Error read_reg: No read packet received from board, quitting"
+            for j in range(10):
+                #set up listening socket, do before sending read request
+                sock_readresp = self.socket_gen("Listen")
+                READ_MESSAGE = self.Msg_gen(regVal,0)
+                #set up a read request socket
+                sock_read = self.socket_gen("Write")
+                if femb_addr == None:
+                    sock_readresp.bind(('', self.UDP_PORT_RREGRESP ))      #WIB Response UDP port 32002
+                    sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDP_PORT_RREG))#Read request UDP port 32001
+                elif femb_addr == 0:
+                    sock_readresp.bind(('', self.UDPFEMB0_PORT_RREGRESP )) #FEMB0 Response UDP port 32018
+                    sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB0_PORT_RREG)) #FEMB0 Read request UDP port 32017
+                elif femb_addr == 1:
+                    sock_readresp.bind(('', self.UDPFEMB1_PORT_RREGRESP )) #FEMB1 Response UDP port 32034
+                    sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB1_PORT_RREG)) #FEMB1 Read request UDP port 32033
+                elif femb_addr == 2:
+                    sock_readresp.bind(('', self.UDPFEMB2_PORT_RREGRESP )) #FEMB2 Response UDP port 32050
+                    sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB2_PORT_RREG)) #FEMB2 Read request UDP port 32049
+                elif femb_addr == 3:
+                    sock_readresp.bind(('', self.UDPFEMB3_PORT_RREGRESP )) #FEMB3 Response UDP port 32066
+                    sock_read.sendto(READ_MESSAGE,(self.UDP_IP,self.UDPFEMB3_PORT_RREG)) #FEMB3 Read request UDP port 32065
+    
+                sock_read.close()
+                #try to receive response packet from board, store in hex
+                data = []
+                try:
+                    data = sock_readresp.recv(4*1024)
+                except socket.timeout:
+                    if (j<8):
+                        sock_readresp.close()
+                        print ("Read reg time out (%d)"%j)
+                        time.sleep(0.5)
+                        continue
+                    else:
+                        print ("FEMB_UDP--> Error read_reg: No read packet received from board, quitting")
+                        sock_readresp.close()
+                        sys.exit()                 
+                #dataHex = data.encode('hex') #can not be used in python3
+                dataHex = binascii.hexlify(data) #change it to fit in python3
                 sock_readresp.close()
-                return -1                 
-            #dataHex = data.encode('hex') #can not be used in python3
-            dataHex = binascii.hexlify(data) #change it to fit in python3
-            sock_readresp.close()
-            if int(dataHex[0:4],16) != regVal :
-                #print "FEMB_UDP--> Error read_reg: Invalid response packet"
-                return None
-            else: 
-                dataHexVal = int(dataHex[4:12],16)
-                #print "FEMB_UDP--> Write: reg=%x,value=%x"%(reg,dataHexVal)
-                return dataHexVal
+                if int(dataHex[0:4],16) != regVal :
+                    if (j<8):
+                        print ("Read reg time out (wrong package received) (%d)"%j)
+                        time.sleep(0.5)
+                        continue
+                    else:
+                        print ("FEMB_UDP--> Error read_reg: Invalid response packet")
+                        sys.exit()
+                else: 
+                    dataHexVal = int(dataHex[4:12],16)
+                    break
+                    #print "FEMB_UDP--> Write: reg=%x,value=%x"%(reg,dataHexVal)
+            return dataHexVal
 
 #Check the register if it has been written correctly, this is an overloading function for wib and FEMB both         
     def write_reg_checked (self,reg, data, femb_addr = None):
@@ -169,7 +181,14 @@ class UDP(UDP_frames):
             self.write_reg(regNum,data,femb_addr)
         else:
             #read the register and get original value
-            temp = self.read_reg(regNum,femb_addr)
+            for i in range(10):
+                temp = self.read_reg(regNum,femb_addr)
+                if (temp != None):
+                    break
+                time.sleep(0.01)
+                if ( i == 9):
+                    print ("UDP.py: UDP read-back can't be fixed, exit anyway!")
+                    sys.exit()
             #get mask bits
             index,size = self.bitop.mask(mask)
             #generate a new value
@@ -226,38 +245,75 @@ class UDP(UDP_frames):
         if checkflg == True:
             self.check_packets(packet_cnts)
         return user_data
+    def clr_data_fifo (self):
+        self.write([0x1,0x4],1)
+        self.write([0x1,0x4],1)
+        time.sleep(0.01)
+        self.write([0x1,0x4],0)
         
     def get_pure_rawdata(self,PktNum,Jumbo=None):
+        self.clr_data_fifo ()        
         #set up listening socket
-        sock_data = self.socket_gen("Listen")
-        sock_data.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
-        sock_data.bind(('', self.UDP_PORT_HSDATA))                          #high-speed data UDP port 32003
-        
-        if Jumbo == 'None':
-            recvbuf = 8192      
-        else:
-            recvbuf = 9014 #match to 0xefc      
-        if (PktNum < self.PKT_MAX) or (PktNum == self.PKT_MAX):
-            cycle = 1
-        else:
-            cycle = (PktNum // self.PKT_MAX) + 1
-#        print('cycle=%d'%cycle)
-#        recv_raw=b""
-        recv_raw=[]
-        for i in range(cycle):    
-#            if (i%1000==0):
-#                print (i)
-            data = None
-            try:
-                data = sock_data.recv(recvbuf) 
-            except socket.timeout:
-                print ("UDP--> Error get_data: No data packet received from board, quitting")
-                sock_data.close()
-                return None
-            if data != None:
-               recv_raw.append(data)
-#                recv_raw += data
-        sock_data.close()
+        for j in range(10):
+            sock_data = self.socket_gen("Listen")
+            sock_data.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
+            sock_data.bind(('', self.UDP_PORT_HSDATA))                          #high-speed data UDP port 32003
+            
+            if Jumbo == 'None':
+                recvbuf = 8192      
+            else:
+                recvbuf = 9014 #match to 0xefc      
+            if (PktNum < self.PKT_MAX) or (PktNum == self.PKT_MAX):
+                cycle = 1
+            else:
+                cycle = (PktNum // self.PKT_MAX) + 1
+    #        print('cycle=%d'%cycle)
+    #        recv_raw=b""
+
+            recv_raw=[]
+            for i in range(cycle):    
+    #            if (i%1000==0):
+    #                print (i)
+                data = None
+                try:
+                    data = sock_data.recv(recvbuf) 
+                except socket.timeout:
+                    if j < 8 :
+                        sock_data.close()
+                        print ("High-speed data time out (%d)"%j)
+                        time.sleep(0.5)
+                        continue
+                    else:
+                        print ("UDP--> Error get_data: No data packet received from board, quitting")
+                        sock_data.close()
+                        sys.exit()
+                if data != None:
+                    recv_raw.append(data)
+                else:
+                    sock_data.close()
+                    print ("No high-speed data received (%d)"%j)
+                    time.sleep(0.5)
+                    continue
+    #                recv_raw += data
+            sock_data.close()
+            
+            pkg_len = (0x1610//2)
+            bad_pkg_flg = False
+            for upkg in recv_raw:
+                dataNtuple =struct.unpack_from(">%dH"%(pkg_len),upkg)
+                i = 8
+                if (dataNtuple[i] == 0xbc3c ) :
+                    pass
+                else:
+                    print (hex(dataNtuple[i]))
+                    print ("Error: incomplete user package is found, please retake data %d"%j)
+                    bad_pkg_flg = True
+                    break
+            if (bad_pkg_flg):
+                self.clr_data_fifo()
+                continue
+            else:
+                break
         return recv_raw
     
     def clr_server_buf(self, en = False):

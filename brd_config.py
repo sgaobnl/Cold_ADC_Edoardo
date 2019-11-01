@@ -42,7 +42,11 @@ class Brd_Config:
         if Val == 1:
             self.udp_fifo_clear()        
             self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],1)
+            time.sleep(0.01)
+            self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],1)
         else:
+            self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],0)
+            time.sleep(0.01)
             self.udp.write_reg_checked(self.fpga_reg.ACQ_START[0],0)
         time.sleep(0.01)
         

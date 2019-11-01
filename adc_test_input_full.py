@@ -249,7 +249,7 @@ if(refs == "BJT"):
 else:
     with open (rawdir + "/ref_set/cmos.cmos", 'rb') as f:
         tmp = pickle.load(f)
-Vfullscale = tmp[1][3] - tmp[1][4]
+Vfullscale = tmp[1][1] - tmp[1][2]
 
 #Vfullscale = 1.5 #V
 
@@ -291,7 +291,13 @@ while(flag < 10 and ENOB < 10):
     
     f, p, psd = chn_rfft_psd(fft_data, fs = fs, fft_s = Ntot, avg_cycle = avgs)
     f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
+    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
+    f, p, psd = p_delete(f, p, psd, fmin=1950, fmax=2050)
     f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+    f, p, psd = p_delete(f, p, psd, fmin=3950, fmax=4050)
+    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
+    f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
     f, p, psd = p_delete(f, p, psd, fmin=5950, fmax=6050)
 
     #Truncate DC and Nyquist bins

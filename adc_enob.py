@@ -39,8 +39,8 @@ if(adc_sample_rate == "4"):
     fs = 500 #kHz
 else:
     #freq = "81054.7"
-    #freq = "28320.3"
-    freq = "12695.3"
+    freq = "28320.3"
+    #freq = "12695.3"
     fs = 2000 #kHz
 
 #50 ohm terminations on socket mezzanine boards
@@ -88,7 +88,8 @@ if(refs == "BJT"):
 else:
     with open (rawdir + "/ref_set/cmos.cmos", 'rb') as f:
         tmp = pickle.load(f)
-Vfullscale = tmp[1][3] - tmp[1][4]
+print (tmp[1][1], tmp[1][2], tmp[1][3], tmp[1][4])
+Vfullscale = tmp[1][1] - tmp[1][2]
 #Vfullscale = 1.5 #V
 avgs = 10
 
@@ -155,6 +156,7 @@ for chnno in range(16):
     NAD = np.sum(p) - signal_pwr
     SINAD = 10*np.log10( signal_pwr / NAD )
     ENOB = (SINAD - 1.76 + 20*np.log10(Vfullscale/Vinput)) / 6.02
+    print (SINAD, ENOB, NAD, 20*np.log10(Vfullscale/Vinput), Vfullscale, Vinput)
     
     fundamental = max(p)
     SFDR = 10*np.log10( fundamental / max(p_aux))

@@ -9,6 +9,9 @@ from fpga_reg import FPGA_REG
 #from adc_reg import ADC_REG
 from bit_op import Bit_Op
 import time
+import adc_config as config
+import os
+
 #import sys
 class COLDADC_tool:
     
@@ -136,7 +139,10 @@ class COLDADC_tool:
             #print("DONE")           
             self.udp.write(self.fpga_reg.i2c_ena,0)
             self.udp.write(self.fpga_reg.i2c_ena,0)
-
+            
+        with open(self.rf, 'a+') as f:
+            f.write("%s, %s, %s, %s, \n"%(hex(chip_id), hex(page), hex(addr), hex(data)))
+            
     def I2C_write_checked(self,chip_id,page,reg,data):
         for i in range(10):
             self.I2C_write(chip_id, page, reg, data)
@@ -148,9 +154,7 @@ class COLDADC_tool:
                 time.sleep(0.001)
         else:
             print ("readback value is different from written data, %d, %x, %x"%(reg, data, rdata))
-
-
-        
+    
     #ADC adc write with bit mask
     def ADC_I2C_write(self,chip_id,page,reg,data):
         regNum = reg[0] #register number
@@ -327,6 +331,7 @@ class COLDADC_tool:
         #self.adc_reg = ADC_REG()
         self.fpga_reg = FPGA_REG()
         self.bitop = Bit_Op()
+        self.rf = config.subdir + "ADC_register_write_record.csv"
 
 
 #if __name__ == '__main__':
