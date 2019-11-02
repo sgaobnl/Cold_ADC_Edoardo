@@ -46,7 +46,6 @@ else:
 Ntot = 60000
 
 gen.gen_init()
-print(baseline)
 if(baseline == "200"):
     gen.gen_set(wave_type="WHITE", freq="0", amp="0VP", dc_oft="0.2", load=gen_load) 
 else:
@@ -63,7 +62,7 @@ else:
         print ("Error to create folder ")
         sys.exit()
 
-fn = noise_dir + "WHITE_%s_%s"%(env,refs) + ".bin"
+fn = noise_dir + "WHITE_%s_%s_%s"%(env,refs, baseline) + ".bin"
 print (fn)
 chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
                 

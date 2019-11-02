@@ -35,7 +35,7 @@ class Brd_Config:
     def udp_fifo_clear(self):
         self.udp.write(self.fpga_reg.udp_fifo_clr,1)
         self.udp.write(self.fpga_reg.udp_fifo_clr,1)
-        time.sleep(0.1)
+        time.sleep(0.01)
         self.udp.write(self.fpga_reg.udp_fifo_clr,0)
                 
     def Acq_start_stop(self,Val):
@@ -187,22 +187,22 @@ class Brd_Config:
             for i in range(len(fe_spi_data)):
                 #load data
                 self.udp.write_reg(self.fpga_reg.SPI_WRITE_BASE+i, fe_spi_data[i])
-                time.sleep(0.01)
+                time.sleep(0.001)
             #write SPI
             self.udp.write(self.fpga_reg.WRITE_SPI,1)
-            time.sleep(0.5)
+            time.sleep(0.05)
             self.udp.write(self.fpga_reg.WRITE_SPI,0)
         else: #Check if there are something wrong and get the feedback
             spi_data_fb=[]
-            time.sleep(0.5) #need a delay here too fast
+            time.sleep(0.05) #need a delay here too fast
             for i in range(len(fe_spi_data)):
                 spi_data_fb.append(self.udp.read_reg(self.fpga_reg.SPI_READ_BASE + i))
-                time.sleep(0.01)
+                time.sleep(0.001)
             #print(spi_data_fb)
             p = [i for i, j in enumerate(zip(spi_data_fb,fe_spi_data)) if all(j[0]!=k for k in j[1:])]
             if not p:
                 #print('FE SPI configuration success') #feadback is equels to the original
-                time.sleep(0.01)
+                time.sleep(0.001)
             else:
                 print('FE SPI configuration failed!')
                 sys.exit     
@@ -219,21 +219,21 @@ class Brd_Config:
         if(mode == "External"):
             #self.udp.write_reg(0xc,0x39)
             self.udp.write_reg(0xc,0)
-            time.sleep(0.01) 
+            time.sleep(0.001) 
             self.udp.write(self.fpga_reg.FPGA_DAC_SELECT,1) #select analog pulse source
-            time.sleep(0.01)   
+            time.sleep(0.001)   
             self.udp.write(self.fpga_reg.FPGA_TP_EN,1)      #enable FPGA calibration DAC
-            time.sleep(0.01)
+            time.sleep(0.001)
             self.udp.write(self.fpga_reg.INT_TP_EN,1)       #enable pulse injection
             
         elif(mode == "Internal"):
             #self.udp.write_reg(0xc,0x56)
             self.udp.write_reg(0xc,0)
-            time.sleep(0.01) 
+            time.sleep(0.001) 
             self.udp.write(self.fpga_reg.FPGA_DAC_SELECT,1)#select analog pulse source
-            time.sleep(0.01)   
+            time.sleep(0.001)   
             self.udp.write(self.fpga_reg.ASIC_TP_EN,1) #enable ASIC DAC
-            time.sleep(0.01)
+            time.sleep(0.001)
             self.udp.write(self.fpga_reg.INT_TP_EN,1) #enable pulse injection
 
         else: #No pulse, RMS mode
@@ -332,11 +332,11 @@ class Brd_Config:
         
     def adc_set_vrefs(self,vrefp_c,vrefn_c,vcmo_c,vcmi_c):
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefp_ctrl,vrefp_c)
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefn_ctrl,vrefn_c)
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmo_ctrl,vcmo_c)
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmi_ctrl,vcmi_c)
 
     
@@ -366,11 +366,11 @@ class Brd_Config:
     #CMOS reference
     def adc_set_cmos_vrefs(self,vrefp_c,vrefn_c,vcmi_c,vcmo_c):
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefp_ctrl_cmos,vrefp_c)
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vrefn_ctrl_cmos,vrefn_c)
-        time.sleep(0.01) 
+        time.sleep(0.001) 
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmi_ctrl_cmos,vcmi_c)
-        time.sleep(0.01) 
+        time.sleep(0.001) 
         self.adc.ADC_I2C_write(self.chip_id,self.page,self.adc_reg.vcmo_ctrl_cmos,vcmo_c)
         #time.sleep(0.01) 
     
@@ -526,31 +526,12 @@ class Brd_Config:
         return (int(num) & 0xffff) #ignore the bit17
 
     def adc_average(self,pktnum,neg=None):
-#        self.Acq_start_stop(1)
         rawdata = self.udp.get_pure_rawdata(pktnum+1000 )
         chns = raw_conv(rawdata, pktnum)[0]
-#        self.Acq_start_stop(0)
-        
-#        #add for test  
-#        self.Acq_start_stop(1)
-#        #pktnum = 16000 # up to 128k points
-#        adcdata = self.get_data(pktnum,1,'Jumbo')
-#        #time.sleep(1)
-#        self.Acq_start_stop(0)
-#        
-#        frames_inst = Frames(pktnum,adcdata)
-#        frames = frames_inst.packets()
-#    
-#        chns=[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
-#        for i in range(len(frames)):
-#            for j in range(16): #16 channels
-#                chns[j].append(self.complement(frames[i].ADCdata[j],"none"))
         
         temp0 = chns[0] + chns[1] + chns[2] + chns[3] + chns[4] + chns[5] + chns[6] + chns[7]
         temp1 = chns[8] + chns[9] + chns[10]+ chns[11]+ chns[12]+ chns[13]+ chns[14]+ chns[15]
           
-#        val0 = round(sum(temp0)/len(temp0))
-#        val1 = round(sum(temp1)/len(temp1))
         val0 = round(np.mean(temp0))
         val1 = round(np.mean(temp1))
         
@@ -960,16 +941,16 @@ class Brd_Config:
             #samples = int(avr/math.pow(2,(6-i))) #change 16000 to avr
             samples = int(avr) #change 16000 to avr
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.cal_stages,(0x7-i))  # calibrate stage6
-            tdly = 0.01
-            time.sleep(tdly)
+            tdly = 0.001
+            #time.sleep(tdly)
             #reg 44 setting
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.force_adc,0x3)   #force adc0,adc1
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.stage_select,(0x6-i)) #put stage6 in forcing mode
             #reg 46 setting
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.clear_reg_adc,0x3) # clear adc0,adc1 calibration registers
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.clear_reg_adc,0x0) # S0 appears at ADC0,ADC1 output
             #record an average value for S0
             time.sleep(tdly)
@@ -979,26 +960,26 @@ class Brd_Config:
             #record an average value for S1
             time.sleep(tdly)
             adc0_S1,adc1_S1, adc0_s1_statics, adc1_s1_statics = self.adc_average(samples)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.caldac_ctrl_adc,0x3) # S2 and S3 measurement, S2 appears at ADC0,ADC1 output 
             #record on average value for s2
             time.sleep(tdly)
             adc0_S2,adc1_S2, adc0_s2_statics, adc1_s2_statics = self.adc_average(samples)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.force_lsb_adc,0x0) #ADC0 ADC1 back to normal mode
             #reg 45
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.force_msb_adc,0x3) #force adc0 adc1 msb to 1, S3 appears at the ADC output
         
             #record on average value for S3
             time.sleep(tdly)
             adc0_S3,adc1_S3,adc0_s3_statics, adc1_s3_statics = self.adc_average(samples,"neg")
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.force_adc,0x0)      #clear reg44
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.force_msb_adc,0x0)  #clear reg45
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.ADC_I2C_write_checked(self.chip_id,self.page,self.adc_reg.caldac_ctrl_adc,0x0)#clear reg46
-            time.sleep(tdly)
+            #time.sleep(tdly)
             #Compute W0 = S1 + (-S0) W2 = S2 + (-S3)
             adc0_W0 = self.subtract(adc0_S1 + adc0_S0)
             adc0_W2 = self.subtract(adc0_S2 + adc0_S3)
@@ -1015,19 +996,19 @@ class Brd_Config:
             adc1_w2h = (adc1_W2 >> 8) & 0xff            
             
             self.adc.I2C_write_checked(self.chip_id,self.page,(0xc-2*i),adc0_w0l)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0xd-2*i),adc0_w0h)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x2c-2*i),adc0_w2l)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x2d-2*i),adc0_w2h)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x4c-2*i),adc1_w0l)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x4d-2*i),adc1_w0h)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x6c-2*i),adc1_w2l)
-            time.sleep(tdly)
+            #time.sleep(tdly)
             self.adc.I2C_write_checked(self.chip_id,self.page,(0x6d-2*i),adc1_w2h)   
 
             if saveflag == "savefig":
@@ -1143,7 +1124,7 @@ class Brd_Config:
         else:
             for i in range(len(reg)):
                 self.adc.I2C_write_checked(self.chip_id,self.page,reg[i],val[i])
-                time.sleep(0.05)
+                #time.sleep(0.05)
 
     def adc_read_config_regs(self):
         page1_reg=[]

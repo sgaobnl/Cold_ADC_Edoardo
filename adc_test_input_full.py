@@ -363,7 +363,7 @@ baseline = "900"
 gen.gen_set(wave_type="WHITE", freq ="0", amp="0VP", dc_oft="0.90", load=gen_load)
 
 #chns = cq.get_adcdata(PktNum=Ntot )
-fn = adc_tst_dir + "ADC_TST_INPUT_WHITE_%s_%s"%(env,refs) + ".bin"
+fn = adc_tst_dir + "ADC_TST_INPUT_WHITE_%s_%s_%s"%(env,refs, baseline) + ".bin"
 chns = cq.get_adcdata(PktNum=Ntot, saveraw=True, fn=fn )
 
 if (mode16bit):

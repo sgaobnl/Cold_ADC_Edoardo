@@ -630,7 +630,6 @@ class CMD_ACQ:
                     break
             if nibble_sync_f:
                 self.bc.adc_test_data_mode(mode = "Normal")
-                time.sleep(0.01)
                 chns = self.get_adcdata(PktNum=128)
                 for i in range(10):
                     chns = self.get_adcdata(PktNum=128)
@@ -695,13 +694,13 @@ class CMD_ACQ:
             self.init_chk()
             self.ref_set(fn)
             if (self.flg_bjt_r):
-#                self.bc.adc_write_reg(22, 0x00)
-#                self.bc.adc_write_reg(23, 0x20) 
+                self.bc.adc_write_reg(22, 0x00)
+                self.bc.adc_write_reg(23, 0x20) 
                 pass
             else:
                 self.bc.adc_write_reg(22, 0xff)
                 self.bc.adc_write_reg(23, 0x2f)     
-            time.sleep(1)
+            time.sleep(0.1)
 
             self.Input_buffer_cfg(sdc = adc_sdc, db = adc_db, sha = adc_sha, curr_src = adc_curr_src)      
             #self.Input_buffer_cfg(sdc = "On", db = "Bypass", sha = "Diff", curr_src = "BJT-sd")      
@@ -737,7 +736,7 @@ class CMD_ACQ:
             print ("Powerdone BJT reference")
             self.bc.adc_write_reg(22, 0xff)
             self.bc.adc_write_reg(23, 0x2f)            
-        time.sleep(1)
+        time.sleep(0.1)
         if (not os.path.isfile(fp)):
             self.ref_set_find(fn)
         self.ref_set(fn)

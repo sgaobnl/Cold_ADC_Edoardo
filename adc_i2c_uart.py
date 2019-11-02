@@ -64,7 +64,7 @@ class COLDADC_tool:
             rdadr = (vreg>>16)&0xff
             rddata = (vreg>>8)&0xff
 #            print (hex(chip_id), hex(vreg), hex(rdadr), hex(rddata))
-            time.sleep(0.01)
+            time.sleep(0.001)
             self.udp.write_reg(2, data + 0x00)
             temp = rddata
         else: 
@@ -78,7 +78,7 @@ class COLDADC_tool:
             self.udp.write(self.fpga_reg.i2c_reg_addr,addr)
             #run strobe
             self.udp.write(self.fpga_reg.i2c_ena,1)
-            time.sleep(0.01)
+            time.sleep(0.001)
             check_done =1
             while(check_done):
                 check_done = self.udp.read(self.fpga_reg.i2c_busy)
@@ -117,7 +117,7 @@ class COLDADC_tool:
             data_w = ((par_chk<<28)&0x10000000) + data_w
             self.udp.write_reg(2, data_w + 0x01)
 #            print (hex(chip_id), hex(addr), hex(data), hex(data_w))
-            time.sleep(0.01)
+            time.sleep(0.001)
             self.udp.write_reg(2, data_w + 0x00)
         else: 
             #load address
@@ -132,7 +132,7 @@ class COLDADC_tool:
             self.udp.write(self.fpga_reg.i2c_data_wr,data)
             #run strobe
             self.udp.write(self.fpga_reg.i2c_ena,1)
-            time.sleep(0.01)
+            time.sleep(0.001)
             check_done =1
             while(check_done):
                 check_done = self.udp.read(self.fpga_reg.i2c_busy)
@@ -231,7 +231,7 @@ class COLDADC_tool:
         check_done = 1
         while(check_done):
             check_done = self.udp.read(self.fpga_reg.uart_tx_busy)       
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.udp.write(self.fpga_reg.uart_tx_ena,0)
 
     
@@ -253,7 +253,7 @@ class COLDADC_tool:
         check_done = 1
         while(check_done):
             check_done = self.udp.read(self.fpga_reg.uart_tx_busy)       
-        time.sleep(0.01)
+        time.sleep(0.001)
         self.udp.write(self.fpga_reg.uart_tx_ena,0)       
         
         check_done =1

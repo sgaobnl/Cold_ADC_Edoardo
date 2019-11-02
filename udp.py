@@ -98,7 +98,6 @@ class UDP(UDP_frames):
 
 # Read register from FPGA to PC, this is an overloading function for wib and FEMB both
     def read_reg(self, reg, femb_addr = None ):
-        time.sleep(0.001)
         regVal = int(reg)
         if (regVal < 0) or (regVal > self.MAX_REG_NUM):
            #print "FEMB_UDP--> Error read_reg: Invalid register number"
@@ -135,7 +134,7 @@ class UDP(UDP_frames):
                     if (j<8):
                         sock_readresp.close()
                         print ("Read reg time out (%d)"%j)
-                        time.sleep(0.5)
+                        time.sleep(0.05)
                         continue
                     else:
                         print ("FEMB_UDP--> Error read_reg: No read packet received from board, quitting")
@@ -147,7 +146,7 @@ class UDP(UDP_frames):
                 if int(dataHex[0:4],16) != regVal :
                     if (j<8):
                         print ("Read reg time out (wrong package received) (%d)"%j)
-                        time.sleep(0.5)
+                        time.sleep(0.05)
                         continue
                     else:
                         print ("FEMB_UDP--> Error read_reg: Invalid response packet")
@@ -185,7 +184,7 @@ class UDP(UDP_frames):
                 temp = self.read_reg(regNum,femb_addr)
                 if (temp != None):
                     break
-                time.sleep(0.01)
+                time.sleep(0.001)
                 if ( i == 9):
                     print ("UDP.py: UDP read-back can't be fixed, exit anyway!")
                     sys.exit()
@@ -258,7 +257,7 @@ class UDP(UDP_frames):
         
     def get_pure_rawdata(self,PktNum,Jumbo=None):
         #set up listening socket
-        for j in range(10):
+        for j in range(100):
             sock_data = self.socket_gen("Listen")
             sock_data.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
             sock_data.bind(('', self.UDP_PORT_HSDATA))                          #high-speed data UDP port 32003
@@ -283,7 +282,7 @@ class UDP(UDP_frames):
                     if j < 8 :
                         sock_data.close()
                         print ("High-speed data time out (%d)"%j)
-                        time.sleep(0.5)
+                        time.sleep(0.05)
                         continue
                     else:
                         print ("UDP--> Error get_data: No data packet received from board, quitting")
@@ -294,7 +293,7 @@ class UDP(UDP_frames):
                 else:
                     sock_data.close()
                     print ("No high-speed data received (%d)"%j)
-                    time.sleep(0.5)
+                    time.sleep(0.05)
                     continue
             sock_data.close()
             
@@ -311,6 +310,8 @@ class UDP(UDP_frames):
                     bad_pkg_flg = True
                     break
             if (bad_pkg_flg):
+                self.data_fifo_en(en=0)
+                time.sleep(0.05)
                 continue
             else:
                 self.data_fifo_en(en=0)

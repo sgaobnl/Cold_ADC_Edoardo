@@ -32,7 +32,9 @@ cq = CMD_ACQ()  #command library
 env = config.temperature
 rawdir = config.subdir
 if (os.path.exists(rawdir)):
-    pass
+    while (1):
+        print ("Folder already exists. Please close *.bat and reset")
+        time.sleep(10)
 else:
     try:
         os.makedirs(rawdir)
@@ -79,11 +81,7 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
         time.sleep(1)
         ps.off([1,2, 3])
-        if(env == "RT"):
-            time.sleep(5)
-        else:
-            #With LN2, wait longer (current settling)
-            time.sleep(10)
+        time.sleep(5)
         
         #Set VDDA2P5 to 2.8 V for BJT reference only (known issue at LN2 with nominal 2.5 V)
         ps.set_channel(1,2.75)
@@ -95,7 +93,7 @@ def pwr_chk():
         time.sleep(1)
         cq.flg_bjt_r = True
         cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="BJT-sd", fn=ref_set_dir)
-        time.sleep(5)
+        time.sleep(2)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
         powers = [a*b for a,b in zip(voltages,currents)]
@@ -160,10 +158,7 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
         time.sleep(1)
         ps.off([1,2,3])
-        if(env == "RT"):
-            time.sleep(5)
-        else:
-            time.sleep(10)
+        time.sleep(5)
         ps.set_channel(1,2.55)
         ps.set_channel(2,2.1)
         ps.set_channel(3,2.25)
@@ -173,7 +168,7 @@ def pwr_chk():
         time.sleep(1)
         cq.flg_bjt_r = False
         cq.adc_cfg_init(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src="CMOS-sd", fn=ref_set_dir)
-        time.sleep(5)
+        time.sleep(2)
         voltages = ps.measure_voltages()
         currents = ps.measure_currents()
         powers = [a*b for a,b in zip(voltages,currents)]

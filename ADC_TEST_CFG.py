@@ -103,31 +103,26 @@ ps.ps_init()
 if(flg_bjt_r):
     adc_curr_src = "BJT-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
-    ps.off([1,2,3])
-    time.sleep(5)
     ps.set_channel(1,2.75)
     ps.set_channel(2,2.1)
     ps.set_channel(3,2.25)
     ps.on([1,2,3])
 ####    ps.set_channel(1,2.8)
-
-    time.sleep(5)
+    time.sleep(2)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
-    time.sleep(10)
+    time.sleep(5)
 
 else:
     adc_curr_src = "CMOS-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
-    ps.off([1,2,3])
-    time.sleep(5)
     ps.set_channel(1,2.55)
     ps.set_channel(2,2.1)
     ps.set_channel(3,2.25)
     ps.on([1,2,3])
 ####    ps.set_channel(1,2.5)
-    time.sleep(5)
+    time.sleep(2)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
-    time.sleep(10)
+    time.sleep(5)
 
 #Complete ADC configuration: input buffer, SDC, SHA, current source, references, weights)
 if (adc_sdc_en):

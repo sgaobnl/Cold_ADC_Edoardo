@@ -5,25 +5,3 @@ I2C Read/Write: PASS
 Configuration pattern: PASS 
 Default registers: PASS 
 Bandgap reference: PASS 
-WARNING: Channel 1 ENOB = -3.96 bits 
-WARNING: Channel 2 ENOB = -2.61 bits 
-WARNING: Channel 3 ENOB = -2.72 bits 
-WARNING: Channel 4 ENOB = -2.28 bits 
-WARNING: Channel 5 ENOB = -2.01 bits 
-WARNING: Channel 6 ENOB = -1.70 bits 
-WARNING: Channel 7 ENOB = -1.41 bits 
-WARNING: Channel 9 ENOB = -3.93 bits 
-WARNING: Channel 10 ENOB = -3.57 bits 
-WARNING: Channel 11 ENOB = -2.72 bits 
-WARNING: Channel 12 ENOB = -2.37 bits 
-WARNING: Channel 13 ENOB = -2.09 bits 
-WARNING: Channel 14 ENOB = -1.73 bits 
-WARNING: Channel 15 ENOB = -1.41 bits 
-WARNING: Channel 0 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 1 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 0 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 1 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 0 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 1 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 0 RMS Noise (0.000000) is out of expected range 
-WARNING: Channel 1 RMS Noise (0.000000) is out of expected range 

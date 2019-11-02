@@ -30,12 +30,11 @@
 :::: Connect Single Ended SMA cable from DS360 positive output to the board.
 :::: Connect Clock Synchronization cables from FPGA mezzanine jumpers to DS360 10 MHz input.
 :::: Turn on DS360 Stanford Generator.
-::echo 'Confirm the cables were switch!'
-::echo 'Confirm the cables were switch!'
-::PAUSE
-::python all_ps_on.py
-::python adc_init_checkout.py      
+echo 'Confirm the cables were switch!'
+echo 'Confirm the cables were switch!'
 PAUSE
+python all_ps_on.py
+python adc_init_checkout.py      
 python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16 SHAinput
 python adc_dnlinl_sinewave.py    BJT 16
 python adc_enob.py               BJT 16

@@ -23,8 +23,6 @@ import datetime
 now = datetime.datetime.now()
 
 from fpdf import FPDF
-from cmd_library import CMD_ACQ
-cq = CMD_ACQ()  #command library
 
 env = config.temperature
 rawdir = config.subdir
@@ -61,6 +59,7 @@ pdf = FPDF(orientation = 'P', unit = 'mm', format='Letter')
 pdf.alias_nb_pages()
 
 ##### ADC Test Summary page #####
+print ("##### ADC Test Summary page #####")
 pdf.add_page()
 pdf.set_font('Times', '', 20)
 pdf.cell(85)
@@ -80,6 +79,7 @@ pdf.cell(30, 5, 'Status: %s'%status, 0, 1)
 pdf.ln(5)
 
 # Generate Power Check table
+print ("# Generate Power Check table")
 pdf.cell(30, 5, 'Power Consumption (CMOS Reference):', 0, 1)
 # Colon width is 1/4 of effective page width
 epw = pdf.w - 2*pdf.l_margin
@@ -87,10 +87,10 @@ col_width = epw/4
 pdf.set_font('Times', '', 10) 
 with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 pdf.ln(5)
 
 # Text height is the same as current font size
+print ("# Text height is the same as current font size")
 th = pdf.font_size 
 pdf.ln(0.5*th)
 for row in data:
@@ -109,12 +109,13 @@ if(status == "PASS"):
     pdf.multi_cell(epw, 5, '%s'%pass_log)
     pdf.ln(2*th)
 
+    pdf.add_page()
+    pdf.set_font('Times', '', 12)
     col_width = epw/10
     pdf.cell(epw, 10, 'ADC0 (CMOS Reference)', 0, 1, align = 'C')
     pdf.ln(0.5*th)
     with open(rawdir + 'Channel_Characterization_CMOS_ADC0.csv', "r") as csvfile:
         data = list(csv.reader(csvfile))
-    print(data)
 
     for row in data:
         i = 0
@@ -131,7 +132,6 @@ if(status == "PASS"):
     pdf.ln(0.5*th)
     with open(rawdir + 'Channel_Characterization_CMOS_ADC1.csv', "r") as csvfile:
         data = list(csv.reader(csvfile))
-    print(data)
 
     for row in data:
         i = 0
@@ -154,6 +154,7 @@ if(status == "FAIL"):
 
 
 ##### ADC Initialization Checkout pages #####
+print ("##### ADC Initialization Checkout pages #####")
 pdf.add_page()
 pdf.set_font('Times', '', 20)
 pdf.cell(85)
@@ -168,9 +169,8 @@ col_width = epw/4
  
 with open(rawdir + 'Power_Check/Power_Check_BJT.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
-# Text height is the same as current font size
+print ("# Text height is the same as current font size")
 th = pdf.font_size 
 pdf.ln(0.5*th)
 for row in data:
@@ -186,7 +186,6 @@ pdf.cell(30, 5, 'Power Check - CMOS (2 MSPS/CH):', 0, 1)
 pdf.ln(0.5*th)
 with open(rawdir + 'Power_Check/Power_Check_CMOS.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
 for row in data:
     for datum in row:
@@ -203,6 +202,7 @@ pdf.image(rawdir + 'Reference_Check/Reference_CMOS.png', 11, 222, 186)
 
 
 # Generate Calibration Weights table
+print ("# Generate Calibration Weights table")
 pdf.add_page()
 pdf.set_font('Times', '', 20)
 pdf.cell(85)
@@ -215,7 +215,6 @@ pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
 col_width = table_w/4
 with open(rawdir + 'Weights_Records/Weights_Record_BJT_4M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
 pdf.set_font('Times', '', 10)
 th = pdf.font_size 
@@ -233,7 +232,6 @@ table_w = pdf.w/2 - (4/3)*pdf.l_margin
 col_width = table_w/4
 with open(rawdir + 'Weights_Records/Weights_Record_CMOS_4M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
 pdf.set_font('Times', '', 10)
 th = pdf.font_size 
@@ -244,6 +242,7 @@ for row in data:
     pdf.ln(2*th)    
 
 # Generate Calibration Weights table
+print ("# Generate Calibration Weights table")
 pdf.add_page()
 pdf.set_font('Times', '', 20)
 pdf.cell(85)
@@ -256,7 +255,6 @@ pdf.cell(table_w, 10, 'BJT:', 0, 1, align = 'C')
 col_width = table_w/4
 with open(rawdir + 'Weights_Records/Weights_Record_BJT_16M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
 pdf.set_font('Times', '', 10)
 th = pdf.font_size 
@@ -274,7 +272,6 @@ table_w = pdf.w/2 - (4/3)*pdf.l_margin
 col_width = table_w/4
 with open(rawdir + 'Weights_Records/Weights_Record_CMOS_16M.csv', "r") as csvfile:
     data = list(csv.reader(csvfile))
-print(data)
 
 pdf.set_font('Times', '', 10)
 th = pdf.font_size 
@@ -284,6 +281,7 @@ for row in data:
         pdf.cell(col_width, 2*th, str(datum), border=1)
     pdf.ln(2*th)    
 
+print ("#Generate Noise Study pages")
 for sample_rate in ["4MSPS", "16MSPS"]:
     #Generate Noise Study pages
     pdf.add_page()
@@ -334,6 +332,7 @@ for sample_rate in ["4MSPS", "16MSPS"]:
     
     ##### Single channel Carachterization (static and dynamic behavior) #####
     for chnno in range(16):
+        print ("##### channel %d Carachterization (static and dynamic behavior) #####" %chnno)
         pdf.add_page()
         pdf.set_font('Times', '', 20)
         pdf.cell(85)
@@ -364,6 +363,7 @@ for sample_rate in ["4MSPS", "16MSPS"]:
 ##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
 #if (False):
 if (True):
+    print ("##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####")
     pdf.add_page()
     pdf.set_font('Times', '', 20)
     pdf.cell(85)
@@ -387,6 +387,7 @@ if (True):
     
     
     ##### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####
+    print ("##### ADC Test Input Carachterization (4 MHz, nominal operating frequency) #####")
     pdf.add_page()
     pdf.set_font('Times', '', 20)
     pdf.cell(85)
