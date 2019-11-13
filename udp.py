@@ -67,7 +67,7 @@ class UDP(UDP_frames):
         new_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #creat a new socket, IPv4,UDP
         if(socket_type == "Listen"):
             new_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            #new_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
+            new_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 81920000) #open a large buffer for that
             new_socket.settimeout(5) #unit second
         else:
             new_socket.setblocking(0) #non-blocking socket
