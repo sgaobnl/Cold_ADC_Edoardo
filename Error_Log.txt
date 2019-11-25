@@ -1,0 +1,5 @@
+Reference setting error: VREFP (BJT) is not monotonic 
+Reference setting error: VREFN (BJT) is not monotonic 
+Reference setting error: VCMI (BJT) is not monotonic 
+Reference setting error: VCMO (BJT) is not monotonic 
+Reference setting error: IDAC0 (BJT) is not monotonic 
