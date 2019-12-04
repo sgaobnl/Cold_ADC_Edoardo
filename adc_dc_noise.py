@@ -31,7 +31,7 @@ refs = sys.argv[1]
 baseline = sys.argv[2]
 adc_sample_rate = sys.argv[3]
 
-gen_load = "50"
+gen_load = "Hi-Z"
 
 #env = "RT"
 #refs = "CMOS"
