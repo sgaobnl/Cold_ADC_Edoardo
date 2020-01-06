@@ -25,6 +25,9 @@ fm_ps = RIGOL_PS_CTL()
 fm_ps.ps_init()
 fm_ps.off([1, 2,3])
 
+import time
+time.sleep(5)
+
 
 
 
