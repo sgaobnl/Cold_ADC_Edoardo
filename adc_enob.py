@@ -44,7 +44,8 @@ else:
     fs = 2000 #kHz
 
 #50 ohm terminations on socket mezzanine boards
-gen_load = "Hi-Z"
+#gen_load = "Hi-Z"
+gen_load = "50"
 
 #Choose between 16 bit or 12 bit ADC
 mode16bit = False

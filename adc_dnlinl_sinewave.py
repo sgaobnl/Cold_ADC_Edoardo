@@ -42,8 +42,8 @@ else:
     fs = 2000 #kHz
 
 #50 ohm terminations on socket mezzanine boards
-#gen_load = "50"  
-gen_load = "Hi-Z"  
+gen_load = "50"  
+#gen_load = "Hi-Z"  
 
 mode16bit = False
 if (mode16bit):
