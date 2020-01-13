@@ -13,19 +13,6 @@ from raw_data_decoder import raw_conv
 import pickle
 import os
 
-#from udp import UDP 
-#from adc_i2c_uart import COLDADC_tool
-#
-#from fpga_reg import FPGA_REG
-#from fe_reg import FE_REG
-#from user_defined import User_defined
-#from adc_i2c_uart import COLDADC_tool
-#from adc_reg import ADC_REG
-#from frame import Frames
-#import sys
-#import time
-#import math
-
 class CMD_ACQ:
     def err_log(self, s):
         err_file = open("Error_Log.txt","a") #append mode 

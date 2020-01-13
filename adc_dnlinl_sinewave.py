@@ -77,7 +77,9 @@ else:
 gen.gen_init()
 gen.gen_set(wave_type="SINE", freq=freq, amp = amp, dc_oft="0.9", load=gen_load) #sinewave, Hi-Z termination 
 import time
-time.sleep(3)
+time.sleep(2)
+gen.gen_set(wave_type="SINE", freq=freq, amp = amp, dc_oft="0.9", load=gen_load) #sinewave, Hi-Z termination 
+time.sleep(2)
 #Save Data (>1G of data, comment if not required)
 fn = lin_dir + "DNL_INL_sinewave_%s"%refs + ".bin"
 print (fn)

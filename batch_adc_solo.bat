@@ -30,21 +30,10 @@
 :::: Connect Single Ended SMA cable from DS360 positive output to the board.
 :::: Connect Clock Synchronization cables from FPGA mezzanine jumpers to DS360 10 MHz input.
 :::: Turn on DS360 Stanford Generator.
-echo 'Confirm the cables were switch!'
-echo 'Confirm the cables were switch!'
+echo 'Confirm setup is ready!'
 PAUSE
 python all_ps_on.py
 python adc_init_checkout.py      
-python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16 SHAinput
-python adc_dnlinl_sinewave.py    BJT 16
-python adc_enob.py               BJT 16
-python adc_dc_noise.py           BJT 200 16
-python adc_dc_noise.py           BJT 900 16
-python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 16 SHAinput
-python adc_dnlinl_sinewave.py    CMOS 16 
-python adc_enob.py               CMOS 16
-python adc_dc_noise.py           CMOS 200 16
-python adc_dc_noise.py           CMOS 900 16
 
 python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4 SHAinput
 python adc_dnlinl_sinewave.py    BJT 4 
@@ -56,21 +45,35 @@ python adc_dnlinl_sinewave.py    CMOS 4
 python adc_enob.py               CMOS 4 
 python adc_dc_noise.py           CMOS 200 4
 python adc_dc_noise.py           CMOS 900 4
-::
-echo 'Switch the cables'
-echo 'Confirm the cables were switch!'
-PAUSE
-:::::: Internal ADC Tests (Differential ADC Test Input):
-:::::: Disconnect Single Ended SMA output from DS360, connect differential output for ADC Test Input (P and N SMA cables).
-:::::: Disconnect clock synchronization cables from FPGA mezzanine.
-python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16  ADCinput
-python adc_test_input_full.py    BJT 16
-python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4   ADCinput
-python adc_test_input_full.py    BJT 4
-python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 16 ADCinput
-python adc_test_input_full.py    CMOS  16
-python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 4  ADCinput
-python adc_test_input_full.py    CMOS  4
+
+python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16 SHAinput
+python adc_dnlinl_sinewave.py    BJT 16
+python adc_enob.py               BJT 16
+python adc_dc_noise.py           BJT 200 16
+python adc_dc_noise.py           BJT 900 16
+python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 16 SHAinput
+python adc_dnlinl_sinewave.py    CMOS 16 
+python adc_enob.py               CMOS 16
+python adc_dc_noise.py           CMOS 200 16
+python adc_dc_noise.py           CMOS 900 16
+
 python all_ps_off.py
 python adc_only_pdf.py           NoSDC    
+::
 PAUSE
+::::Internal ADC Tests (Differential ADC Test Input):
+::echo 'Switch the cables'
+::echo 'Confirm the cables were switch!'
+::PAUSE
+::::Disconnect Single Ended SMA output from DS360, connect differential output for ADC Test Input (P and N SMA cables).
+::::Disconnect clock synchronization cables from FPGA mezzanine.
+::::python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 16  ADCinput
+::::python adc_test_input_full.py    BJT 16
+::::python ADC_TEST_CFG.py           BJT NoSDC OLD_CALI 4   ADCinput
+::::python adc_test_input_full.py    BJT 4
+::::python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 16 ADCinput
+::::python adc_test_input_full.py    CMOS  16
+::::python ADC_TEST_CFG.py           CMOS NoSDC OLD_CALI 4  ADCinput
+::::python adc_test_input_full.py    CMOS  4
+::::python all_ps_off.py
+::::PAUSE

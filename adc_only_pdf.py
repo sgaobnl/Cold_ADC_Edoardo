@@ -361,8 +361,8 @@ for sample_rate in ["4MSPS", "16MSPS"]:
     
 
 ##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####
-#if (False):
-if (True):
+if (False):
+#if (True):
     print ("##### ADC Test Input Carachterization (16 MHz, nominal operating frequency) #####")
     pdf.add_page()
     pdf.set_font('Times', '', 20)
