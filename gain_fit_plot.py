@@ -189,11 +189,13 @@ def Chn_Plot(asic_cali, chnno = 0, mode16bit=True, fpic = "gain.png"):
 
 mode16bit = False
 BL = "900mV"
+import adc_config as config
+rawdir = config.subdir
 
 testnos = list(range(1,5)) #+ list(range(11, 19)) + list(range(21, 29)) + list(range(31, 39))
 for testno in testnos:
     testno_str = "Test%02d"%testno
-    f_dir = "D:/ColdADC/ChipN_gain/"
+    f_dir = rawdir + "FE_Gain_data/"
     fr_dir = f_dir + "results/"
     if (os.path.exists(fr_dir)):
         pass

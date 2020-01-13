@@ -72,6 +72,6 @@ if (adc_sdc_en):
     if(cali == "reload weights"):
         old_wghts()
 else:
-    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src=adc_curr_src,,  cali = cali, fn=ref_set_dir)
+    cq.adc_cfg(adc_sdc="Bypass", adc_db="Bypass", adc_sha="Single-ended", adc_curr_src=adc_curr_src,  cali = cali, fn=ref_set_dir)
     if(cali == "reload weights"):
         old_wghts()

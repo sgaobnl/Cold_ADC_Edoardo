@@ -13,6 +13,9 @@ import os
 import sys
 cq = CMD_ACQ() 
 
+import adc_config as config
+rawdir = config.subdir
+
 tp = sys.argv[1]
 sg_str = sys.argv[2]
 pls_str =  sys.argv[3]
@@ -21,7 +24,6 @@ sbf_str = sys.argv[5]
 sdc_str = sys.argv[6]
 sdacsw_str =  sys.argv[7]
 testno = int(sys.argv[8])
-env = sys.argv[9]
 
 if tp == "05us":
     tpi = 1
@@ -72,8 +74,7 @@ fpga_dac = 0
 asic_dac = 8
 print ("sdacsw = %d, fpga_dac = %d, asic_dac = %d"%(sdacsw, fpga_dac, asic_dac) )
    
-rawdir = "D:/ColdADC/"
-rawdir = rawdir + "ChipN_gain/"
+rawdir = rawdir + "FE_Gain_data/"
 if (os.path.exists(rawdir)):
     pass
 else:
@@ -114,7 +115,7 @@ for asic_dac in range(3,0x10,1):
     
     chns = cq.get_adcdata_raw(PktNum=(period*avg_n + 1000) )
     
-    fn = rawdir + "Gain_Test%02d_"%testno + tp + sg_str + snc_str + sbf_str + sdc_str + env + "_asicdac%02d"%asic_dac +".bin"
+    fn = rawdir + "Gain_Test%02d_"%testno + tp + sg_str + snc_str + sbf_str + sdc_str + "_asicdac%02d"%asic_dac +".bin"
     
     print (fn)
     with open(fn, 'wb') as f:

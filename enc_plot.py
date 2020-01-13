@@ -21,10 +21,15 @@ import matplotlib.mlab as mlab
 import pickle
 
 def file_list(runpath):
+    tmp = None
     if (os.path.exists(runpath)):
         for root, dirs, files in os.walk(runpath):
+            tmp = files
             break
-    return files
+    return tmp
+
+import adc_config as config
+rawdir = config.subdir
 
 test_ps = [
            [1, 1, "05us", "14mVfC", "900mV", "NoSDC"], 
@@ -40,7 +45,7 @@ else:
     adc_bits = "ADC12bit"
 Cd="150pF"
 
-nf_dir = "D:/ColdADC/ChipN_noise/"
+nf_dir = rawdir + "FE_Noise_data/"
 nfr_dir = nf_dir + "results/"
     
 for ty in range(len(test_ps)):
@@ -79,7 +84,7 @@ for ty in range(len(test_ps)):
             rmss.append( np.std( (np.array( chns[chnno][0:10000] )&0xffff)//16))
     
     
-    f_dir = "D:/ColdADC/ChipN_gain/"
+    f_dir = rawdir + "FE_Gain_data/"
     fr_dir = f_dir + "results/"
     g_testno_str = "Test%02d"%g_testno
     fs = file_list(runpath=fr_dir)

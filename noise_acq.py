@@ -15,6 +15,9 @@ import pickle
 import os
 import sys
 
+import adc_config as config
+rawdir = config.subdir
+
 cq = CMD_ACQ()
 tp = sys.argv[1]
 sg_str = sys.argv[2]
@@ -24,7 +27,6 @@ sbf_str = sys.argv[5]
 sdc_str = sys.argv[6]
 sdacsw_str =  sys.argv[7]
 testno = int(sys.argv[8])
-env = sys.argv[9]
 
 if tp == "05us":
     tpi = 1
@@ -75,8 +77,7 @@ fpga_dac = 0
 asic_dac = 0
  
 
-rawdir = "D:/ColdADC/"
-rawdir = rawdir + "ChipN_Noise/"
+rawdir = rawdir + "FE_Noise_data/"
 if (os.path.exists(rawdir)):
     pass
 else:
@@ -90,7 +91,7 @@ chns = cq.get_adcdata_raw(PktNum=200000 )
 for i in range(len(chns)):
     print (np.mean(chns[i]), np.std(chns[i]))
 
-fn = rawdir + "Noise_Test%02d_"%testno + tp + sg_str + snc_str + sbf_str + sdc_str + env + ".bin"
+fn = rawdir + "Noise_Test%02d_"%testno + tp + sg_str + snc_str + sbf_str + sdc_str + ".bin"
 
 print (fn)
 with open(fn, 'wb') as f:

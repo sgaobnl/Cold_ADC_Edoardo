@@ -20,7 +20,10 @@ import matplotlib.mlab as mlab
 
 import pickle
 
-nf_dir = "D:/ColdADC/ChipN_noise/"
+import adc_config as config
+rawdir = config.subdir
+
+nf_dir = rawdir + "FE_Noise_data/"
 nfr_dir = nf_dir + "results/"
 
 mode16bit = False
