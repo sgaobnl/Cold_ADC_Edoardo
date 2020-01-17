@@ -1287,7 +1287,7 @@ class Brd_Config:
             code = result / avr
             amp = int(code)
             #---conversion---#
-            amp = code * 2.5 / 4096
+            amp = code * 2.34 / 4096
         return amp    
     
     
