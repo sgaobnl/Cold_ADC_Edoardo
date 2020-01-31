@@ -20,7 +20,7 @@ import matplotlib.mlab as mlab
 import pickle
 from scipy.stats import norm
 
-runpath = "D:/ColdADC/"
+runpath = "D:/ColdADC/QC_Data/"
 
 if (os.path.exists(runpath)):
     for root, dirs, files in os.walk(runpath):
@@ -33,10 +33,14 @@ for adir in dirs:
             rt_dirs.append(runpath + adir + "/")
         elif ("_LN" in adir):
             ln_dirs.append(runpath + adir + "/")
-if (True):
+#if (True):
+if (False):
     dirs = ln_dirs
-    fp0 = "Channel_Characterization_CMOS_ADC0.csv"
-    fp1 = "Channel_Characterization_CMOS_ADC1.csv"
+#    fp0 = "Channel_Characterization_CMOS_ADC0.csv"
+#    fp1 = "Channel_Characterization_CMOS_ADC1.csv"
+    fp0 = "Channel_Characterization_BJT_ADC0.csv"
+    fp1 = "Channel_Characterization_BJT_ADC1.csv"
+
     wdnls_16    = []
     winls_16    = []
     enobs_16    = []
@@ -144,12 +148,12 @@ if (True):
     print (len(rmss900_4 )) 
 
 
-    titles = ["Histogram of Worst DNL (16MS/s)", "Histogram of Worst INL (16MS/s)", \
-              "Histogram of ENOB (16MS/s)", "Histogram of Noise at 900mV (16MS/s)", \
-              "Histogram of Noise at 900mV (16MS/s)", \
-              "Histogram of Worst DNL (4MS/s)", "Histogram of Worst INL (4MS/s)", \
-              "Histogram of ENOB (4MS/s)", "Histogram of Noise at 900mV (4MS/s)", \
-              "Histogram of Noise at 900mV (4MS/s)", \
+    titles = ["Histogram of Worst DNL (2 MS/s)", "Histogram of Worst INL (2 MS/s)", \
+              "Histogram of ENOB (2 MS/s)", "Histogram of Noise at 900mV (2 MS/s)", \
+              "Histogram of Noise at 200mV (2 MS/s)", \
+              "Histogram of Worst DNL (500 kS/s)", "Histogram of Worst INL (500 kS/s)", \
+              "Histogram of ENOB (500 kS/s)", "Histogram of Noise at 900mV (500 kS/s)", \
+              "Histogram of Noise at 200mV (500 kS/s)", \
               ]
 
 
@@ -164,12 +168,12 @@ if (True):
     i = 0
     for datai in [ wdnls_16  , winls_16  , enobs_16  , rmss200_16, rmss900_16, \
             wdnls_4   , winls_4   , enobs_4   , rmss200_4 , rmss900_4 ]:
-        plt.rcParams.update({'font.size': 12})
+        plt.rcParams.update({'font.size': 16})
         fig = plt.figure(figsize=(8,6))
         m = np.mean(datai)
         s = np.std(datai)
-        plt.hist(datai, histtype='bar',  bins=10, label = "Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
-        plt.ylabel('ADC Counts')
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 512 \n Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.ylabel('ADC Channel Counts')
         
         plt.xlabel(xlable[i])
         plt.title(titles[i])
@@ -179,10 +183,14 @@ if (True):
         plt.savefig(runpath+"ADC_per_LN_%d.png"%i)
 #       plt.close()
 
+#if (True):
 if (False):
     dirs = rt_dirs
-    fp0 = "Channel_Characterization_CMOS_ADC0.csv"
-    fp1 = "Channel_Characterization_CMOS_ADC1.csv"
+#    fp0 = "Channel_Characterization_CMOS_ADC0.csv"
+#    fp1 = "Channel_Characterization_CMOS_ADC1.csv"
+    fp0 = "Channel_Characterization_BJT_ADC0.csv"
+    fp1 = "Channel_Characterization_BJT_ADC1.csv"
+
     wdnls_16    = []
     winls_16    = []
     enobs_16    = []
@@ -296,12 +304,12 @@ if (False):
     print (len(rmss900_4 )) 
 
 
-    titles = ["Histogram of Worst DNL (16MS/s)", "Histogram of Worst INL (16MS/s)", \
-              "Histogram of ENOB (16MS/s)", "Histogram of Noise at 900mV (16MS/s)", \
-              "Histogram of Noise at 900mV (16MS/s)", \
-              "Histogram of Worst DNL (4MS/s)", "Histogram of Worst INL (4MS/s)", \
-              "Histogram of ENOB (4MS/s)", "Histogram of Noise at 900mV (4MS/s)", \
-              "Histogram of Noise at 900mV (4MS/s)", \
+    titles = ["Histogram of Worst DNL (2 MS/s)", "Histogram of Worst INL (2 MS/s)", \
+              "Histogram of ENOB (2 MS/s)", "Histogram of Noise at 900mV (2 MS/s)", \
+              "Histogram of Noise at 200mV (2 MS/s)", \
+              "Histogram of Worst DNL (500 kS/s)", "Histogram of Worst INL (500 kS/s)", \
+              "Histogram of ENOB (500 kS/s)", "Histogram of Noise at 900mV (500 kS/s)", \
+              "Histogram of Noise at 200mV (500 kS/s)", \
               ]
 
 
@@ -316,12 +324,12 @@ if (False):
     i = 0
     for datai in [ wdnls_16  , winls_16  , enobs_16  , rmss200_16, rmss900_16, \
             wdnls_4   , winls_4   , enobs_4   , rmss200_4 , rmss900_4 ]:
-        plt.rcParams.update({'font.size': 12})
+        plt.rcParams.update({'font.size': 16})
         fig = plt.figure(figsize=(8,6))
         m = np.mean(datai)
         s = np.std(datai)
-        plt.hist(datai, histtype='bar',  bins=10, label = "Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
-        plt.ylabel('ADC Counts')
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 512 \nMean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.ylabel('ADC Channel Counts')
         
         plt.xlabel(xlable[i])
         plt.title(titles[i])
@@ -331,10 +339,12 @@ if (False):
         plt.savefig(runpath+"ADC_per_RT_%d.png"%i)
 #       plt.close()
 
+#if (True):
 if (False):
     dirs = ln_dirs
     subdir = "ADC_TST_IN/16Mss/"
-    fp = "Channel_Characterization_CMOS.csv"
+    #fp = "Channel_Characterization_CMOS.csv"
+    fp = "Channel_Characterization_BJT.csv"
     wdnls = []
     winls = []
     enobs = []
@@ -355,16 +365,17 @@ if (False):
                 if ("Noise" in tmp[0]):
                     rmss.append(float(tmp[1]))
     
-    titles = ["Histogram of Worst DNL", "Histogram of Worst INL", "Histogram of ENOB", "Histogram of Noise at 900mV"]
+    #titles = ["Histogram of Worst DNL", "Histogram of Worst INL", "Histogram of ENOB", "Histogram of Noise at 900mV"]
+    titles = ["Histogram of Worst DNL (ADC core only)", "Histogram of Worst INL (ADC core only)", "Histogram of ENOB (ADC core only)", "Histogram of Noise at 900mV (ADC core only)"]
     xlable = ["Worst DNL / LSB", "Worst INL / LSB", "ENOB / bit", "Noise at 900mV / LSB"]
     i = 0
     for datai in [ wdnls, winls, enobs, rmss]:
-        plt.rcParams.update({'font.size': 12})
+        plt.rcParams.update({'font.size': 16})
         fig = plt.figure(figsize=(8,6))
         m = np.mean(datai)
         s = np.std(datai)
-        plt.hist(datai, histtype='bar',  bins=10, label = "Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
-        plt.ylabel('ADC Counts')
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 512 \nMean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.ylabel('ADC Channel Counts')
         
         plt.xlabel(xlable[i])
         plt.title(titles[i])
@@ -373,10 +384,103 @@ if (False):
         plt.grid()
         plt.savefig(runpath+"LN_ADC_TST_IN_16Mss_%d.png"%i)
 
+#if (True):
+if (False):
+    dirs = ln_dirs
+    subdir = "ADC_TST_IN/4Mss/"
+    #fp = "Channel_Characterization_CMOS.csv"
+    fp = "Channel_Characterization_BJT.csv"
+    wdnls = []
+    winls = []
+    enobs = []
+    rmss = []
+
+    for adir in dirs:
+        aadir = adir + subdir
+        aaf = aadir + fp
+        with open(aaf, "r") as f:
+            for line in f:
+                tmp = line.split(",")
+                if ("DNL" in tmp[0]):
+                    wdnls.append(float(tmp[1]))
+                if ("INL" in tmp[0]):
+                    winls.append(float(tmp[1]))
+                if ("ENOB" in tmp[0]):
+                    enobs.append(float(tmp[1]))
+                if ("Noise" in tmp[0]):
+                    rmss.append(float(tmp[1]))
+    
+    titles = ["Histogram of Worst DNL (ADC core only)", "Histogram of Worst INL (ADC core only)", "Histogram of ENOB (ADC core only)", "Histogram of Noise at 900mV (ADC core only)"]
+    xlable = ["Worst DNL / LSB", "Worst INL / LSB", "ENOB / bit", "Noise at 900mV / LSB"]
+    i = 0
+    for datai in [ wdnls, winls, enobs, rmss]:
+        plt.rcParams.update({'font.size': 16})
+        fig = plt.figure(figsize=(8,6))
+        m = np.mean(datai)
+        s = np.std(datai)
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 32 \nMean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.ylabel('ADC Counts')
+        
+        plt.xlabel(xlable[i])
+        plt.title(titles[i])
+        i = i + 1
+        plt.legend()
+        plt.grid()
+        plt.savefig(runpath+"LN_ADC_TST_IN_4Mss_%d.png"%i)
+#       plt.close()
+
+#if (True):
+if (False):
+    dirs = rt_dirs
+    subdir = "ADC_TST_IN/16Mss/"
+    #fp = "Channel_Characterization_CMOS.csv"
+    fp = "Channel_Characterization_BJT.csv"
+    dirs = rt_dirs
+    wdnls = []
+    winls = []
+    enobs = []
+    rmss = []
+
+    for adir in dirs:
+        aadir = adir + subdir
+        aaf = aadir + fp
+        with open(aaf, "r") as f:
+            for line in f:
+                tmp = line.split(",")
+                if ("DNL" in tmp[0]):
+                    wdnls.append(float(tmp[1]))
+                if ("INL" in tmp[0]):
+                    winls.append(float(tmp[1]))
+                if ("ENOB" in tmp[0]):
+                    enobs.append(float(tmp[1]))
+                if ("Noise" in tmp[0]):
+                    rmss.append(float(tmp[1]))
+    
+    titles = ["Histogram of Worst DNL (ADC core only)", "Histogram of Worst INL (ADC core only)", "Histogram of ENOB (ADC core only)", "Histogram of Noise at 900mV (ADC core only)"]
+    xlable = ["Worst DNL / LSB", "Worst INL / LSB", "ENOB / bit", "Noise at 900mV / LSB"]
+    i = 0
+    for datai in [ wdnls, winls, enobs, rmss]:
+        plt.rcParams.update({'font.size': 16})
+        fig = plt.figure(figsize=(8,6))
+        m = np.mean(datai)
+        s = np.std(datai)
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 32 \nMean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.ylabel('ADC Counts')
+        
+        plt.xlabel(xlable[i])
+        plt.title(titles[i])
+        i = i + 1
+        plt.legend()
+        plt.grid()
+        plt.savefig(runpath+"RT_ADC_TST_IN_16Mss_%d.png"%i)
+#       plt.close()
+
+#if (True):
 if (False):
     dirs = rt_dirs
     subdir = "ADC_TST_IN/4Mss/"
-    fp = "Channel_Characterization_CMOS.csv"
+    #fp = "Channel_Characterization_CMOS.csv"
+    fp = "Channel_Characterization_BJT.csv"
     wdnls = []
     winls = []
     enobs = []
@@ -397,15 +501,15 @@ if (False):
                 if ("Noise" in tmp[0]):
                     rmss.append(float(tmp[1]))
     
-    titles = ["Histogram of Worst DNL", "Histogram of Worst INL", "Histogram of ENOB", "Histogram of Noise at 900mV"]
+    titles = ["Histogram of Worst DNL (ADC core only)", "Histogram of Worst INL (ADC core only)", "Histogram of ENOB (ADC core only)", "Histogram of Noise at 900mV (ADC core only)"]
     xlable = ["Worst DNL / LSB", "Worst INL / LSB", "ENOB / bit", "Noise at 900mV / LSB"]
     i = 0
     for datai in [ wdnls, winls, enobs, rmss]:
-        plt.rcParams.update({'font.size': 12})
+        plt.rcParams.update({'font.size': 16})
         fig = plt.figure(figsize=(8,6))
         m = np.mean(datai)
         s = np.std(datai)
-        plt.hist(datai, histtype='bar',  bins=10, label = "Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
+        plt.hist(datai, histtype='bar',  bins=10, label = "Total CHNs = 32 \nMean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
         plt.ylabel('ADC Counts')
         
         plt.xlabel(xlable[i])
@@ -413,69 +517,16 @@ if (False):
         i = i + 1
         plt.legend()
         plt.grid()
-        plt.savefig(runpath+"ADC_TST_IN_4Mss_%d.png"%i)
+        plt.savefig(runpath+"RT_ADC_TST_IN_4Mss_%d.png"%i)
 #       plt.close()
 
-
-if (False):
-    subdir = "ADC_TST_IN/16Mss/"
-    fp = "Channel_Characterization_CMOS.csv"
+if (True):
     dirs = rt_dirs
-    wdnls = []
-    winls = []
-    enobs = []
-    rmss = []
-
-    for adir in dirs:
-        aadir = adir + subdir
-        aaf = aadir + fp
-        with open(aaf, "r") as f:
-            for line in f:
-                tmp = line.split(",")
-                if ("DNL" in tmp[0]):
-                    wdnls.append(float(tmp[1]))
-                if ("INL" in tmp[0]):
-                    winls.append(float(tmp[1]))
-                if ("ENOB" in tmp[0]):
-                    enobs.append(float(tmp[1]))
-                if ("Noise" in tmp[0]):
-                    rmss.append(float(tmp[1]))
-    
-    titles = ["Histogram of Worst DNL", "Histogram of Worst INL", "Histogram of ENOB", "Histogram of Noise at 900mV"]
-    xlable = ["Worst DNL / LSB", "Worst INL / LSB", "ENOB / bit", "Noise at 900mV / LSB"]
-    i = 0
-    for datai in [ wdnls, winls, enobs, rmss]:
-        plt.rcParams.update({'font.size': 12})
-        fig = plt.figure(figsize=(8,6))
-        m = np.mean(datai)
-        s = np.std(datai)
-        plt.hist(datai, histtype='bar',  bins=10, label = "Mean = %.2f \n RMS = %.2f"%(m, s), rwidth=0.9)
-        plt.ylabel('ADC Counts')
-        
-        plt.xlabel(xlable[i])
-        plt.title(titles[i])
-        i = i + 1
-        plt.legend()
-        plt.grid()
-        plt.savefig(runpath+"ADC_TST_IN_16Mss_%d.png"%i)
-#       plt.close()
-
-if (False):
     subdir = "Power_Check/"
     fp = "Power_Check_CMOS.csv"
-    pmean = np.mean(chip_pcs)
-    pstd = np.std(chip_pcs)
-    plt.hist(chip_pcs, histtype='bar', range=(350, 500), bins=15, label = "Mean = %d \n RMS = %d"%(pmean, pstd), rwidth=0.9)
-    plt.title('Power Consumption at RT (Total chips = %d)'%len(chip_pcs))
-    plt.ylabel('ADC Counts')
-    plt.xlabel('Power Consumption / mW')
-    plt.legend()
-    plt.grid()
-    plt.savefig(runpath+"PC_atRT.png")
-    plt.close()
+    #fp = "Power_Check_BJT.csv"
     
     chip_pcs = []
-    dirs = ln_dirs
     for adir in dirs:
         aadir = adir + subdir
         aaf = aadir + fp
@@ -490,20 +541,52 @@ if (False):
             pc = pc1 + pc2 + pc3
             chip_pcs.append(pc)
     
-    plt.rcParams.update({'font.size': 12})
+    plt.rcParams.update({'font.size': 16})
     fig = plt.figure(figsize=(8,6))
     pmean = np.mean(chip_pcs)
     pstd = np.std(chip_pcs)
     plt.hist(chip_pcs, histtype='bar', range=(350, 500), bins=15, label = "Mean = %d \n RMS = %d"%(pmean, pstd), rwidth=0.9)
     plt.title('Power Consumption at RT (Total chips = %d)'%len(chip_pcs))
-    plt.ylabel('ADC Counts')
+    plt.ylabel('ADC Channel Counts')
+    plt.xlabel('Power Consumption / mW')
+    plt.legend()
+    plt.grid()
+    plt.savefig(runpath+"PC_atRT.png")
+    plt.close()
+
+if (True):
+    dirs = ln_dirs
+    subdir = "Power_Check/"
+    fp = "Power_Check_CMOS.csv"
+    #fp = "Power_Check_BJT.csv"
+    
+    chip_pcs = []
+    for adir in dirs:
+        aadir = adir + subdir
+        aaf = aadir + fp
+        with open(aaf, "r") as f:
+            for line in f:
+                if ("mW" in line):
+                    break
+            pcs = line.split(",")
+            pc1 = float(pcs[1])
+            pc2 = float(pcs[2])
+            pc3 = float(pcs[3])
+            pc = pc1 + pc2 + pc3
+            chip_pcs.append(pc)
+    
+    plt.rcParams.update({'font.size': 16})
+    fig = plt.figure(figsize=(8,6))
+    pmean = np.mean(chip_pcs)
+    pstd = np.std(chip_pcs)
+    plt.hist(chip_pcs, histtype='bar', range=(350, 500), bins=15, label = "Mean = %d \n RMS = %d"%(pmean, pstd), rwidth=0.9)
+    plt.title('Power Consumption at LN (Total chips = %d)'%len(chip_pcs))
+    plt.ylabel('ADC Channel Counts')
     plt.xlabel('Power Consumption / mW')
     plt.legend()
     plt.grid()
     plt.savefig(runpath+"PC_atLN.png")
     plt.close()
-
-
 
 #def Chn_Plot(asic_cali, chnno = 0, mode16bit=True, fpic = "gain.png"):
 #    if (mode16bit):
