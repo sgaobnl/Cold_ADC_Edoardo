@@ -175,7 +175,8 @@ class RIGOL_PS_CTL:
 
     #__INIT__#
     def __init__(self):
-        self.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR'
+        self.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184550857::0::INSTR' #PS1
+        #self.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR' #PS2
         self.gen = None
         
         
