@@ -20,8 +20,8 @@ from rigol_dp832_ps import RIGOL_PS_CTL
 #ps = PS_CTL()   #power supply library
 adc_ps = RIGOL_PS_CTL() 
 adc_ps.ADDR =u'USB0::0x1AB1::0x0E11::DP8C184550857::0::INSTR' 
-fm_ps = RIGOL_PS_CTL() 
-fm_ps.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR'
+#fm_ps = RIGOL_PS_CTL() 
+#fm_ps.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR'
 
 cq = CMD_ACQ()  #command library
 
@@ -106,15 +106,16 @@ else:
 
 #Set 2.8 V for channel 1 (VDDA2P5) if BJT reference is used    
 adc_ps.ps_init()
-fm_ps.ps_init()
+#fm_ps.ps_init()
 if(flg_bjt_r):
     adc_curr_src = "BJT-sd"
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     adc_ps.set_channel(1,2.75)
     adc_ps.set_channel(2,2.1)
-    fm_ps.set_channel(1,2.25)
-    adc_ps.on([1,2])
-    fm_ps.on([1])
+    adc_ps.set_channel(3,2.25)
+    #fm_ps.set_channel(1,2.25)
+    adc_ps.on([1,2,3])
+    #fm_ps.on([1])
 ####    ps.set_channel(1,2.8)
     time.sleep(2)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)
@@ -125,9 +126,10 @@ else:
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0)
     adc_ps.set_channel(1,2.55)
     adc_ps.set_channel(2,2.1)
-    fm_ps.set_channel(1,2.25)
-    adc_ps.on([1,2])
-    fm_ps.on([1])
+    adc_ps.set_channel(3,2.25)
+    #fm_ps.set_channel(1,2.25)
+    adc_ps.on([1,2,3])
+    #fm_ps.on([1])
 ####    ps.set_channel(1,2.5)
     time.sleep(2)
     cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1)

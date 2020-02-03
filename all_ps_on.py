@@ -27,10 +27,10 @@ def power_on_init():
     fm_ps.off([1,2,3])
     time.sleep(2)
     #fm_ps.set_channel(channel=1, voltage = 2.8,  v_limit = 3.5, c_limit = 1)
-    fm_ps.set_channel(channel=2, voltage = 2.8,  v_limit = 3.0, c_limit = 1)
-    fm_ps.set_channel(channel=3, voltage = 5,  c_limit = 1)
+    fm_ps.set_channel(channel=1, voltage = 2.8,  v_limit = 3.0, c_limit = 1)
+    fm_ps.set_channel(channel=2, voltage = 5,  c_limit = 1)
 
-    fm_ps.on([2,3])
+    fm_ps.on([1,2])
     time.sleep(3)
     #FPGA reset
     print ("FM Reset")
@@ -47,12 +47,13 @@ def power_on_init():
     time.sleep(2)
     adc_ps.set_channel(channel=1, voltage = 2.75,  v_limit = 1, c_limit = 1)
     adc_ps.set_channel(channel=2, voltage = 2.1,  v_limit = 1, c_limit = 1)
-    fm_ps.set_channel(channel=1, voltage = 2.25,  v_limit = 1, c_limit = 1)
+    adc_ps.set_channel(channel=3, voltage = 2.25,  v_limit = 1, c_limit = 1)
+    #fm_ps.set_channel(channel=1, voltage = 2.25,  v_limit = 1, c_limit = 1)
 #    adc_ps.set_channel(1,2.75)
 #    adc_ps.set_channel(2,2.1)
 #    adc_ps.set_channel(3,2.25)
-    adc_ps.on([1,2])
-    fm_ps.on([1])
+    adc_ps.on([1,2,3])
+#    fm_ps.on([1])
     time.sleep(2)
 
     #initilize Genetor 

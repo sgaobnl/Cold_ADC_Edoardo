@@ -29,8 +29,8 @@ gen = GEN_CTL() #signal generator library
 #ps = PS_CTL()   #power supply library
 adc_ps = RIGOL_PS_CTL() 
 adc_ps.ADDR =u'USB0::0x1AB1::0x0E11::DP8C184550857::0::INSTR' 
-fm_ps = RIGOL_PS_CTL() 
-fm_ps.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR'
+#fm_ps = RIGOL_PS_CTL() 
+#fm_ps.ADDR = u'USB0::0x1AB1::0x0E11::DP8C184450708::0::INSTR'
 
 cq = CMD_ACQ()  #command library
 
@@ -87,8 +87,8 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
         time.sleep(1)
         #ps.off([1,2, 3])
-        adc_ps.off([1,2])
-        fm_ps.off([1])
+        adc_ps.off([1,2,3])
+        #fm_ps.off([1])
         time.sleep(5)
         
         #Set VDDA2P5 to 2.8 V for BJT reference only (known issue at LN2 with nominal 2.5 V)
@@ -97,10 +97,11 @@ def pwr_chk():
         #ps.set_channel(3,2.25)
         adc_ps.set_channel(1,2.75)
         adc_ps.set_channel(2,2.1)
-        fm_ps.set_channel(1,2.25)
+        adc_ps.set_channel(3,2.25)
+        #fm_ps.set_channel(1,2.25)
         #ps.on([1,2,3])
-        adc_ps.on([1,2])
-        fm_ps.on([1])
+        adc_ps.on([1,2,3])
+        #fm_ps.on([1])
         time.sleep(5)
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
         time.sleep(1)
@@ -116,7 +117,8 @@ def pwr_chk():
         #p_bjt = [x + y for x, y in zip(p_bjt, powers)]
         vdda_vip = adc_ps.measure_params(1)
         v1p2_vip = adc_ps.measure_params(2)
-        vdio_vip = fm_ps.measure_params(1)
+        #vdio_vip = fm_ps.measure_params(1)
+        vdio_vip = adc_ps.measure_params(3)
         voltages = [vdda_vip[0], v1p2_vip[0], vdio_vip[0]]
         currents = [vdda_vip[1], v1p2_vip[1], vdio_vip[1]]
         powers = [a*b for a,b in zip(voltages,currents)]
@@ -182,15 +184,16 @@ def pwr_chk():
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,0) 
         time.sleep(1)
         #ps.off([1,2,3])
-        adc_ps.off([1,2])
-        fm_ps.off([1])
+        adc_ps.off([1,2,3])
+        #fm_ps.off([1])
         time.sleep(5)
         adc_ps.set_channel(1,2.55)
         adc_ps.set_channel(2,2.1)
-        fm_ps.set_channel(1,2.25)
+        adc_ps.set_channel(3,2.25)
+        #fm_ps.set_channel(1,2.25)
         #ps.on([1,2,3])
-        adc_ps.on([1,2])
-        fm_ps.on([1])
+        adc_ps.on([1,2,3])
+        #fm_ps.on([1])
 
         time.sleep(5)
         cq.bc.udp.write(cq.bc.fpga_reg.MASTER_RESET,1) 
@@ -206,7 +209,8 @@ def pwr_chk():
         #p_cmos = [x + y for x, y in zip(p_cmos, powers)]
         vdda_vip = adc_ps.measure_params(1)
         v1p2_vip = adc_ps.measure_params(2)
-        vdio_vip = fm_ps.measure_params(1)
+        vdio_vip = adc_ps.measure_params(3)
+        #vdio_vip = fm_ps.measure_params(1)
         voltages = [vdda_vip[0], v1p2_vip[0], vdio_vip[0]]
         currents = [vdda_vip[1], v1p2_vip[1], vdio_vip[1]]
         powers = [a*b for a,b in zip(voltages,currents)]
@@ -646,7 +650,7 @@ def gen_output_dis():
 
 init_logs()
 adc_ps.ps_init()
-fm_ps.ps_init()
+#fm_ps.ps_init()
 sample_rate_set(sr = 16)
 pwr_chk()
 cq.init_chk()
